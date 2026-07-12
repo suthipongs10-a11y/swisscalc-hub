@@ -1,0 +1,141 @@
+---
+/**
+ * Brutto-Netto calculator island. Server-renders a working default result so
+ * the page is useful without JS (SEO_SPEC §6); the client script recomputes on
+ * input using the same engine + renderer (single source of truth).
+ */
+import cantonData from '../data/cantons.json';
+import { calculateSalary, annualFromMonthly } from '../lib/salary/engine';
+import { renderResultHtml } from '../lib/salary/renderResult';
+
+const cantons = cantonData.cantons;
+
+// Defaults for the initial server render.
+const DEFAULTS = { monthly: 6500, payouts: 13 as const, age: 40, nbuPct: 1.4, bvg: true };
+const initialResult = calculateSalary({
+  annualGross: annualFromMonthly(DEFAULTS.monthly, DEFAULTS.payouts),
+  age: DEFAULTS.age,
+  nbuRate: DEFAULTS.nbuPct / 100,
+  includeBvg: DEFAULTS.bvg,
+});
+const initialHtml = renderResultHtml(initialResult);
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section aria-label="Brutto-Netto-Rechner" class="grid gap-6 md:grid-cols-2">
+  <form id="salary-form" class="space-y-4" novalidate>
+    <div>
+      <label class={labelClass} for="monthly">Bruttolohn pro Monat (CHF)</label>
+      <input
+        class={inputClass}
+        type="number"
+        id="monthly"
+        name="monthly"
+        min="0"
+        step="100"
+        inputmode="numeric"
+        value={DEFAULTS.monthly}
+      />
+    </div>
+
+    <fieldset>
+      <legend class={labelClass}>Anzahl Lohnzahlungen</legend>
+      <div class="mt-1 inline-flex rounded-md border border-slate-300 p-0.5">
+        <label class="cursor-pointer">
+          <input type="radio" name="payouts" value="12" class="peer sr-only" />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">12×</span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="payouts" value="13" class="peer sr-only" checked />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">
+            13× (13. Monatslohn)
+          </span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div>
+      <label class={labelClass} for="age">Alter (für BVG-Satz)</label>
+      <input class={inputClass} type="number" id="age" name="age" min="17" max="70" step="1" value={DEFAULTS.age} />
+    </div>
+
+    <div>
+      <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+        <input type="checkbox" id="bvg" name="bvg" class="h-4 w-4 rounded border-slate-300" checked />
+        In Pensionskasse versichert (BVG)
+      </label>
+    </div>
+
+    <details class="text-sm">
+      <summary class="cursor-pointer text-slate-600 hover:text-slate-900">Erweiterte Einstellungen</summary>
+      <div class="mt-3 space-y-4">
+        <div>
+          <label class={labelClass} for="nbu">NBU-Satz (Nichtberufsunfall, %)</label>
+          <input class={inputClass} type="number" id="nbu" name="nbu" min="0" max="5" step="0.01" value={DEFAULTS.nbuPct} />
+          <p class="mt-1 text-xs text-slate-500">
+            Der NBU-Satz wird vom Arbeitgeber/Versicherer festgelegt. Richtwert – bitte anhand Ihrer Lohnabrechnung anpassen.
+          </p>
+        </div>
+        <div>
+          <label class={labelClass} for="canton">Kanton (für die spätere Steuerberechnung)</label>
+          <select class={inputClass} id="canton" name="canton">
+            {cantons.map((c) => <option value={c.slug}>{c.name}</option>)}
+          </select>
+          <p class="mt-1 text-xs text-slate-500">
+            Die Sozialabzüge sind in allen Kantonen gleich. Die kantonale Einkommenssteuer wird separat veranlagt – ein
+            dedizierter Steuervergleich folgt.
+          </p>
+        </div>
+      </div>
+    </details>
+  </form>
+
+  <div>
+    <div id="salary-result" aria-live="polite" set:html={initialHtml}></div>
+    <p class="mt-3 text-xs text-slate-500">
+      Der Nettolohn versteht sich <strong>vor Einkommenssteuer</strong>. In der Schweiz wird die Einkommenssteuer bei
+      Schweizer:innen und Personen mit Niederlassungsbewilligung (Ausweis C) nicht vom Lohn abgezogen, sondern separat
+      veranlagt. Für quellenbesteuerte Personen folgt ein eigener Rechner.
+    </p>
+  </div>
+</section>
+
+<script>
+  import { calculateSalary, annualFromMonthly } from '../lib/salary/engine';
+  import { renderResultHtml } from '../lib/salary/renderResult';
+
+  const form = document.getElementById('salary-form') as HTMLFormElement | null;
+  const resultEl = document.getElementById('salary-result');
+  if (form && resultEl) {
+    const num = (name: string): number => {
+      const el = form.elements.namedItem(name) as HTMLInputElement | null;
+      const v = el ? parseFloat(el.value) : NaN;
+      return Number.isFinite(v) ? v : 0;
+    };
+
+    const recompute = () => {
+      const monthly = num('monthly');
+      const payouts = (form.elements.namedItem('payouts') as RadioNodeList).value === '12' ? 12 : 13;
+      const age = num('age');
+      const nbuRate = num('nbu') / 100;
+      const bvg = (form.elements.namedItem('bvg') as HTMLInputElement).checked;
+      try {
+        const result = calculateSalary({
+          annualGross: annualFromMonthly(monthly, payouts),
+          age,
+          nbuRate,
+          includeBvg: bvg,
+        });
+        resultEl.innerHTML = renderResultHtml(result);
+      } catch {
+        // Leave the last valid result in place on invalid input.
+      }
+    };
+
+    form.addEventListener('input', recompute);
+    form.addEventListener('change', recompute);
+  }
+</script>

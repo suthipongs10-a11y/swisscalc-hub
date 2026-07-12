@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "source": "https://www.bfs.admin.ch/bfs/de/home/grundlagen/agvch.html",
+    "retrieved": "2026-07-12",
+    "validFor": "2026",
+    "description": "Registry of the 26 Swiss cantons keyed by official BFS canton number, with German names and URL slugs per SEO_SPEC §2. Reused by the canton selector and by the programmatic /steuerrechner/[kanton]/ pages (M3)."
+  },
+  "cantons": [
+    { "bfs": 1, "abbr": "ZH", "name": "Zürich", "slug": "zuerich" },
+    { "bfs": 2, "abbr": "BE", "name": "Bern", "slug": "bern" },
+    { "bfs": 3, "abbr": "LU", "name": "Luzern", "slug": "luzern" },
+    { "bfs": 4, "abbr": "UR", "name": "Uri", "slug": "uri" },
+    { "bfs": 5, "abbr": "SZ", "name": "Schwyz", "slug": "schwyz" },
+    { "bfs": 6, "abbr": "OW", "name": "Obwalden", "slug": "obwalden" },
+    { "bfs": 7, "abbr": "NW", "name": "Nidwalden", "slug": "nidwalden" },
+    { "bfs": 8, "abbr": "GL", "name": "Glarus", "slug": "glarus" },
+    { "bfs": 9, "abbr": "ZG", "name": "Zug", "slug": "zug" },
+    { "bfs": 10, "abbr": "FR", "name": "Freiburg", "slug": "freiburg" },
+    { "bfs": 11, "abbr": "SO", "name": "Solothurn", "slug": "solothurn" },
+    { "bfs": 12, "abbr": "BS", "name": "Basel-Stadt", "slug": "basel-stadt" },
+    { "bfs": 13, "abbr": "BL", "name": "Basel-Landschaft", "slug": "basel-landschaft" },
+    { "bfs": 14, "abbr": "SH", "name": "Schaffhausen", "slug": "schaffhausen" },
+    { "bfs": 15, "abbr": "AR", "name": "Appenzell Ausserrhoden", "slug": "appenzell-ausserrhoden" },
+    { "bfs": 16, "abbr": "AI", "name": "Appenzell Innerrhoden", "slug": "appenzell-innerrhoden" },
+    { "bfs": 17, "abbr": "SG", "name": "St. Gallen", "slug": "st-gallen" },
+    { "bfs": 18, "abbr": "GR", "name": "Graubünden", "slug": "graubuenden" },
+    { "bfs": 19, "abbr": "AG", "name": "Aargau", "slug": "aargau" },
+    { "bfs": 20, "abbr": "TG", "name": "Thurgau", "slug": "thurgau" },
+    { "bfs": 21, "abbr": "TI", "name": "Tessin", "slug": "tessin" },
+    { "bfs": 22, "abbr": "VD", "name": "Waadt", "slug": "waadt" },
+    { "bfs": 23, "abbr": "VS", "name": "Wallis", "slug": "wallis" },
+    { "bfs": 24, "abbr": "NE", "name": "Neuenburg", "slug": "neuenburg" },
+    { "bfs": 25, "abbr": "GE", "name": "Genf", "slug": "genf" },
+    { "bfs": 26, "abbr": "JU", "name": "Jura", "slug": "jura" }
+  ]
+}

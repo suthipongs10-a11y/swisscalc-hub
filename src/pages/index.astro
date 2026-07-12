@@ -6,6 +6,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { useTranslations } from '../lib/i18n';
 import { BRAND, SITE_URL, SITE_YEAR } from '../lib/site';
+import { TOOLS } from '../lib/tools';
 
 const t = useTranslations('de');
 
@@ -19,28 +20,7 @@ const websiteJsonLd = {
   publisher: { '@id': `${SITE_URL}/#organization` },
 };
 
-const tools = [
-  {
-    name: `Brutto-Netto-Rechner Schweiz ${SITE_YEAR}`,
-    description: 'Vom Bruttolohn zum Nettolohn: AHV, IV, EO, ALV, NBU, BVG — transparent aufgeschlüsselt.',
-  },
-  {
-    name: 'Quellensteuer-Rechner',
-    description: 'Quellensteuer für ausländische Arbeitnehmende — nach Kanton, Tarifcode und Gemeinde.',
-  },
-  {
-    name: 'Steuervergleich aller 26 Kantone',
-    description: 'Ein Einkommen, alle Kantone: wo zahlen Sie wie viel Einkommenssteuer?',
-  },
-  {
-    name: 'Säule-3a-Rechner',
-    description: 'Wie viel Steuern spart Ihre Einzahlung in die Säule 3a? Nach Kanton und Einkommen.',
-  },
-  {
-    name: 'Franchise-Rechner Krankenkasse',
-    description: 'Welche Franchise lohnt sich bei Ihren Gesundheitskosten? Break-even einfach berechnet.',
-  },
-];
+const tools = TOOLS;
 ---
 
 <BaseLayout
@@ -58,10 +38,20 @@ const tools = [
       tools.map((tool) => (
         <li class="rounded-lg border border-slate-200 p-5">
           <div class="mb-1 flex items-start justify-between gap-2">
-            <h3 class="font-semibold text-slate-900">{tool.name}</h3>
-            <span class="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-              {t('home.comingSoon')}
-            </span>
+            {tool.href ? (
+              <h3 class="font-semibold">
+                <a href={tool.href} class="text-blue-700 hover:underline">
+                  {tool.name}
+                </a>
+              </h3>
+            ) : (
+              <h3 class="font-semibold text-slate-900">{tool.name}</h3>
+            )}
+            {!tool.href && (
+              <span class="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+                {t('home.comingSoon')}
+              </span>
+            )}
           </div>
           <p class="text-sm leading-relaxed text-slate-600">{tool.description}</p>
         </li>

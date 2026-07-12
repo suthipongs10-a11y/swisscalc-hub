@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "source": "https://www.bsv.admin.ch/dam/de/sd-web/sAgdISSXenMT/d_Betr%C3%A4ge%202026.pdf",
+    "retrieved": "2026-07-12",
+    "taxYear": 2026,
+    "description": "Swiss employee social-insurance contribution parameters for salary year 2026. Rates are federal and uniform across cantons. See per-value 'source' fields for the authoritative citation of each figure.",
+    "notes": "Employee shares only. AHV/IV/EO and ALV rates unchanged for 2026 despite the 13th AHV pension (financed via VAT, not wage contributions). BVG limits are adjusted biennially; the 2025 values remain in force for 2026."
+  },
+  "ahvIvEo": {
+    "employeeRate": 0.053,
+    "totalRate": 0.106,
+    "composition": { "ahv": 0.087, "iv": 0.014, "eo": 0.005 },
+    "ceiling": null,
+    "source": "https://www.ahv-iv.ch/p/2.01.d",
+    "note": "Total 10.6% split 50/50; employee pays 5.3% of gross with no upper limit."
+  },
+  "alv": {
+    "employeeRate": 0.011,
+    "totalRate": 0.022,
+    "annualCeiling": 148200,
+    "aboveCeilingRate": 0.0,
+    "source": "https://www.ahv-iv.ch/p/2.08.d",
+    "note": "2.2% split 50/50; employee 1.1% up to CHF 148'200/year. No contribution above the ceiling since the Solidaritätsprozent was abolished on 01.01.2023."
+  },
+  "nbu": {
+    "defaultEmployeeRate": 0.014,
+    "annualCeiling": 148200,
+    "planSpecific": true,
+    "source": "https://www.ahv-iv.ch/p/2.07.d",
+    "note": "Non-occupational accident insurance (UVG). The premium is set per employer/insurer and paid by the employee; the insured-earnings ceiling equals CHF 148'200/year. The default here (1.4%) is a typical illustrative value and is user-adjustable — it is not an official uniform rate."
+  },
+  "bvg": {
+    "entryThreshold": 22680,
+    "coordinationDeduction": 26460,
+    "minCoordinatedSalary": 3780,
+    "maxCoordinatedSalary": 64260,
+    "upperLimit": 90720,
+    "minInsuredAge": 25,
+    "employeeShare": 0.5,
+    "retirementCredits": [
+      { "fromAge": 25, "toAge": 34, "rate": 0.07 },
+      { "fromAge": 35, "toAge": 44, "rate": 0.1 },
+      { "fromAge": 45, "toAge": 54, "rate": 0.15 },
+      { "fromAge": 55, "toAge": 70, "rate": 0.18 }
+    ],
+    "source": "https://www.koordination.ch/fileadmin/files/bvg/masszahlen/bvg-masszahlen-2026.pdf",
+    "creditsSource": "https://www.fedlex.admin.ch/eli/cc/1983/797_797_797/de#art_16",
+    "note": "Mandatory (obligatorisch) BVG only. Retirement credits (Altersgutschriften) per Art. 16 BVG apply from age 25 on the coordinated salary. Employee share is the legal minimum of 50%; many plans and super-mandatory (überobligatorisch) coverage differ, so real deductions can be higher."
+  }
+}

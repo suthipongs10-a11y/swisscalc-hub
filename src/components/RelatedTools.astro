@@ -1,0 +1,43 @@
+---
+/**
+ * "Weitere Rechner" module for tool/canton pages (SEO_SPEC §5 rule 4).
+ * Deterministic per page: shows the other tools, excluding the current one.
+ * Unbuilt tools render without a link (no broken links).
+ */
+import { TOOLS } from '../lib/tools';
+import { useTranslations } from '../lib/i18n';
+
+interface Props {
+  current: string;
+}
+const { current } = Astro.props;
+const t = useTranslations('de');
+const others = TOOLS.filter((tool) => tool.id !== current);
+---
+
+<section aria-label="Weitere Rechner" class="mt-14">
+  <h2 class="mb-4 text-2xl font-bold">Weitere Rechner</h2>
+  <ul class="grid gap-4 sm:grid-cols-2">
+    {
+      others.map((tool) => (
+        <li class="rounded-lg border border-slate-200 p-5">
+          <div class="mb-1 flex items-start justify-between gap-2">
+            {tool.href ? (
+              <a href={tool.href} class="font-semibold text-blue-700 hover:underline">
+                {tool.name}
+              </a>
+            ) : (
+              <span class="font-semibold text-slate-900">{tool.name}</span>
+            )}
+            {!tool.href && (
+              <span class="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+                {t('home.comingSoon')}
+              </span>
+            )}
+          </div>
+          <p class="text-sm leading-relaxed text-slate-600">{tool.description}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>

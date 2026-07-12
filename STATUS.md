@@ -2,15 +2,18 @@
 
 ## Current state
 
-**M0 built — awaiting review + owner deploy steps. Do not start M1 without approval.**
+**M1 built — awaiting review. Do not start M2 without approval.**
 
-Code is complete and green (build ✓, tests 4/4 ✓, Lighthouse 100/100/100/100 mobile on all four sampled pages, local run). What remains for M0 is owner-side and cannot be done from this repo:
+Flagship-anchor tool (Brutto-Netto-Rechner) is complete and green: build ✓, tests 35/35 ✓, Lighthouse **100/100/100/100** mobile on all 5 sampled pages incl. the new tool page, and the calculator was **driven live in Chromium** (recomputes correctly, no console errors, results verified against the engine by hand). SSR renders a working default result so the page is useful without JS.
 
-1. **Connect repo to Cloudflare Pages** (build command `npm run build`, output `dist`), attach calcswiss.ch + www (the `_redirects` file handles www→apex once both are attached).
-2. **Enable Cloudflare Web Analytics** for the Pages project (dashboard toggle — zero code).
-3. **Fill Impressum identity**: replace `[INHABER-NAME]/[STRASSE NR.]/[PLZ ORT]/[E-MAIL]` in `src/pages/impressum.astro` and `src/pages/datenschutz.astro` (nFADP requires this before real launch).
-4. **Verify Google Search Console + Bing Webmaster** after deploy; submit `https://calcswiss.ch/sitemap-index.xml`; enable IndexNow in Cloudflare.
-5. Re-check Lighthouse on the live URL (expected same scores).
+**Still owner-side before public launch** (carried from M0 — none block M2):
+
+1. **Connect repo to Cloudflare Pages** (build `npm run build`, output `dist`), attach calcswiss.ch + www (`_redirects` handles www→apex).
+2. **Enable Cloudflare Web Analytics** (dashboard toggle).
+3. **Fill Impressum identity** in `src/pages/impressum.astro` + `datenschutz.astro` (nFADP).
+4. **Send ESTV consent letter** (`docs/estv-consent-request.md`) once Impressum is live; log date below.
+5. **Verify GSC + Bing**, submit sitemap, enable IndexNow; request-indexing for `/brutto-netto-rechner/`.
+6. **Validate keyword volumes** (Keyword Planner) → append to RESEARCH.md.
 
 Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milestone) → `SEO_SPEC.md` → this file. `RESEARCH.md` is the evidence base.
 
@@ -25,6 +28,16 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-12 — Session 3: M1 Brutto-Netto-Rechner (built on Opus 4.8)
+
+- Verified official 2026 employee contribution rates from BSV / ahv-iv.ch / SECO / koordination.ch / Art. 16 BVG: AHV/IV/EO 5.3% (no ceiling), ALV 1.1% to CHF 148'200, NBU plan-specific (UVG ceiling 148'200), BVG entry 22'680 / coord. deduction 26'460 / coord. salary 3'780–64'260 / Altersgutschriften 7-10-15-18% / 50% employee share.
+- Data: `src/data/social-contributions-2026.json` (per-value sources) + `src/data/cantons.json` (26 cantons, BFS IDs + SEO_SPEC slugs, for the selector and M3 reuse). Both pass the `_meta` schema test.
+- Engine: `src/lib/salary/engine.ts` — pure functions (coordinated salary, age-band credit, full deduction calc). 27 unit tests pinned to hand-computed official values incl. edge cases (ALV ceiling, below entry threshold, age <25, min/max coordinated, all age bands).
+- Page `/brutto-netto-rechner/` per SEO_SPEC §3.1: island above fold (monthly/13th toggle, age, BVG, advanced NBU + canton selector) → methodology table w/ sources → worked example → 6 FAQs → RelatedTools → sources footer + "Zuletzt aktualisiert". Schema: WebApplication + FAQPage (+ Organization + BreadcrumbList).
+- SSR-first island (usable without JS); client script shares the engine + renderer (one source of truth). Swiss format CHF 12'345.60 (`src/lib/format.ts`, tested).
+- Shared `src/lib/tools.ts` registry drives homepage + RelatedTools; unbuilt tools render link-less (no orphans/broken links). Brutto-netto card now links live.
+- **Verified live in Chromium** (Playwright): default net CHF 75'007; after edit (144k, age 55) BVG caps at 9% = CHF 5'783.40, net CHF 126'984.60 — all match the engine. Lighthouse 100×4 on all 5 pages. Committed, stopped for review.
 
 ### 2026-07-12 — Session 2: M0 scaffold
 

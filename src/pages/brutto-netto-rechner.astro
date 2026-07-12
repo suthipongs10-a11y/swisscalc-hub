@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import SalaryCalculator from '../components/SalaryCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
+import { formatCHF } from '../lib/format';
+
+const path = '/brutto-netto-rechner/';
+const title = `Brutto-Netto-Rechner Schweiz ${SITE_YEAR} – Lohn berechnen | ${BRAND}`;
+const description = `Bruttolohn in Nettolohn umrechnen: AHV, IV, EO, ALV, NBU und BVG transparent aufgeschlüsselt. Kostenlos, ohne Anmeldung, mit offiziellen Sätzen ${SITE_YEAR}.`;
+const dataUpdated = '2026-07-12';
+
+const faqs = [
+  {
+    q: 'Was ist der Unterschied zwischen Brutto- und Nettolohn?',
+    a: 'Der Bruttolohn ist der vereinbarte Lohn vor Abzügen. Der Nettolohn ist der Betrag, der nach Abzug der Sozialversicherungsbeiträge (AHV/IV/EO, ALV, NBU, BVG) auf Ihr Konto überwiesen wird. Die Einkommenssteuer ist darin noch nicht berücksichtigt – sie wird separat veranlagt.',
+  },
+  {
+    q: 'Welche Abzüge werden vom Bruttolohn abgezogen?',
+    a: 'Vom Bruttolohn gehen ab: AHV/IV/EO (5.3%), ALV (1.1% bis CHF 148’200), die Nichtberufsunfallversicherung NBU (arbeitgeberabhängig) sowie der BVG-Beitrag an die Pensionskasse (altersabhängig auf dem koordinierten Lohn). Alle Sätze gelten schweizweit einheitlich.',
+  },
+  {
+    q: 'Wird die Einkommenssteuer vom Lohn abgezogen?',
+    a: 'Bei Schweizer:innen und Personen mit Niederlassungsbewilligung (Ausweis C) nicht: Sie zahlen die Einkommenssteuer separat über die jährliche Veranlagung. Nur bei quellenbesteuerten Personen wird die Steuer direkt vom Lohn abgezogen – dafür ist ein eigener Quellensteuer-Rechner vorgesehen.',
+  },
+  {
+    q: `Wie hoch sind die AHV/IV/EO-Beiträge ${SITE_YEAR}?`,
+    a: 'Der Gesamtbeitrag beträgt 10.6% und wird hälftig getragen: Arbeitnehmende zahlen 5.3% des Bruttolohns, ohne obere Grenze. Der Satz bleibt trotz Einführung der 13. AHV-Rente unverändert, da diese über die Mehrwertsteuer und nicht über höhere Lohnbeiträge finanziert wird.',
+  },
+  {
+    q: 'Wie funktioniert der BVG-Abzug (Pensionskasse)?',
+    a: `Die BVG-Altersgutschrift wird auf dem koordinierten Lohn berechnet – dem Bruttolohn abzüglich Koordinationsabzug (CHF 26’460), begrenzt auf CHF 3’780 bis CHF 64’260. Der Satz steigt mit dem Alter (7% bis 18%) und wird mindestens hälftig von den Arbeitnehmenden getragen. Je nach Pensionskasse kann der Abzug höher sein.`,
+  },
+  {
+    q: 'Wie wirkt sich der 13. Monatslohn aus?',
+    a: 'Der 13. Monatslohn ist Teil des Bruttojahreslohns und unterliegt denselben Abzügen wie der übrige Lohn. Mit der Option «13×» rechnet der Rechner Ihren Monatslohn auf 13 Zahlungen hoch und wendet die Sozialabzüge auf den gesamten Jahreslohn an.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Brutto-Netto-Rechner Schweiz',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'de-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Brutto-Netto-Rechner' }]} />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Brutto-Netto-Rechner Schweiz {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Berechnen Sie in Sekunden Ihren Nettolohn: Alle Sozialabzüge – AHV, IV, EO, ALV, NBU und BVG – transparent und mit
+    offiziellen Sätzen {SITE_YEAR} aufgeschlüsselt.
+  </p>
+
+  <SalaryCalculator />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Wie wird gerechnet?</h2>
+    <p>
+      Der Rechner zieht vom Bruttojahreslohn die gesetzlichen Sozialversicherungsbeiträge der Arbeitnehmenden ab. Diese
+      Sätze sind eidgenössisch und in allen Kantonen gleich. Massgebend für {SITE_YEAR}:
+    </p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-300 text-left">
+          <th class="py-2 pr-2">Beitrag</th>
+          <th class="py-2 px-2">Satz (Arbeitnehmende)</th>
+          <th class="py-2 pl-2">Basis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">AHV / IV / EO</td>
+          <td class="py-2 px-2">5.3%</td>
+          <td class="py-2 pl-2">gesamter Bruttolohn</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">ALV</td>
+          <td class="py-2 px-2">1.1%</td>
+          <td class="py-2 pl-2">bis {formatCHF(148200, 0)} / Jahr</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">NBU (Nichtberufsunfall)</td>
+          <td class="py-2 px-2">arbeitgeberabhängig</td>
+          <td class="py-2 pl-2">bis {formatCHF(148200, 0)} / Jahr</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">BVG (Pensionskasse)</td>
+          <td class="py-2 px-2">7–18% × 50%, altersabhängig</td>
+          <td class="py-2 pl-2">koordinierter Lohn</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Rechenbeispiel</h3>
+    <p>
+      Bruttolohn {formatCHF(100000, 0)} pro Jahr, 40 Jahre alt, NBU-Satz 1.4%:
+    </p>
+    <ul>
+      <li>AHV/IV/EO: {formatCHF(100000, 0)} × 5.3% = {formatCHF(5300, 0)}</li>
+      <li>ALV: {formatCHF(100000, 0)} × 1.1% = {formatCHF(1100, 0)}</li>
+      <li>NBU: {formatCHF(100000, 0)} × 1.4% = {formatCHF(1400, 0)}</li>
+      <li>
+        BVG: koordinierter Lohn {formatCHF(64260, 0)} (Maximum) × 10% × 50% = {formatCHF(3213, 0)}
+      </li>
+      <li><strong>Total Abzüge: {formatCHF(11013, 0)} → Nettolohn {formatCHF(88987, 0)} pro Jahr</strong></li>
+    </ul>
+
+    <h3>Grenzen dieser Berechnung</h3>
+    <ul>
+      <li>
+        Der <strong>NBU-Satz</strong> und die <strong>BVG-Beiträge</strong> hängen vom Arbeitgeber bzw. der
+        Pensionskasse ab. Wir rechnen mit dem gesetzlichen Minimum (BVG-Obligatorium, 50%-Anteil); überobligatorische
+        Lösungen führen zu höheren Abzügen.
+      </li>
+      <li>Die <strong>Einkommenssteuer</strong> ist nicht enthalten (separate Veranlagung, siehe oben).</li>
+      <li>Freiwillige Beiträge wie das Krankentaggeld (KTG) sind nicht berücksichtigt.</li>
+    </ul>
+
+    <h2>Häufige Fragen</h2>
+    {
+      faqs.map((f) => (
+        <div class="mb-4">
+          <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+          <p class="text-slate-700">{f.a}</p>
+        </div>
+      ))
+    }
+  </div>
+
+  <RelatedTools current="brutto-netto-rechner" />
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Quellen:</strong>
+      <a class="underline" href="https://www.ahv-iv.ch/p/2.01.d" rel="noopener">AHV/IV/EO (Merkblatt 2.01)</a>,
+      <a class="underline" href="https://www.ahv-iv.ch/p/2.08.d" rel="noopener">ALV (Merkblatt 2.08)</a>,
+      <a class="underline" href="https://www.koordination.ch/fileadmin/files/bvg/masszahlen/bvg-masszahlen-2026.pdf" rel="noopener">
+        BVG-Masszahlen 2026</a>. Alle Werte mit Stichdatum unter <a class="underline" href="/quellen/">Quellen</a>.
+    </p>
+    <p>Zuletzt aktualisiert: 12.07.2026 · Datenstand {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "url": ["/", "/impressum/", "/datenschutz/", "/methodik/"],
+      "url": ["/", "/brutto-netto-rechner/", "/impressum/", "/datenschutz/", "/methodik/"],
       "numberOfRuns": 1,
       "settings": { "chromeFlags": "--no-sandbox --headless=new" }
     },
