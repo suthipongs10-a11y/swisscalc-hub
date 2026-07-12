@@ -3,7 +3,9 @@
     "home": "Startseite",
     "tools": "Rechner",
     "methodology": "Methodik",
-    "about": "Über uns"
+    "about": "Über uns",
+    "menu": "Menü öffnen",
+    "allTools": "Alle Rechner"
   },
   "footer": {
     "legal": "Rechtliches",
