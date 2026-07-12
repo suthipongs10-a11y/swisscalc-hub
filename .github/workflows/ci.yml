@@ -17,5 +17,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      - name: Internal-link integrity (no orphans, no broken links)
+        run: node scripts/check-links.mjs
       - name: Lighthouse CI (mobile, all four categories >= 0.95)
         run: npx --yes @lhci/cli@0.15.x autorun

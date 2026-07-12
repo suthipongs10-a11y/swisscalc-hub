@@ -1,0 +1,205 @@
+---
+/**
+ * Programmatic canton pages (M3) — 26 pages from data + hand-written
+ * editorial content. Must satisfy SEO_SPEC §3.2 anti-doorway rules: every
+ * quantitative block below is computed from this canton's data; the intro
+ * and one FAQ are individually written per canton (src/lib/cantonContent.ts).
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CantonCalculator from '../../components/CantonCalculator.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import cantonData from '../../data/cantons.json';
+import statsData from '../../data/tax/canton-stats-2026.json';
+import cantonalData from '../../data/tax/cantonal-income-2026.json';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF, formatNumber } from '../../lib/format';
+import { cantonTax, compareCantons, cantonMultipliers } from '../../lib/tax/engine';
+import { CANTON_CONTENT } from '../../lib/cantonContent';
+
+export function getStaticPaths() {
+  return cantonData.cantons.map((c) => ({ params: { kanton: c.slug }, props: { canton: c } }));
+}
+
+interface CantonInfo {
+  bfs: number;
+  abbr: string;
+  name: string;
+  slug: string;
+}
+const { canton } = Astro.props as { canton: CantonInfo };
+const { abbr, name, slug } = canton;
+
+const editorial = CANTON_CONTENT[abbr];
+if (!editorial) throw new Error(`Missing editorial content for ${abbr}`);
+
+const stats = (statsData.cantons as Record<string, { municipalityCount: number; minCity: { name: string; pct: number }; maxCity: { name: string; pct: number } }>)[abbr]!;
+const m = cantonMultipliers(abbr);
+
+// Reference figures at 100k single (computed live from the engine).
+const ref = cantonTax(100_000, abbr, 'single');
+const ranking = compareCantons(100_000, 'single');
+const rank = ranking.findIndex((r) => r.abbr === abbr) + 1;
+const cheapest = ranking[0]!;
+
+// Tarif-type label from the canton's own data.
+const tarifTypes: Record<string, string> = {
+  ZUERICH: 'progressiver Stufentarif',
+  BUND: 'progressiver Stufentarif mit Grundbetrag',
+  FLATTAX: 'Proportionaltarif (Flat Rate)',
+  FREIBURG: 'stufenlos interpolierter Tarif',
+  FORMEL: 'stufenloser Formeltarif',
+};
+const cantonTarifs = (cantonalData.cantons as Record<string, { tableType: string }[]>)[abbr]!;
+const tarifLabel = tarifTypes[cantonTarifs[0]!.tableType] ?? cantonTarifs[0]!.tableType;
+
+const path = `/steuerrechner/${slug}/`;
+const longTitle = `Steuerrechner Kanton ${name} ${SITE_YEAR} – Steuern berechnen | ${BRAND}`;
+const title = longTitle.length <= 65 ? longTitle : `Steuerrechner ${name} ${SITE_YEAR} | ${BRAND}`;
+const description = `Steuern im Kanton ${name} ${SITE_YEAR} berechnen: Kantons-, Gemeinde- und Bundessteuer in ${ref.capital}. Rang ${rank} von 26 bei CHF 100'000 — mit offiziellen ESTV-Tarifen.`;
+
+const faqs = [
+  {
+    q: `Wie hoch sind die Steuern im Kanton ${name}?`,
+    a: `Bei CHF 100'000 steuerbarem Einkommen (alleinstehend) zahlen Sie in ${ref.capital} rund ${formatCHF(ref.totalTax, 0)} pro Jahr (Kantons-, Gemeinde- und Bundessteuer, ohne Kirchensteuer) — das ist ein effektiver Satz von ${(ref.effectiveRate * 100).toFixed(1)}% und Rang ${rank} von 26 Kantonshauptorten. Für Ihr Einkommen nutzen Sie den Rechner oben.`,
+  },
+  {
+    q: `Welche Gemeinde im Kanton ${name} hat die tiefsten Steuern?`,
+    a: `Den tiefsten Gemeindesteuerfuss hat aktuell ${stats.minCity.name} (${formatNumber(stats.minCity.pct, 0)}%), den höchsten ${stats.maxCity.name} (${formatNumber(stats.maxCity.pct, 0)}%) — bei insgesamt ${stats.municipalityCount} Gemeinden. Unser Rechner verwendet den Hauptort ${ref.capital}; in einer anderen Gemeinde verschiebt sich die Gemeindesteuer entsprechend dem Steuerfuss.`,
+  },
+  {
+    q: `Wie setzt sich die Steuer in ${ref.capital} zusammen?`,
+    a: `Auf die einfache Staatssteuer nach ${abbr}-Tarif (${tarifLabel}) wendet der Kanton einen Steuerfuss von ${formatNumber(m.cantonPct, 0)}% an, die Gemeinde ${ref.capital} ${formatNumber(m.cityPct, 0)}%. Dazu kommt die direkte Bundessteuer nach einheitlichem Bundestarif.`,
+  },
+  editorial.faq,
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: `Steuerrechner Kanton ${name}`,
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'de-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const compareRows = editorial.compare.map((other) => {
+  const r = cantonTax(100_000, other, 'single');
+  const otherInfo = cantonData.cantons.find((c) => c.abbr === other)!;
+  return { ...r, name: otherInfo.name, slug: otherInfo.slug };
+});
+---
+
+<BaseLayout title={title} description={description} path={path} jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Steuervergleich', path: '/steuervergleich/' }, { name: `Kanton ${name}` }]} />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Steuerrechner Kanton {name} {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Kantons-, Gemeinde- und Bundessteuer für den Kanton {name} berechnen — mit den offiziellen Tarifen {SITE_YEAR} und
+    den Steuerfüssen des Hauptorts {ref.capital}.
+  </p>
+
+  <CantonCalculator abbr={abbr} />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Steuern im Kanton {name}</h2>
+    <p>{editorial.intro}</p>
+
+    <h3>Die wichtigsten Zahlen {SITE_YEAR}</h3>
+    <table class="w-full text-sm">
+      <tbody>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Tarifsystem</td>
+          <td class="py-2 pl-2 text-right">{tarifLabel}</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Steuerfuss Kanton</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(m.cantonPct, 2)}%</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Steuerfuss {ref.capital} (Hauptort)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(m.cityPct, 2)}%</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Günstigste Gemeinde</td>
+          <td class="py-2 pl-2 text-right">{stats.minCity.name} ({formatNumber(stats.minCity.pct, 0)}%)</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Teuerste Gemeinde</td>
+          <td class="py-2 pl-2 text-right">{stats.maxCity.name} ({formatNumber(stats.maxCity.pct, 0)}%)</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Anzahl Gemeinden</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{stats.municipalityCount}</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-2">Rang bei CHF 100'000 (alleinstehend)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{rank} von 26</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>{name} im Vergleich</h3>
+    <p>
+      Bei CHF 100'000 steuerbarem Einkommen (alleinstehend) kostet der Hauptort {ref.capital}
+      {' '}{formatCHF(ref.totalTax, 0)} pro Jahr.
+      {rank === 1
+        ? ' Damit ist er der günstigste Kantonshauptort der Schweiz.'
+        : ` Der günstigste Hauptort (${cheapest.capital}, ${formatCHF(cheapest.totalTax, 0)}) liegt ${formatCHF(ref.totalTax - cheapest.totalTax, 0)} darunter.`}
+    </p>
+    <ul>
+      {
+        compareRows.map((r) => (
+          <li>
+            <a href={`/steuerrechner/${r.slug}/`}>Kanton {r.name}</a>: {formatCHF(r.totalTax, 0)} ({(r.effectiveRate * 100).toFixed(1)}%
+            effektiv in {r.capital})
+          </li>
+        ))
+      }
+    </ul>
+    <p>
+      Alle 26 Kantone für Ihr Einkommen: <a href="/steuervergleich/">zum Steuervergleich</a>. Ihre Abzüge optimieren:
+      <a href="/saeule-3a-rechner/">Säule-3a-Rechner</a>. Vom Brutto- zum Nettolohn:
+      <a href="/brutto-netto-rechner/">Brutto-Netto-Rechner</a>.
+    </p>
+
+    <h2>Häufige Fragen</h2>
+    {
+      faqs.map((f) => (
+        <div class="mb-4">
+          <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+          <p class="text-slate-700">{f.a}</p>
+        </div>
+      ))
+    }
+
+    <p>
+      Verbindliche Auskünfte und die offizielle Veranlagung:
+      <a href={editorial.portal} rel="noopener">Steuerverwaltung des Kantons {name}</a>.
+    </p>
+  </div>
+
+  <RelatedTools current="steuervergleich" />
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Quellen:</strong> Tarife und Steuerfüsse {SITE_YEAR}:
+      <a class="underline" href="https://swisstaxcalculator.estv.admin.ch/" rel="noopener">ESTV Steuerdaten</a>.
+      Methodik und Grenzen: <a class="underline" href="/methodik/">Methodik</a> ·
+      <a class="underline" href="/quellen/">alle Quellen</a>.
+    </p>
+    <p>Zuletzt aktualisiert: 12.07.2026 · Datenstand Steuerjahr {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

@@ -2,7 +2,11 @@
 
 ## Current state
 
-**M2 built (2 of 3 tools live; Quellensteuer blocked on data — see below). Awaiting review. Do not start M3 without approval.**
+**M3 built — 26 programmatic canton pages live. Awaiting review. Do not start M4 without approval.**
+
+36 pages total: 3 tools + 26 `/steuerrechner/[kanton]/` pages + trust/legal pages. Tests 65/65, Lighthouse 100×4 (sampled incl. canton pages), CI now enforces internal-link integrity (no orphans, ≤3 clicks, no broken links). Every canton page passes the anti-doorway bar: hand-written unique intro (verified: 26/26 distinct), canton data table, computed comparison teaser + FAQs, official portal link.
+
+**M2 leftover unchanged:** Quellensteuer-Rechner still deferred pending tariff files (see M2 deviation below — owner downloads 5 files from estv.admin.ch in a normal browser, no special access needed; detailed instructions will be provided when you're ready).
 
 Live tools: `/brutto-netto-rechner/`, `/steuervergleich/` (all 26 cantons), `/saeule-3a-rechner/`. Build ✓, tests 65/65 ✓, Lighthouse **100×4** on all sampled pages, both new calculators **driven live in Chromium** (values match the pinned engine references exactly, no console errors).
 
@@ -41,6 +45,15 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-12 — Session 5: M3 — 26 programmatic canton pages
+
+- Import extended: `canton-stats-2026.json` (per-canton municipality count, cheapest/most expensive municipality from all 2,110 ESTV factor entries).
+- `src/lib/cantonContent.ts`: 26 individually written German intros (~100 words each, built around each canton's verifiable tax characteristics: OW/UR flat tax, BL formula tariff, VD Familienquotient, GE centimes additionnels, SZ/VS municipal tarifs, BS three municipalities, …) + 1 distinctive hand-written FAQ per canton + comparison-canton selection + official portal links. Verified post-build: all 26 intros distinct.
+- `/steuerrechner/[kanton]/` template: canton-preset calculator island (shared bundle via data attribute), data table (tarif system, multipliers, min/max municipality, rank), computed comparison teaser linking 3 related canton pages, 3 computed + 1 editorial FAQ (FAQPage schema), WebApplication schema, title-length guard for long canton names.
+- Link mesh: /steuervergleich/ table rows now link to all 26 canton pages (2 clicks from home); canton pages link up (steuervergleich), across (3 cantons), down (tools), out (canton portal).
+- `scripts/check-links.mjs` in CI: fails on broken internal links, orphans, >3 click depth, missing trailing slashes. Current: 35 pages green.
+- Verified: 5 canton pages spot-checked against pinned engine values (ZH/ZG/VS/SZ/GE), ZH page driven live in Chromium (150k married recompute correct, no errors), Lighthouse 100×4 sampled on 3 canton pages. 36 pages built. Committed, stopped for review.
 
 ### 2026-07-12 — Session 4: M2 Steuervergleich + Säule 3a (QST deferred)
 

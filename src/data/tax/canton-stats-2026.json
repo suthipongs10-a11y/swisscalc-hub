@@ -1,0 +1,298 @@
+{
+  "_meta": {
+    "source": "https://swisstaxcalculator.estv.admin.ch/#/taxdata",
+    "retrievedVia": "https://github.com/devbrains-com/swisstaxcalculator (MIT) — data/raw/2026",
+    "retrieved": "2026-07-12",
+    "taxYear": 2026,
+    "description": "Per-canton statistics over the municipal income-tax multipliers (Steuerfuesse) of ALL municipalities in the canton: count, cheapest and most expensive municipality. Basis: ESTV simple-rates dataset (one entry per BFS municipality).",
+    "license": "ESTV data is not open-data licensed; stored here as derived calculation parameters with attribution (see RESEARCH.md 4.4)."
+  },
+  "cantons": {
+    "ZH": {
+      "municipalityCount": 160,
+      "minCity": {
+        "name": "Zumikon",
+        "pct": 71
+      },
+      "maxCity": {
+        "name": "Maschwanden",
+        "pct": 128
+      }
+    },
+    "BE": {
+      "municipalityCount": 334,
+      "minCity": {
+        "name": "Deisswil bei Münchenbuchsee",
+        "pct": 89
+      },
+      "maxCity": {
+        "name": "Schelten",
+        "pct": 220
+      }
+    },
+    "LU": {
+      "municipalityCount": 79,
+      "minCity": {
+        "name": "Meggen",
+        "pct": 90
+      },
+      "maxCity": {
+        "name": "Luthern",
+        "pct": 240
+      }
+    },
+    "UR": {
+      "municipalityCount": 19,
+      "minCity": {
+        "name": "Schattdorf",
+        "pct": 91
+      },
+      "maxCity": {
+        "name": "Isenthal",
+        "pct": 117
+      }
+    },
+    "SZ": {
+      "municipalityCount": 30,
+      "minCity": {
+        "name": "Freienbach",
+        "pct": 64
+      },
+      "maxCity": {
+        "name": "Illgau",
+        "pct": 195
+      }
+    },
+    "OW": {
+      "municipalityCount": 7,
+      "minCity": {
+        "name": "Sarnen",
+        "pct": 386
+      },
+      "maxCity": {
+        "name": "Lungern",
+        "pct": 525
+      }
+    },
+    "NW": {
+      "municipalityCount": 11,
+      "minCity": {
+        "name": "Hergiswil (NW)",
+        "pct": 120
+      },
+      "maxCity": {
+        "name": "Wolfenschiessen",
+        "pct": 250
+      }
+    },
+    "GL": {
+      "municipalityCount": 3,
+      "minCity": {
+        "name": "Glarus",
+        "pct": 61
+      },
+      "maxCity": {
+        "name": "Glarus Nord",
+        "pct": 63
+      }
+    },
+    "ZG": {
+      "municipalityCount": 11,
+      "minCity": {
+        "name": "Baar",
+        "pct": 47.53
+      },
+      "maxCity": {
+        "name": "Neuheim",
+        "pct": 59
+      }
+    },
+    "FR": {
+      "municipalityCount": 119,
+      "minCity": {
+        "name": "Greng",
+        "pct": 32
+      },
+      "maxCity": {
+        "name": "Jaun",
+        "pct": 100
+      }
+    },
+    "SO": {
+      "municipalityCount": 104,
+      "minCity": {
+        "name": "Kammersrohr",
+        "pct": 65
+      },
+      "maxCity": {
+        "name": "Bolken",
+        "pct": 145
+      }
+    },
+    "BS": {
+      "municipalityCount": 3,
+      "minCity": {
+        "name": "Bettingen",
+        "pct": 37.5
+      },
+      "maxCity": {
+        "name": "Basel",
+        "pct": 50
+      }
+    },
+    "BL": {
+      "municipalityCount": 86,
+      "minCity": {
+        "name": "Pfeffingen",
+        "pct": 45
+      },
+      "maxCity": {
+        "name": "Waldenburg",
+        "pct": 72
+      }
+    },
+    "SH": {
+      "municipalityCount": 26,
+      "minCity": {
+        "name": "Buchberg",
+        "pct": 59
+      },
+      "maxCity": {
+        "name": "Oberhallau",
+        "pct": 117
+      }
+    },
+    "AR": {
+      "municipalityCount": 20,
+      "minCity": {
+        "name": "Teufen (AR)",
+        "pct": 260
+      },
+      "maxCity": {
+        "name": "Trogen",
+        "pct": 450
+      }
+    },
+    "AI": {
+      "municipalityCount": 5,
+      "minCity": {
+        "name": "Appenzell",
+        "pct": 56
+      },
+      "maxCity": {
+        "name": "Oberegg",
+        "pct": 96
+      }
+    },
+    "SG": {
+      "municipalityCount": 75,
+      "minCity": {
+        "name": "Balgach",
+        "pct": 61
+      },
+      "maxCity": {
+        "name": "Wartau",
+        "pct": 145
+      }
+    },
+    "GR": {
+      "municipalityCount": 100,
+      "minCity": {
+        "name": "Rongellen",
+        "pct": 30
+      },
+      "maxCity": {
+        "name": "Flerden",
+        "pct": 120
+      }
+    },
+    "AG": {
+      "municipalityCount": 196,
+      "minCity": {
+        "name": "Oberwil-Lieli",
+        "pct": 48
+      },
+      "maxCity": {
+        "name": "Mellikon",
+        "pct": 127
+      }
+    },
+    "TG": {
+      "municipalityCount": 80,
+      "minCity": {
+        "name": "Warth-Weiningen",
+        "pct": 90
+      },
+      "maxCity": {
+        "name": "Arbon",
+        "pct": 177
+      }
+    },
+    "TI": {
+      "municipalityCount": 100,
+      "minCity": {
+        "name": "Porza",
+        "pct": 56
+      },
+      "maxCity": {
+        "name": "Lavertezzo",
+        "pct": 100
+      }
+    },
+    "VD": {
+      "municipalityCount": 300,
+      "minCity": {
+        "name": "Eclépens",
+        "pct": 46
+      },
+      "maxCity": {
+        "name": "La Praz",
+        "pct": 83
+      }
+    },
+    "VS": {
+      "municipalityCount": 122,
+      "minCity": {
+        "name": "Brig-Glis",
+        "pct": 100
+      },
+      "maxCity": {
+        "name": "Leukerbad",
+        "pct": 145
+      }
+    },
+    "NE": {
+      "municipalityCount": 24,
+      "minCity": {
+        "name": "Milvignes",
+        "pct": 63
+      },
+      "maxCity": {
+        "name": "Les Verrières",
+        "pct": 79
+      }
+    },
+    "GE": {
+      "municipalityCount": 45,
+      "minCity": {
+        "name": "Cologny",
+        "pct": 25
+      },
+      "maxCity": {
+        "name": "Avully",
+        "pct": 51
+      }
+    },
+    "JU": {
+      "municipalityCount": 51,
+      "minCity": {
+        "name": "Les Breuleux",
+        "pct": 130
+      },
+      "maxCity": {
+        "name": "Coeuve",
+        "pct": 235
+      }
+    }
+  }
+}

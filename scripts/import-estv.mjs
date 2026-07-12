@@ -137,6 +137,32 @@ for (const [abbr, bfsId] of Object.entries(CAPITALS)) {
   };
 }
 
+// 4) Per-canton municipality statistics (for the canton pages, M3) -----------
+const cantonStats = {
+  _meta: meta(
+    'Per-canton statistics over the municipal income-tax multipliers (Steuerfuesse) of ALL municipalities in the canton: count, cheapest and most expensive municipality. Basis: ESTV simple-rates dataset (one entry per BFS municipality).',
+  ),
+  cantons: {},
+};
+for (const f of factors) {
+  const abbr = f.Location?.Canton;
+  if (!abbr || !(abbr in CAPITALS)) continue;
+  const s = (cantonStats.cantons[abbr] ??= {
+    municipalityCount: 0,
+    minCity: null,
+    maxCity: null,
+  });
+  s.municipalityCount++;
+  const pct = Math.round(f.IncomeRateCity * 100) / 100;
+  if (!s.minCity || pct < s.minCity.pct) {
+    s.minCity = { name: f.Location.BfsName, pct };
+  }
+  if (!s.maxCity || pct > s.maxCity.pct) {
+    s.maxCity = { name: f.Location.BfsName, pct };
+  }
+}
+if (Object.keys(cantonStats.cantons).length !== 26) throw new Error('canton stats incomplete');
+
 // Write --------------------------------------------------------------------
 const outDir = join(process.cwd(), 'src', 'data', 'tax');
 mkdirSync(outDir, { recursive: true });
@@ -147,4 +173,5 @@ const write = (name, obj) => {
 write(`federal-income-${year}.json`, federal);
 write(`cantonal-income-${year}.json`, cantonal);
 write(`multipliers-${year}.json`, multipliers);
+write(`canton-stats-${year}.json`, cantonStats);
 console.log('Done.');

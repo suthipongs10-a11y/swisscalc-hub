@@ -6,16 +6,16 @@ import type { CantonTaxResult, Relationship } from './engine';
 import { compareCantons } from './engine';
 import { formatCHF, formatPercent } from '../format';
 
-const CANTON_NAMES: Record<string, string> = {
-  ZH: 'Zürich', BE: 'Bern', LU: 'Luzern', UR: 'Uri', SZ: 'Schwyz', OW: 'Obwalden',
-  NW: 'Nidwalden', GL: 'Glarus', ZG: 'Zug', FR: 'Freiburg', SO: 'Solothurn',
-  BS: 'Basel-Stadt', BL: 'Basel-Landschaft', SH: 'Schaffhausen', AR: 'Appenzell Ausserrhoden',
-  AI: 'Appenzell Innerrhoden', SG: 'St. Gallen', GR: 'Graubünden', AG: 'Aargau',
-  TG: 'Thurgau', TI: 'Tessin', VD: 'Waadt', VS: 'Wallis', NE: 'Neuenburg', GE: 'Genf', JU: 'Jura',
-};
+import cantonRegistry from '../../data/cantons.json';
+
+const CANTONS = new Map(cantonRegistry.cantons.map((c) => [c.abbr, c]));
 
 export function cantonName(abbr: string): string {
-  return CANTON_NAMES[abbr] ?? abbr;
+  return CANTONS.get(abbr)?.name ?? abbr;
+}
+
+export function cantonSlug(abbr: string): string | undefined {
+  return CANTONS.get(abbr)?.slug;
 }
 
 export function renderComparisonHtml(taxableIncome: number, relationship: Relationship): string {
@@ -27,7 +27,7 @@ export function renderComparisonHtml(taxableIncome: number, relationship: Relati
       const barWidth = max > 0 ? Math.max(2, Math.round((r.totalTax / max) * 100)) : 0;
       return `<tr class="border-b border-slate-100${i === 0 ? ' bg-emerald-50' : ''}">
         <td class="py-2 pr-2 text-slate-500 tabular-nums">${i + 1}</td>
-        <td class="py-2 pr-2 font-medium text-slate-900">${cantonName(r.abbr)} <span class="text-xs text-slate-500">(${r.capital})</span></td>
+        <td class="py-2 pr-2 font-medium text-slate-900"><a href="/steuerrechner/${cantonSlug(r.abbr)}/" class="text-blue-700 hover:underline">${cantonName(r.abbr)}</a> <span class="text-xs text-slate-500">(${r.capital})</span></td>
         <td class="py-2 px-2 text-right tabular-nums text-slate-900">${formatCHF(r.totalTax, 0)}</td>
         <td class="py-2 px-2 text-right tabular-nums text-slate-500">${formatPercent(r.effectiveRate)}</td>
         <td class="hidden py-2 pl-2 sm:table-cell" aria-hidden="true">
