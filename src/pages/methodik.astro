@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { BRAND } from '../lib/site';
+
+// M0 stub — completed in M4 (BUILD_PLAN). Grows one section per shipped tool.
+---
+
+<BaseLayout
+  title={`Methodik: So rechnen unsere Rechner | ${BRAND}`}
+  description="Wie CalcSwiss rechnet: offizielle Datenquellen (ESTV, BFS, BAG), Stichdaten, Formeln und bekannte Grenzen — vollständig offengelegt."
+  path="/methodik/"
+>
+  <Breadcrumbs crumbs={[{ name: 'Methodik' }]} />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Methodik</h1>
+    <p>
+      Jeder Rechner auf calcswiss.ch legt offen, wie er rechnet. Auf dieser Seite dokumentieren wir für jedes
+      Werkzeug die Formeln, die verwendeten Parameter und deren offizielle Quellen mit Stichdatum.
+    </p>
+    <h2>Unsere Grundsätze</h2>
+    <ul>
+      <li>
+        <strong>Jede Zahl hat eine Quelle.</strong> Berechnungsparameter stammen aus offiziellen Publikationen (ESTV,
+        BFS, BAG, kantonale Steuerverwaltungen) und sind mit Abrufdatum versioniert.
+      </li>
+      <li>
+        <strong>Geprüfte Formeln.</strong> Jede Steuerformel wird automatisiert gegen offizielle Beispielrechnungen
+        getestet, bevor sie live geht.
+      </li>
+      <li>
+        <strong>Grenzen benennen wir.</strong> Wo eine Berechnung vereinfacht (z.&nbsp;B. Pensionskassen-Beiträge nach
+        gesetzlichem Minimum statt reglementarischer Werte), steht das beim jeweiligen Rechner.
+      </li>
+    </ul>
+    <h2>Dokumentation pro Rechner</h2>
+    <p>Die detaillierte Methodik erscheint hier mit der Veröffentlichung des jeweiligen Rechners.</p>
+  </article>
+</BaseLayout>

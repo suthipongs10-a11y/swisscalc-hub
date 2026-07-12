@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations } from '../lib/i18n';
+import { BRAND } from '../lib/site';
+
+const t = useTranslations('de');
+---
+
+<BaseLayout
+  title={`${t('notFound.title')} | ${BRAND}`}
+  description="Diese Seite existiert nicht. Zurück zur Übersicht aller Rechner von CalcSwiss."
+  path="/404/"
+>
+  <div class="py-16 text-center">
+    <p class="mb-2 text-5xl font-bold text-slate-300">404</p>
+    <h1 class="mb-3 text-2xl font-bold">{t('notFound.title')}</h1>
+    <p class="mb-8 text-slate-600">{t('notFound.message')}</p>
+    <a
+      href="/"
+      class="inline-block rounded-lg bg-slate-900 px-5 py-2.5 font-medium text-white hover:bg-slate-700"
+    >
+      {t('notFound.backHome')}
+    </a>
+  </div>
+</BaseLayout>

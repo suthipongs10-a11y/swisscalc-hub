@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { BRAND } from '../lib/site';
+
+// Sitewide sources index (SEO_SPEC §7). Grows as data files land in /src/data/.
+const sources = [
+  {
+    name: 'Eidgenössische Steuerverwaltung (ESTV) — Steuerrechner und Steuerdaten',
+    url: 'https://swisstaxcalculator.estv.admin.ch/',
+    use: 'Tarife, Steuerfüsse und Abzüge von Bund, Kantonen und Gemeinden',
+  },
+  {
+    name: 'Bundesamt für Statistik (BFS) — Amtliches Gemeindeverzeichnis',
+    url: 'https://www.bfs.admin.ch/bfs/de/home/grundlagen/agvch.html',
+    use: 'BFS-Gemeindenummern als Ortsschlüssel',
+  },
+  {
+    name: 'Bundesamt für Gesundheit (BAG) — Krankenversicherungsprämien',
+    url: 'https://opendata.swiss/de/dataset/health-insurance-premiums',
+    use: 'Genehmigte KVG-Prämien nach Versicherer, Prämienregion, Altersgruppe und Franchise',
+  },
+  {
+    name: 'Bundesamt für Sozialversicherungen (BSV)',
+    url: 'https://www.bsv.admin.ch/',
+    use: 'Beitragssätze AHV/IV/EO/ALV und Kennzahlen der beruflichen Vorsorge',
+  },
+];
+---
+
+<BaseLayout
+  title={`Quellen und Datengrundlagen | ${BRAND}`}
+  description="Alle Datenquellen von CalcSwiss im Überblick: ESTV, BFS, BAG und BSV — mit Verwendungszweck und Links zu den offiziellen Publikationen."
+  path="/quellen/"
+>
+  <Breadcrumbs crumbs={[{ name: 'Quellen' }]} />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Quellen und Datengrundlagen</h1>
+    <p>
+      Alle Berechnungsparameter auf calcswiss.ch stammen aus offiziellen Quellen und werden mit Abrufdatum
+      versioniert. Diese Seite listet die Datengrundlagen; das Stichdatum der Parameter steht jeweils direkt beim
+      Rechner.
+    </p>
+    <ul>
+      {
+        sources.map((source) => (
+          <li>
+            <a href={source.url} rel="noopener">
+              {source.name}
+            </a>
+            <br />
+            <span class="text-sm text-slate-600">{source.use}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <p>
+      Die Berechnungen sind unverbindlich; massgebend ist die offizielle Veranlagung. Die ESTV, das BFS, das BAG und
+      das BSV sind an dieser Website nicht beteiligt.
+    </p>
+  </article>
+</BaseLayout>

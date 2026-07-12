@@ -1,0 +1,23 @@
+---
+import { useTranslations } from '../lib/i18n';
+import { BRAND } from '../lib/site';
+
+const t = useTranslations('de');
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t border-slate-200 bg-slate-50">
+  <div class="mx-auto max-w-4xl px-4 py-8 text-sm text-slate-600">
+    <p class="mb-4 max-w-xl">{t('footer.tagline')}</p>
+    <nav aria-label="Rechtliches">
+      <ul class="mb-4 flex flex-wrap gap-x-5 gap-y-1">
+        <li><a href="/impressum/" class="hover:text-slate-900 hover:underline">{t('footer.imprint')}</a></li>
+        <li><a href="/datenschutz/" class="hover:text-slate-900 hover:underline">{t('footer.privacy')}</a></li>
+        <li><a href="/quellen/" class="hover:text-slate-900 hover:underline">{t('footer.sources')}</a></li>
+        <li><a href="/methodik/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
+      </ul>
+    </nav>
+    <p class="mb-2 text-xs text-slate-500">{t('footer.disclaimer')}</p>
+    <p class="text-xs text-slate-500">© {year} {BRAND}</p>
+  </div>
+</footer>

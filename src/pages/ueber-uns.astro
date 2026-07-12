@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { BRAND } from '../lib/site';
+
+// TODO_OWNER: real "who runs this" content (SEO_SPEC §7 — no fake credentials,
+// transparency over invented authority). Person schema added when identity is set.
+---
+
+<BaseLayout
+  title={`Über uns | ${BRAND}`}
+  description="Wer hinter CalcSwiss steht und warum es diese Rechner gibt: unabhängig, werbefrei und mit offengelegter Methodik."
+  path="/ueber-uns/"
+>
+  <Breadcrumbs crumbs={[{ name: 'Über uns' }]} />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Über uns</h1>
+    <p>
+      CalcSwiss ist ein unabhängiges Projekt mit einem einfachen Ziel: präzise, kostenlose Finanz- und Steuerrechner
+      für die Schweiz — ohne Werbung, ohne Datensammeln, ohne versteckte Vermittlungsinteressen.
+    </p>
+    <p>
+      Wir sind kein Vergleichsportal und verkaufen keine Kontakte. Was uns von anderen unterscheidet: Jede Zahl ist
+      mit einer offiziellen Quelle belegt, und die <a href="/methodik/">Methodik</a> jedes Rechners ist vollständig
+      offengelegt.
+    </p>
+    <h2>Kontakt</h2>
+    <p>Fragen, Fehler gefunden, Feedback? Kontaktangaben finden Sie im <a href="/impressum/">Impressum</a>.</p>
+  </article>
+</BaseLayout>

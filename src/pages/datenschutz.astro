@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { BRAND } from '../lib/site';
+
+// nFADP-compliant privacy policy: controller, purposes, recipient countries
+// (RESEARCH.md §6.2). TODO_OWNER: controller identity before public launch.
+---
+
+<BaseLayout
+  title={`Datenschutzerklärung | ${BRAND}`}
+  description={`Datenschutzerklärung von ${BRAND}: keine Cookies, keine Werbung, cookielose Statistik — Ihre Eingaben verlassen Ihren Browser nicht.`}
+  path="/datenschutz/"
+>
+  <Breadcrumbs crumbs={[{ name: 'Datenschutz' }]} />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Datenschutzerklärung</h1>
+
+    <h2>Verantwortliche Stelle</h2>
+    <p>[INHABER-NAME], [STRASSE NR.], [PLZ ORT] — Kontakt: [E-MAIL]</p>
+
+    <h2>Das Wichtigste in Kürze</h2>
+    <ul>
+      <li>calcswiss.ch verwendet <strong>keine Cookies</strong> und zeigt <strong>keine Werbung</strong>.</li>
+      <li>
+        Ihre Eingaben in unsere Rechner (Lohn, Steuerdaten usw.) werden <strong>ausschliesslich in Ihrem Browser</strong>
+        verarbeitet und nie an einen Server übermittelt oder gespeichert.
+      </li>
+      <li>Es besteht keine Registrierungs- oder Anmeldemöglichkeit.</li>
+    </ul>
+
+    <h2>Hosting</h2>
+    <p>
+      Diese Website wird bei Cloudflare, Inc. (USA) gehostet (Cloudflare Pages). Beim Abruf der Website verarbeitet
+      Cloudflare technisch notwendige Verbindungsdaten (z.&nbsp;B. IP-Adresse) zur Auslieferung und zum Schutz der
+      Website. Empfängerland: USA. Cloudflare verpflichtet sich zu den anerkannten Datenschutzrahmen für die
+      Übermittlung; Details in der Datenschutzerklärung von Cloudflare.
+    </p>
+
+    <h2>Webstatistik (ohne Cookies)</h2>
+    <p>
+      Wir nutzen Cloudflare Web Analytics, eine cookielose Reichweitenmessung. Dabei werden keine Cookies gesetzt, keine
+      persönlichen Profile gebildet und keine Nutzenden über Websites hinweg verfolgt. Zweck: aggregierte Statistik
+      (Seitenaufrufe, Ladezeiten), um die Website zu verbessern.
+    </p>
+
+    <h2>Ihre Rechte</h2>
+    <p>
+      Nach dem Schweizer Datenschutzgesetz (DSG) haben Sie das Recht auf Auskunft, Berichtigung und Löschung Sie
+      betreffender Personendaten. Da wir selbst keine Personendaten speichern, richten Sie Anfragen zu
+      Verbindungsdaten bitte an den Hosting-Anbieter oder an die oben genannte Kontaktadresse.
+    </p>
+
+    <h2>Stand</h2>
+    <p>Diese Datenschutzerklärung wird bei Änderungen am Dienst angepasst. Stand: Juli 2026.</p>
+  </article>
+</BaseLayout>

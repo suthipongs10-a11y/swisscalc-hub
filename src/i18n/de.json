@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "tools": "Rechner",
+    "methodology": "Methodik",
+    "about": "Über uns"
+  },
+  "footer": {
+    "legal": "Rechtliches",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "sources": "Quellen",
+    "tagline": "Unabhängige Steuer- und Finanzrechner für die Schweiz — kostenlos, werbefrei, ohne Cookies.",
+    "disclaimer": "Alle Berechnungen dienen der unverbindlichen Information. Massgebend ist die offizielle Veranlagung der zuständigen Behörden."
+  },
+  "home": {
+    "title": "Steuer- und Finanzrechner Schweiz",
+    "metaDescription": "Kostenlose Steuer- und Finanzrechner für die Schweiz: Brutto-Netto, Quellensteuer, Steuervergleich aller 26 Kantone, Säule 3a. Ohne Werbung, ohne Cookies.",
+    "h1": "Steuer- und Finanzrechner für die Schweiz",
+    "intro": "CalcSwiss baut präzise, kostenlose Rechner für Lohn, Steuern und Vorsorge — mit nachvollziehbarer Methodik und offiziellen Datenquellen für alle 26 Kantone.",
+    "comingSoon": "In Arbeit",
+    "toolsHeading": "Unsere Rechner"
+  },
+  "common": {
+    "lastUpdated": "Zuletzt aktualisiert",
+    "sources": "Quellen",
+    "breadcrumbHome": "Startseite"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "message": "Diese Seite existiert nicht oder wurde verschoben.",
+    "backHome": "Zur Startseite"
+  }
+}

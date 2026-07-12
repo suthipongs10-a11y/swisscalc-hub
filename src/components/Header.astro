@@ -1,0 +1,26 @@
+---
+import { useTranslations } from '../lib/i18n';
+import { BRAND } from '../lib/site';
+
+const t = useTranslations('de');
+---
+
+<header class="border-b border-slate-200 bg-white">
+  <div class="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
+    <a href="/" class="flex items-center gap-2 text-lg font-bold text-slate-900" aria-label={BRAND}>
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <rect width="24" height="24" rx="5" fill="#0f4c81"></rect>
+        <rect x="6" y="7" width="12" height="2.5" rx="1.25" fill="#fff"></rect>
+        <rect x="6" y="12" width="12" height="2.5" rx="1.25" fill="#fff"></rect>
+        <rect x="6" y="17" width="7" height="2.5" rx="1.25" fill="#7fb3d5"></rect>
+      </svg>
+      {BRAND}
+    </a>
+    <nav aria-label="Hauptnavigation">
+      <ul class="flex items-center gap-5 text-sm text-slate-600">
+        <li><a href="/methodik/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
+        <li><a href="/ueber-uns/" class="hover:text-slate-900 hover:underline">{t('nav.about')}</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

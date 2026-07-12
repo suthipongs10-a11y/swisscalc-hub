@@ -1,0 +1,55 @@
+---
+/**
+ * Visible breadcrumb + BreadcrumbList JSON-LD (SEO_SPEC §4, §5 rule 5).
+ * Used on every page below root.
+ */
+import { absoluteUrl } from '../lib/site';
+import { useTranslations } from '../lib/i18n';
+
+interface Crumb {
+  name: string;
+  /** Path with trailing slash; omit for the current page (last crumb). */
+  path?: string;
+}
+
+interface Props {
+  crumbs: Crumb[];
+}
+
+const t = useTranslations('de');
+const { crumbs } = Astro.props;
+const all: Crumb[] = [{ name: t('common.breadcrumbHome'), path: '/' }, ...crumbs];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: all.map((crumb, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: crumb.name,
+    ...(crumb.path ? { item: absoluteUrl(crumb.path) } : {}),
+  })),
+};
+---
+
+<nav aria-label="Breadcrumb" class="mb-6 text-sm text-slate-500">
+  <ol class="flex flex-wrap items-center gap-1">
+    {
+      all.map((crumb, i) => (
+        <li class="flex items-center gap-1">
+          {i > 0 && <span aria-hidden="true">›</span>}
+          {crumb.path ? (
+            <a href={crumb.path} class="hover:text-slate-800 hover:underline">
+              {crumb.name}
+            </a>
+          ) : (
+            <span aria-current="page" class="text-slate-800">
+              {crumb.name}
+            </span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

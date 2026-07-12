@@ -1,0 +1,38 @@
+---
+/**
+ * Base layout: semantic HTML, lang="de-CH" (SEO_SPEC §6), system font stack
+ * (no web fonts — CLAUDE.md performance budget), SEO head via <SEO/>.
+ */
+import SEO from '../components/SEO.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_LANG } from '../lib/site';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  jsonLd?: object[];
+}
+
+const { title, description, path, jsonLd } = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE_LANG}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <SEO title={title} description={description} path={path} jsonLd={jsonLd} />
+  </head>
+  <body class="min-h-screen bg-white font-sans text-slate-900 antialiased">
+    <Header />
+    <main class="mx-auto max-w-4xl px-4 py-8">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

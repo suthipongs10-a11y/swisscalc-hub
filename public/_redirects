@@ -1,0 +1,3 @@
+# SEO_SPEC §1: www 301s to apex (www.calcswiss.ch must be attached as a
+# custom domain in Cloudflare Pages for this to take effect).
+https://www.calcswiss.ch/* https://calcswiss.ch/:splat 301

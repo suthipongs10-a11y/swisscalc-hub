@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* CLAUDE.md: no CSS beyond Tailwind utilities + a small @layer for prose content. */
+@layer components {
+  .prose-content h2 {
+    @apply mt-10 mb-3 text-2xl font-bold text-slate-900;
+  }
+  .prose-content h3 {
+    @apply mt-6 mb-2 text-xl font-semibold text-slate-900;
+  }
+  .prose-content p {
+    @apply mb-4 leading-relaxed text-slate-700;
+  }
+  .prose-content ul {
+    @apply mb-4 list-disc pl-6 text-slate-700;
+  }
+  .prose-content li {
+    @apply mb-1;
+  }
+  .prose-content a {
+    @apply text-blue-700 underline decoration-blue-300 underline-offset-2 hover:decoration-blue-700;
+  }
+}

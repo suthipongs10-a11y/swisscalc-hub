@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { BRAND } from '../lib/site';
+
+// TODO_OWNER: Impressum identity must be filled in before public launch
+// (nFADP + ESTV letter both require it). See STATUS.md pending items.
+---
+
+<BaseLayout
+  title={`Impressum | ${BRAND}`}
+  description={`Impressum von ${BRAND} — Angaben zum Betreiber von calcswiss.ch.`}
+  path="/impressum/"
+>
+  <Breadcrumbs crumbs={[{ name: 'Impressum' }]} />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Impressum</h1>
+    <h2>Verantwortlich für den Inhalt</h2>
+    <p>
+      [INHABER-NAME]<br />
+      [STRASSE NR.]<br />
+      [PLZ ORT]<br />
+      [LAND]
+    </p>
+    <p>Kontakt: [E-MAIL]</p>
+    <h2>Haftungsausschluss</h2>
+    <p>
+      Alle Berechnungen und Inhalte auf calcswiss.ch dienen der unverbindlichen Information und stellen keine Steuer-,
+      Rechts- oder Anlageberatung dar. Massgebend sind ausschliesslich die offiziellen Veranlagungen und Auskünfte der
+      zuständigen Behörden. Trotz sorgfältiger Prüfung übernehmen wir keine Gewähr für die Richtigkeit, Vollständigkeit
+      und Aktualität der Angaben.
+    </p>
+    <h2>Quellenhinweis</h2>
+    <p>
+      Berechnungsparameter basieren auf Daten der Eidgenössischen Steuerverwaltung (ESTV), des Bundesamts für Statistik
+      (BFS) und des Bundesamts für Gesundheit (BAG). Details unter <a href="/quellen/">Quellen</a>.
+    </p>
+  </article>
+</BaseLayout>

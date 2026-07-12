@@ -1,0 +1,57 @@
+---
+/**
+ * Head block per SEO_SPEC §§1-4: unique title/meta, self-referencing canonical
+ * (trailing slash, absolute), hreflang, OG/Twitter cards, JSON-LD.
+ * hreflang: de-CH + x-default point at the German page; fr-CH/en entries are
+ * added per page once those locales ship (SEO_SPEC §2).
+ */
+import { absoluteUrl, BRAND, SITE_URL } from '../lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Canonical path with trailing slash, e.g. "/impressum/". */
+  path: string;
+  /** Extra JSON-LD blocks for this page (BreadcrumbList comes from <Breadcrumbs/>). */
+  jsonLd?: object[];
+  ogImage?: string;
+}
+
+const { title, description, path, jsonLd = [], ogImage = '/og-default.png' } = Astro.props;
+if (!path.endsWith('/')) throw new Error(`SEO path must end with a trailing slash (SEO_SPEC §1): ${path}`);
+if (title.length > 65) throw new Error(`Title too long (${title.length} > 65): ${title}`);
+
+const canonical = absoluteUrl(path);
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE_URL}/#organization`,
+  name: BRAND,
+  url: `${SITE_URL}/`,
+  logo: absoluteUrl('/favicon.svg'),
+};
+
+const blocks = [organization, ...jsonLd];
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<link rel="alternate" hreflang="de-CH" href={canonical} />
+<link rel="alternate" hreflang="x-default" href={canonical} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={BRAND} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={absoluteUrl(ogImage)} />
+<meta property="og:locale" content="de_CH" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absoluteUrl(ogImage)} />
+
+{blocks.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}

@@ -2,7 +2,15 @@
 
 ## Current state
 
-**Phase 0 + 0.5 complete. Docs finalized for handoff. M0 is APPROVED to start** (owner decision, 2026-07-12) — the builder may begin M0 immediately; all later milestones still require explicit approval per CLAUDE.md gate rules.
+**M0 built — awaiting review + owner deploy steps. Do not start M1 without approval.**
+
+Code is complete and green (build ✓, tests 4/4 ✓, Lighthouse 100/100/100/100 mobile on all four sampled pages, local run). What remains for M0 is owner-side and cannot be done from this repo:
+
+1. **Connect repo to Cloudflare Pages** (build command `npm run build`, output `dist`), attach calcswiss.ch + www (the `_redirects` file handles www→apex once both are attached).
+2. **Enable Cloudflare Web Analytics** for the Pages project (dashboard toggle — zero code).
+3. **Fill Impressum identity**: replace `[INHABER-NAME]/[STRASSE NR.]/[PLZ ORT]/[E-MAIL]` in `src/pages/impressum.astro` and `src/pages/datenschutz.astro` (nFADP requires this before real launch).
+4. **Verify Google Search Console + Bing Webmaster** after deploy; submit `https://calcswiss.ch/sitemap-index.xml`; enable IndexNow in Cloudflare.
+5. Re-check Lighthouse on the live URL (expected same scores).
 
 Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milestone) → `SEO_SPEC.md` → this file. `RESEARCH.md` is the evidence base.
 
@@ -17,6 +25,18 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-12 — Session 2: M0 scaffold
+
+- Owner registered calcswiss.ch and approved M0 start.
+- Built the full M0 scaffold: Astro 7 + Tailwind 4 (vite plugin) + TS strict + Vitest; `trailingSlash: 'always'`, `site: https://calcswiss.ch`.
+- Layout system: `BaseLayout` (lang de-CH, system fonts, no web fonts), `SEO.astro` (unique title/meta, canonical with trailing-slash guard, hreflang de-CH + x-default, OG/Twitter, Organization JSON-LD sitewide, per-page JSON-LD injection), `Breadcrumbs.astro` (visible + BreadcrumbList).
+- i18n plumbing: `/src/i18n/de.json` + typed `useTranslations()`; no hardcoded UI copy in components.
+- Pages: homepage hub (WebSite schema, 5 unlinked "In Arbeit" tool cards — no broken links), `/impressum/`, `/datenschutz/` (nFADP: controller/purposes/recipient countries; cookieless), `/methodik/` stub, `/ueber-uns/`, `/quellen/`, 404.
+- Technical SEO: sitemap (`@astrojs/sitemap`), robots.txt, `_redirects` (www→apex 301), static OG image (generated via `scripts/generate-og.mjs`, committed), favicon (abstract mark — no Swiss cross).
+- Tests as guardrails: `_meta` schema validation for `/src/data/*.json`, **ß-scanner** (any ß in src fails CI), i18n smoke tests.
+- CI: GitHub Actions — vitest + astro build + Lighthouse CI (`lighthouserc.json`, all categories ≥ 0.95, mobile).
+- **Exit gate:** build clean, tests 4/4 green, Lighthouse 100×4 on `/`, `/impressum/`, `/datenschutz/`, `/methodik/` (local dist run; LHCI public upload blocked by sandbox proxy — scores extracted from local reports). Committed, stopped for review.
 
 ### 2026-07-12 — Session 1: Phase 0 research + project docs + handoff prep
 
