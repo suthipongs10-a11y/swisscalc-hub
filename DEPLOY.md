@@ -11,7 +11,7 @@ Repo is deploy-ready: `.node-version` pins Node 22, `public/_headers` sets cachi
 3. **Production branch:** `claude/swisscalc-hub-research-p2dt2p` (it is the repo's default branch, so it should be preselected).
 4. **Build settings:**
    - Framework preset: **Astro** (or *None* — both work)
-   - Build command: **`npm run build`**
+   - Build command: **`npm run build:pages`** (runs `astro build`; skips `astro check`, which can flake on hosted builders and is already enforced in GitHub CI)
    - Build output directory: **`dist`**
    - (Node 22 is picked up automatically from `.node-version`.)
 5. **Save and Deploy.** First build gives you a `https://<project>.pages.dev` URL — verify the site loads there.
