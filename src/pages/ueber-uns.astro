@@ -1,16 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import { BRAND } from '../lib/site';
+import { BRAND, SITE_URL, absoluteUrl } from '../lib/site';
 
-// TODO_OWNER: real "who runs this" content (SEO_SPEC §7 — no fake credentials,
-// transparency over invented authority). Person schema added when identity is set.
+// SEO_SPEC §7: honest "who runs this" — no invented credentials. The operator
+// identity lives in the Impressum (owner fills in before launch).
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: `Über ${BRAND}`,
+  url: absoluteUrl('/ueber-uns/'),
+  inLanguage: 'de-CH',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
 ---
 
 <BaseLayout
   title={`Über uns | ${BRAND}`}
   description="Wer hinter CalcSwiss steht und warum es diese Rechner gibt: unabhängig, werbefrei und mit offengelegter Methodik."
   path="/ueber-uns/"
+  jsonLd={[aboutSchema]}
 >
   <Breadcrumbs crumbs={[{ name: 'Über uns' }]} />
   <article class="prose-content max-w-2xl">
@@ -19,12 +28,47 @@ import { BRAND } from '../lib/site';
       CalcSwiss ist ein unabhängiges Projekt mit einem einfachen Ziel: präzise, kostenlose Finanz- und Steuerrechner
       für die Schweiz — ohne Werbung, ohne Datensammeln, ohne versteckte Vermittlungsinteressen.
     </p>
+
+    <h2>Warum es CalcSwiss gibt</h2>
     <p>
-      Wir sind kein Vergleichsportal und verkaufen keine Kontakte. Was uns von anderen unterscheidet: Jede Zahl ist
-      mit einer offiziellen Quelle belegt, und die <a href="/methodik/">Methodik</a> jedes Rechners ist vollständig
-      offengelegt.
+      Schweizer Steuern sind kompliziert: 26 Kantone, über 2000 Gemeinden, jeweils eigene Tarife und Steuerfüsse. Gute
+      Rechner existieren, doch viele sind entweder an ein Vergleichsportal mit Vermittlungsinteresse gekoppelt oder
+      legen nicht offen, wie sie rechnen. Wir wollten ein Angebot, das beides anders macht: neutral und nachvollziehbar.
     </p>
-    <h2>Kontakt</h2>
-    <p>Fragen, Fehler gefunden, Feedback? Kontaktangaben finden Sie im <a href="/impressum/">Impressum</a>.</p>
+
+    <h2>Wie wir arbeiten</h2>
+    <ul>
+      <li>
+        <strong>Jede Zahl hat eine offizielle Quelle.</strong> Unsere Steuerparameter stammen aus den Daten der
+        Eidgenössischen Steuerverwaltung (ESTV), Sozialversicherungswerte vom Bund. Alle Quellen sind unter
+        <a href="/quellen/">Quellen</a> mit Stichdatum aufgeführt.
+      </li>
+      <li>
+        <strong>Wir legen die Methodik offen.</strong> Für jeden Rechner dokumentieren wir Formeln, Parameter und
+        Grenzen — nachzulesen unter <a href="/methodik/">Methodik</a>.
+      </li>
+      <li>
+        <strong>Wir prüfen die Berechnungen.</strong> Jede Steuerformel ist durch automatisierte Tests gegen
+        Referenzwerte abgesichert, bevor sie live geht.
+      </li>
+      <li>
+        <strong>Wir sind neutral.</strong> Keine Werbung, keine Cookies, keine Lead-Vermittlung. Wir empfehlen keine
+        Produkte und erhalten keine Provisionen.
+      </li>
+    </ul>
+
+    <h2>Was wir nicht sind</h2>
+    <p>
+      CalcSwiss ist kein Vergleichsportal, keine Bank und keine Steuerberatung. Unsere Rechner liefern eine fundierte
+      Orientierung, ersetzen aber keine individuelle Beratung. Verbindlich ist immer die offizielle Veranlagung der
+      zuständigen Steuerbehörde. Gerade bei grösseren Entscheidungen — Umzug, Pensionierung, Kapitalbezug — lohnt sich
+      der Beizug einer Fachperson.
+    </p>
+
+    <h2>Kontakt und Betreiber</h2>
+    <p>
+      Angaben zum Betreiber finden Sie im <a href="/impressum/">Impressum</a>. Haben Sie einen Fehler entdeckt oder
+      Feedback? Wir sind für Hinweise dankbar — die Kontaktadresse steht ebenfalls im Impressum.
+    </p>
   </article>
 </BaseLayout>

@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import TaxComparison from '../components/TaxComparison.astro';
 import RelatedTools from '../components/RelatedTools.astro';
+import RatgeberLinks from '../components/RatgeberLinks.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
 import { formatCHF } from '../lib/format';
 import { cantonTax } from '../lib/tax/engine';
@@ -109,6 +110,8 @@ const faqSchema = {
       ))
     }
   </div>
+
+  <RatgeberLinks ids={['kantonswechsel-steuern-sparen', 'heiraten-steuern']} />
 
   <RelatedTools current="steuervergleich" />
 

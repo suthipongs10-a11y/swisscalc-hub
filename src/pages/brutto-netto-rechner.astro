@@ -3,13 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import SalaryCalculator from '../components/SalaryCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
+import RatgeberLinks from '../components/RatgeberLinks.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
 import { formatCHF } from '../lib/format';
 
 const path = '/brutto-netto-rechner/';
 const title = `Brutto-Netto-Rechner Schweiz ${SITE_YEAR} – Lohn berechnen | ${BRAND}`;
 const description = `Bruttolohn in Nettolohn umrechnen: AHV, IV, EO, ALV, NBU und BVG transparent aufgeschlüsselt. Kostenlos, ohne Anmeldung, mit offiziellen Sätzen ${SITE_YEAR}.`;
-const dataUpdated = '2026-07-12';
 
 const faqs = [
   {
@@ -144,6 +144,8 @@ const faqSchema = {
       ))
     }
   </div>
+
+  <RatgeberLinks ids={['quellensteuer-expats']} />
 
   <RelatedTools current="brutto-netto-rechner" />
 

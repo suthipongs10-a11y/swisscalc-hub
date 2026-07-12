@@ -1,0 +1,35 @@
+---
+/**
+ * "Ratgeber zum Thema" module for tool/canton pages (SEO_SPEC §5: each tool
+ * links its supporting cluster articles). Looks up ids in the collection —
+ * an unknown id is skipped, so this can never produce a broken link.
+ */
+import { getCollection } from 'astro:content';
+
+interface Props {
+  ids: string[];
+  heading?: string;
+}
+const { ids, heading = 'Ratgeber zum Thema' } = Astro.props;
+
+const all = await getCollection('ratgeber');
+const articles = ids.map((id) => all.find((a) => a.id === id)).filter((a) => a !== undefined);
+---
+
+{
+  articles.length > 0 && (
+    <section aria-label={heading} class="mt-14">
+      <h2 class="mb-4 text-2xl font-bold">{heading}</h2>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {articles.map((a) => (
+          <li class="rounded-lg border border-slate-200 p-5">
+            <a href={`/ratgeber/${a!.id}/`} class="font-semibold text-blue-700 hover:underline">
+              {a!.data.title}
+            </a>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">{a!.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

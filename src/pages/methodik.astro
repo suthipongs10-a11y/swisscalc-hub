@@ -69,5 +69,59 @@ import { BRAND } from '../lib/site';
     </p>
 
     <p>Die Methodik weiterer Rechner erscheint hier mit deren Veröffentlichung.</p>
+
+    <h2>Datenaktualität und Update-Rhythmus</h2>
+    <p>
+      Steuer- und Sozialversicherungsparameter ändern jährlich. Wir aktualisieren die Daten nach folgendem Kalender —
+      jede Zahl trägt intern ein Abrufdatum, das wir bei Änderungen mitführen:
+    </p>
+    <ul>
+      <li>
+        <strong>Anfang Jahr:</strong> neues Steuerjahr — ESTV-Tarife und Steuerfüsse, AHV/ALV-Beitragssätze,
+        Säule-3a-Maximalbeträge und BVG-Masszahlen werden auf den neuen Stand gebracht.
+      </li>
+      <li>
+        <strong>Ende September:</strong> die genehmigten Krankenkassenprämien des Bundesamts für Gesundheit (BAG)
+        erscheinen — relevant für den geplanten Franchise-Rechner.
+      </li>
+      <li>
+        <strong>Bei Publikation neuer Quellensteuertarife:</strong> Aktualisierung der abgedeckten Kantone.
+      </li>
+    </ul>
+    <p>
+      Jede tool-relevante Zahl ist in versionierten Datendateien mit <code>source</code> (offizieller Link),
+      <code>retrieved</code> (Abrufdatum) und <code>taxYear</code> hinterlegt. Der auf jeder Rechnerseite angezeigte
+      Stand «Zuletzt aktualisiert» entspricht diesem Abrufdatum, nicht dem Zeitpunkt des letzten Seitenaufbaus — wir
+      weisen keine künstliche Aktualität aus.
+    </p>
+
+    <h2>Bekannte Grenzen</h2>
+    <p>Damit Sie die Ergebnisse richtig einordnen, hier die wichtigsten Vereinfachungen im Überblick:</p>
+    <ul>
+      <li>
+        <strong>Steuerbares Einkommen als Basis.</strong> Unsere Steuerrechner setzen beim steuerbaren Einkommen an
+        (nach Abzügen). Die kantonal unterschiedlichen Abzugsregeln bilden wir nicht nach — für einen exakten Vergleich
+        auf Stufe Bruttoeinkommen wären sie nötig.
+      </li>
+      <li>
+        <strong>Hauptorte als Referenz.</strong> Für Kantonssteuern verwenden wir den Steuerfuss des Kantonshauptorts.
+        Ihre Wohngemeinde kann günstiger oder teurer sein; die Kantonsseiten weisen die Bandbreite aus.
+      </li>
+      <li>
+        <strong>Ohne Kirchen- und Personalsteuer.</strong> Konfessionssteuern und feste Personalsteuern sind nicht
+        enthalten.
+      </li>
+      <li>
+        <strong>Nur Einkommen.</strong> Die Vermögenssteuer ist nicht Teil der aktuellen Rechner.
+      </li>
+      <li>
+        <strong>Arbeitgeberabhängige Sozialabzüge.</strong> NBU- und BVG-Beiträge variieren je nach Arbeitgeber und
+        Pensionskasse; wir rechnen mit dem gesetzlichen Minimum.
+      </li>
+    </ul>
+    <p>
+      Alle Berechnungen sind unverbindlich. Massgebend ist die offizielle Veranlagung der zuständigen Steuerbehörde.
+      Sämtliche Datenquellen sind unter <a href="/quellen/">Quellen</a> aufgeführt.
+    </p>
   </article>
 </BaseLayout>

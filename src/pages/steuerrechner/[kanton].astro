@@ -9,6 +9,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import CantonCalculator from '../../components/CantonCalculator.astro';
 import RelatedTools from '../../components/RelatedTools.astro';
+import RatgeberLinks from '../../components/RatgeberLinks.astro';
 import cantonData from '../../data/cantons.json';
 import statsData from '../../data/tax/canton-stats-2026.json';
 import cantonalData from '../../data/tax/cantonal-income-2026.json';
@@ -190,6 +191,8 @@ const compareRows = editorial.compare.map((other) => {
       <a href={editorial.portal} rel="noopener">Steuerverwaltung des Kantons {name}</a>.
     </p>
   </div>
+
+  <RatgeberLinks ids={['kantonswechsel-steuern-sparen']} />
 
   <RelatedTools current="steuervergleich" />
 

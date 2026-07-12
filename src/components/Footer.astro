@@ -11,10 +11,12 @@ const year = new Date().getFullYear();
     <p class="mb-4 max-w-xl">{t('footer.tagline')}</p>
     <nav aria-label="Rechtliches">
       <ul class="mb-4 flex flex-wrap gap-x-5 gap-y-1">
+        <li><a href="/ratgeber/" class="hover:text-slate-900 hover:underline">{t('nav.guide')}</a></li>
+        <li><a href="/methodik/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
+        <li><a href="/ueber-uns/" class="hover:text-slate-900 hover:underline">{t('nav.about')}</a></li>
         <li><a href="/impressum/" class="hover:text-slate-900 hover:underline">{t('footer.imprint')}</a></li>
         <li><a href="/datenschutz/" class="hover:text-slate-900 hover:underline">{t('footer.privacy')}</a></li>
         <li><a href="/quellen/" class="hover:text-slate-900 hover:underline">{t('footer.sources')}</a></li>
-        <li><a href="/methodik/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
       </ul>
     </nav>
     <p class="mb-2 text-xs text-slate-500">{t('footer.disclaimer')}</p>

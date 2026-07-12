@@ -42,8 +42,8 @@ const shortNames: Record<string, string> = {
             </li>
           ))
         }
+        <li><a href="/ratgeber/" class="hover:text-slate-900 hover:underline">{t('nav.guide')}</a></li>
         <li><a href="/methodik/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
-        <li><a href="/ueber-uns/" class="hover:text-slate-900 hover:underline">{t('nav.about')}</a></li>
       </ul>
     </nav>
 
@@ -104,6 +104,11 @@ const shortNames: Record<string, string> = {
         </ul>
         <div class="my-1 border-t border-slate-100" role="presentation"></div>
         <ul>
+          <li>
+            <a href="/ratgeber/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
+              {t('nav.guide')}
+            </a>
+          </li>
           <li>
             <a href="/methodik/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
               {t('nav.methodology')}

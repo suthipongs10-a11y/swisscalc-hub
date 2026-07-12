@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND, SITE_URL, absoluteUrl } from '../../lib/site';
+import { formatSwissDate } from '../../lib/dates';
+
+const path = '/ratgeber/';
+const articles = (await getCollection('ratgeber')).sort((a, b) => a.data.order - b.data.order);
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `Ratgeber – Steuern und Finanzen Schweiz`,
+  url: absoluteUrl(path),
+  inLanguage: 'de-CH',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  hasPart: articles.map((a) => ({
+    '@type': 'Article',
+    headline: a.data.title,
+    url: absoluteUrl(`/ratgeber/${a.id}/`),
+  })),
+};
+---
+
+<BaseLayout
+  title={`Ratgeber: Steuern und Finanzen Schweiz | ${BRAND}`}
+  description={`Fundierte Ratgeber zu Schweizer Steuern und Finanzen: Quellensteuer für Expats, Säule 3a gestaffelt beziehen, Kantonswechsel und Heiratsstrafe — verständlich erklärt mit Quellen.`}
+  path={path}
+  jsonLd={[collectionSchema]}
+>
+  <Breadcrumbs crumbs={[{ name: 'Ratgeber' }]} />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Ratgeber</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Verständliche, mit Quellen belegte Beiträge zu Schweizer Steuern und Vorsorge — passend zu unseren Rechnern.
+  </p>
+
+  <ul class="grid gap-5 sm:grid-cols-2">
+    {
+      articles.map((a) => (
+        <li class="rounded-lg border border-slate-200 p-5 transition-colors hover:border-slate-300">
+          <h2 class="mb-2 text-lg font-semibold">
+            <a href={`/ratgeber/${a.id}/`} class="text-slate-900 hover:text-blue-700 hover:underline">
+              {a.data.title}
+            </a>
+          </h2>
+          <p class="mb-3 text-sm leading-relaxed text-slate-600">{a.data.description}</p>
+          <p class="text-xs text-slate-500">Aktualisiert: {formatSwissDate(a.data.updated)}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="mt-10 text-sm text-slate-600">
+    Alle Beiträge dienen der allgemeinen Information und ersetzen keine individuelle Steuerberatung. Wie wir rechnen und
+    woher unsere Zahlen stammen, lesen Sie unter <a class="underline" href="/methodik/">Methodik</a>.
+  </p>
+</BaseLayout>

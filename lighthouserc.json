@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "url": ["/", "/brutto-netto-rechner/", "/steuervergleich/", "/saeule-3a-rechner/", "/methodik/"],
+      "url": ["/", "/brutto-netto-rechner/", "/steuervergleich/", "/steuerrechner/zug/", "/ratgeber/", "/ratgeber/quellensteuer-expats/"],
       "numberOfRuns": 1,
       "settings": { "chromeFlags": "--no-sandbox --headless=new" }
     },

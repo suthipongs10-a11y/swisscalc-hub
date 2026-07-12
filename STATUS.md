@@ -2,11 +2,14 @@
 
 ## Current state
 
-**M3 built — 26 programmatic canton pages live. Awaiting review. Do not start M4 without approval.**
+**M4 built — E-E-A-T content layer live. This completes the planned build (M0–M4). Awaiting review.**
 
-36 pages total: 3 tools + 26 `/steuerrechner/[kanton]/` pages + trust/legal pages. Tests 65/65, Lighthouse 100×4 (sampled incl. canton pages), CI now enforces internal-link integrity (no orphans, ≤3 clicks, no broken links). Every canton page passes the anti-doorway bar: hand-written unique intro (verified: 26/26 distinct), canton data table, computed comparison teaser + FAQs, official portal link.
+41 pages total: 3 tools + 26 canton pages + 4 Ratgeber articles + Ratgeber index + trust/legal. Build clean (0 errors/warnings/hints), tests 65/65, Lighthouse **100×4** on all sampled pages incl. Ratgeber, CI enforces link integrity + ß-scanner over article content. Responsive nav (mobile hamburger + desktop tool bar) shipped between M3 and M4.
 
-**M2 leftover unchanged:** Quellensteuer-Rechner still deferred pending tariff files (see M2 deviation below — owner downloads 5 files from estv.admin.ch in a normal browser, no special access needed; detailed instructions will be provided when you're ready).
+**Remaining work (all optional / owner-driven, none block anything):**
+- **Quellensteuer-Rechner** — deferred since M2, pending tariff files (owner downloads 5 files from estv.admin.ch in a normal browser; instructions ready on request). The Quellensteuer *guide* article is already live and links to the live tools.
+- **Backlog tools** — Franchise-Rechner (needs Sept BAG data), `/fr/` + `/en/` locales.
+- **Owner deploy + verification checklist** — see below.
 
 Live tools: `/brutto-netto-rechner/`, `/steuervergleich/` (all 26 cantons), `/saeule-3a-rechner/`. Build ✓, tests 65/65 ✓, Lighthouse **100×4** on all sampled pages, both new calculators **driven live in Chromium** (values match the pinned engine references exactly, no console errors).
 
@@ -45,6 +48,16 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-12 — Session 6: M4 — E-E-A-T content layer (+ mobile nav)
+
+- **Mobile navigation** (requested between milestones): `<details>`-based hamburger menu (works without JS), desktop nav expanded to list all live tools; both driven by the shared tools registry (unshipped tools never appear). Verified at 390px + 1280px, Lighthouse 100×4.
+- **Content collection** (`src/content.config.ts`, glob loader, zod schema) + 4 Ratgeber articles in Swiss German (ss-only, caught by the ß-scanner test): Quellensteuer-Leitfaden für Expats, Säule 3a gestaffelt beziehen, Kantonswechsel, Heiraten & Steuern. Each: lead, related-tool CTA, cross-linked related articles, hand-written FAQs.
+- **Ratgeber pages:** `/ratgeber/` index (CollectionPage schema) + `/ratgeber/[slug]/` template (Article + FAQPage schema, dateModified from frontmatter not build time, related-articles module). `seoTitle` frontmatter keeps `<title>` ≤65 while the H1 stays descriptive.
+- **Cluster links:** each tool + canton page now surfaces its supporting article(s) via `RatgeberLinks` (looks up ids in the collection — can't produce a broken link). Nav + footer link Ratgeber.
+- **Trust pages:** `/methodik/` completed (update-cadence calendar + consolidated known-limitations section); `/ueber-uns/` expanded honestly (mission, how-we-work, what-we-are-not, no invented credentials — AboutPage schema, operator identity stays in Impressum); `docs/data-refresh-runbook.md` operational checklist.
+- **Build hygiene:** cleared all `astro check` warnings (zod import via 'zod' not the deprecated re-export; `is:inline` on JSON-LD scripts; removed an unused const) → 0 errors / 0 warnings / 0 hints.
+- **Verified:** Ratgeber flow driven in Chromium (index → article → CTA → related, FAQ + 4 JSON-LD blocks, mobile menu has Ratgeber), Lighthouse 100×4 (fixed a slate-400 date byline that dipped a11y to 95), 41 pages, link check green. Committed, stopped for review.
 
 ### 2026-07-12 — Session 5: M3 — 26 programmatic canton pages
 
