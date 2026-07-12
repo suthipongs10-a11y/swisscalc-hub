@@ -1,0 +1,173 @@
+{
+  "_meta": {
+    "source": "https://swisstaxcalculator.estv.admin.ch/#/taxdata",
+    "retrievedVia": "https://github.com/devbrains-com/swisstaxcalculator (MIT) — data/raw/2026",
+    "retrieved": "2026-07-12",
+    "taxYear": 2026,
+    "description": "Direct federal tax (dBSt) income tariffs. Table semantics: rows are thresholds; tax = row.taxes + (income - row.amount) * row.percent/100 for the last row with amount <= income (income rounded down to CHF 100).",
+    "license": "ESTV data is not open-data licensed; stored here as derived calculation parameters with attribution (see RESEARCH.md 4.4)."
+  },
+  "single": {
+    "groups": [
+      "LEDIG_ALLEINE",
+      "LEDIG_KONKUBINAT",
+      "LEDIG_OHNE_KINDER"
+    ],
+    "tableType": "BUND",
+    "splitting": 0,
+    "table": [
+      {
+        "amount": 0,
+        "taxes": 0,
+        "percent": 0
+      },
+      {
+        "amount": 15200,
+        "taxes": 0,
+        "percent": 0.77
+      },
+      {
+        "amount": 33200,
+        "taxes": 138.6,
+        "percent": 0.88
+      },
+      {
+        "amount": 43500,
+        "taxes": 229.2,
+        "percent": 2.64
+      },
+      {
+        "amount": 58000,
+        "taxes": 612,
+        "percent": 2.9699999999999998
+      },
+      {
+        "amount": 76200,
+        "taxes": 1152.5,
+        "percent": 5.9399999999999995
+      },
+      {
+        "amount": 82100,
+        "taxes": 1502.95,
+        "percent": 6.6
+      },
+      {
+        "amount": 108900,
+        "taxes": 3271.75,
+        "percent": 8.8
+      },
+      {
+        "amount": 141500,
+        "taxes": 6140.55,
+        "percent": 11
+      },
+      {
+        "amount": 185100,
+        "taxes": 10936.55,
+        "percent": 13.2
+      },
+      {
+        "amount": 793900,
+        "taxes": 91298.15,
+        "percent": 13.2
+      },
+      {
+        "amount": 794000,
+        "taxes": 91310,
+        "percent": 11.5
+      }
+    ]
+  },
+  "married": {
+    "groups": [
+      "LEDIG_ALLEINE",
+      "LEDIG_KONKUBINAT",
+      "VERHEIRATET",
+      "LEDIG_MIT_KINDER"
+    ],
+    "tableType": "BUND",
+    "splitting": 0,
+    "table": [
+      {
+        "amount": 0,
+        "taxes": 0,
+        "percent": 0
+      },
+      {
+        "amount": 29700,
+        "taxes": 0,
+        "percent": 1
+      },
+      {
+        "amount": 53400,
+        "taxes": 237,
+        "percent": 2
+      },
+      {
+        "amount": 61300,
+        "taxes": 395,
+        "percent": 3
+      },
+      {
+        "amount": 79100,
+        "taxes": 929,
+        "percent": 4
+      },
+      {
+        "amount": 94900,
+        "taxes": 1561,
+        "percent": 5
+      },
+      {
+        "amount": 108700,
+        "taxes": 2251,
+        "percent": 6
+      },
+      {
+        "amount": 120600,
+        "taxes": 2965,
+        "percent": 7
+      },
+      {
+        "amount": 130500,
+        "taxes": 3658,
+        "percent": 8
+      },
+      {
+        "amount": 138400,
+        "taxes": 4290,
+        "percent": 9
+      },
+      {
+        "amount": 144300,
+        "taxes": 4821,
+        "percent": 10
+      },
+      {
+        "amount": 148300,
+        "taxes": 5221,
+        "percent": 11
+      },
+      {
+        "amount": 150400,
+        "taxes": 5452,
+        "percent": 12
+      },
+      {
+        "amount": 152400,
+        "taxes": 5692,
+        "percent": 13
+      },
+      {
+        "amount": 941300,
+        "taxes": 108249,
+        "percent": 13
+      },
+      {
+        "amount": 941400,
+        "taxes": 108261,
+        "percent": 11.5
+      }
+    ]
+  }
+}

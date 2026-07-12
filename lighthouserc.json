@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "url": ["/", "/brutto-netto-rechner/", "/impressum/", "/datenschutz/", "/methodik/"],
+      "url": ["/", "/brutto-netto-rechner/", "/steuervergleich/", "/saeule-3a-rechner/", "/methodik/"],
       "numberOfRuns": 1,
       "settings": { "chromeFlags": "--no-sandbox --headless=new" }
     },

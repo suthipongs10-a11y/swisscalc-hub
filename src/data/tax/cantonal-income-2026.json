@@ -1,0 +1,3250 @@
+{
+  "_meta": {
+    "source": "https://swisstaxcalculator.estv.admin.ch/#/taxdata",
+    "retrievedVia": "https://github.com/devbrains-com/swisstaxcalculator (MIT) — data/raw/2026",
+    "retrieved": "2026-07-12",
+    "taxYear": 2026,
+    "description": "Cantonal income-tax base tariffs (einfache Steuer) for all 26 cantons. tableType semantics follow the reference implementation (BUND thresholds / ZUERICH band widths / FLATTAX / FREIBURG interpolated effective rate / FORMEL expression with $wert$ and log).",
+    "license": "ESTV data is not open-data licensed; stored here as derived calculation parameters with attribution (see RESEARCH.md 4.4)."
+  },
+  "cantons": {
+    "AG": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 2,
+        "table": [
+          {
+            "amount": 4300,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 3800,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 3900,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 4200,
+            "taxes": 0,
+            "percent": 3
+          },
+          {
+            "amount": 4300,
+            "taxes": 0,
+            "percent": 4
+          },
+          {
+            "amount": 5200,
+            "taxes": 0,
+            "percent": 5
+          },
+          {
+            "amount": 7400,
+            "taxes": 0,
+            "percent": 6
+          },
+          {
+            "amount": 8600,
+            "taxes": 0,
+            "percent": 7
+          },
+          {
+            "amount": 9600,
+            "taxes": 0,
+            "percent": 8
+          },
+          {
+            "amount": 11800,
+            "taxes": 0,
+            "percent": 8.5
+          },
+          {
+            "amount": 11700,
+            "taxes": 0,
+            "percent": 9
+          },
+          {
+            "amount": 35300,
+            "taxes": 0,
+            "percent": 9.5
+          },
+          {
+            "amount": 66300,
+            "taxes": 0,
+            "percent": 10
+          },
+          {
+            "amount": 176300,
+            "taxes": 0,
+            "percent": 10.5
+          },
+          {
+            "amount": 9999999999,
+            "taxes": 0,
+            "percent": 11
+          }
+        ]
+      }
+    ],
+    "AI": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 2,
+        "table": [
+          {
+            "amount": 3000,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 3000,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 3000,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 3000,
+            "taxes": 0,
+            "percent": 3
+          },
+          {
+            "amount": 3000,
+            "taxes": 0,
+            "percent": 4
+          },
+          {
+            "amount": 3000,
+            "taxes": 0,
+            "percent": 5
+          },
+          {
+            "amount": 4000,
+            "taxes": 0,
+            "percent": 6
+          },
+          {
+            "amount": 4000,
+            "taxes": 0,
+            "percent": 7
+          },
+          {
+            "amount": 4000,
+            "taxes": 0,
+            "percent": 7.5
+          },
+          {
+            "amount": 10000,
+            "taxes": 0,
+            "percent": 8
+          },
+          {
+            "amount": 34000,
+            "taxes": 0,
+            "percent": 8.5
+          },
+          {
+            "amount": 66000,
+            "taxes": 0,
+            "percent": 9
+          },
+          {
+            "amount": 60000,
+            "taxes": 0,
+            "percent": 8.5
+          },
+          {
+            "amount": 99999999,
+            "taxes": 0,
+            "percent": 8
+          }
+        ]
+      }
+    ],
+    "AR": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 8300,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 1600,
+            "taxes": 0,
+            "percent": 0.6
+          },
+          {
+            "amount": 1600,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 4200,
+            "taxes": 0,
+            "percent": 1.5
+          },
+          {
+            "amount": 11500,
+            "taxes": 0,
+            "percent": 1.8
+          },
+          {
+            "amount": 14600,
+            "taxes": 0,
+            "percent": 2.2
+          },
+          {
+            "amount": 12500,
+            "taxes": 0,
+            "percent": 2.4
+          },
+          {
+            "amount": 19800,
+            "taxes": 0,
+            "percent": 2.6
+          },
+          {
+            "amount": 14600,
+            "taxes": 0,
+            "percent": 2.7
+          },
+          {
+            "amount": 36500,
+            "taxes": 0,
+            "percent": 2.8
+          },
+          {
+            "amount": 135600,
+            "taxes": 0,
+            "percent": 2.9
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 2.6
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 16700,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 2100,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 3100,
+            "taxes": 0,
+            "percent": 0.9
+          },
+          {
+            "amount": 5200,
+            "taxes": 0,
+            "percent": 1.4
+          },
+          {
+            "amount": 9400,
+            "taxes": 0,
+            "percent": 1.7
+          },
+          {
+            "amount": 15600,
+            "taxes": 0,
+            "percent": 1.9
+          },
+          {
+            "amount": 15600,
+            "taxes": 0,
+            "percent": 2.2
+          },
+          {
+            "amount": 20900,
+            "taxes": 0,
+            "percent": 2.5
+          },
+          {
+            "amount": 26100,
+            "taxes": 0,
+            "percent": 2.7
+          },
+          {
+            "amount": 62600,
+            "taxes": 0,
+            "percent": 2.8
+          },
+          {
+            "amount": 239900,
+            "taxes": 0,
+            "percent": 2.9
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 2.6
+          }
+        ]
+      }
+    ],
+    "BE": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 3300,
+            "taxes": 0,
+            "percent": 1.95
+          },
+          {
+            "amount": 3300,
+            "taxes": 0,
+            "percent": 2.9
+          },
+          {
+            "amount": 9800,
+            "taxes": 0,
+            "percent": 3.6
+          },
+          {
+            "amount": 16100,
+            "taxes": 0,
+            "percent": 4.15
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 4.45
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 5
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 5.6
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 5.75
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 5.9
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 6.05
+          },
+          {
+            "amount": 37700,
+            "taxes": 0,
+            "percent": 6.15
+          },
+          {
+            "amount": 86900,
+            "taxes": 0,
+            "percent": 6.3
+          },
+          {
+            "amount": 152100,
+            "taxes": 0,
+            "percent": 6.4
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 6.5
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 3300,
+            "taxes": 0,
+            "percent": 1.55
+          },
+          {
+            "amount": 3300,
+            "taxes": 0,
+            "percent": 1.65
+          },
+          {
+            "amount": 9800,
+            "taxes": 0,
+            "percent": 2.85
+          },
+          {
+            "amount": 16100,
+            "taxes": 0,
+            "percent": 3.65
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 3.8
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 4.3
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 4.85
+          },
+          {
+            "amount": 26900,
+            "taxes": 0,
+            "percent": 5.2
+          },
+          {
+            "amount": 41700,
+            "taxes": 0,
+            "percent": 5.7
+          },
+          {
+            "amount": 54300,
+            "taxes": 0,
+            "percent": 5.85
+          },
+          {
+            "amount": 54300,
+            "taxes": 0,
+            "percent": 5.95
+          },
+          {
+            "amount": 54300,
+            "taxes": 0,
+            "percent": 6.2
+          },
+          {
+            "amount": 141300,
+            "taxes": 0,
+            "percent": 6.4
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 6.5
+          }
+        ]
+      }
+    ],
+    "BL": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "FORMEL",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 16731,
+            "taxes": 0,
+            "percent": 0,
+            "formula": "-0.827548* $wert$ + 0.089722* $wert$ * (log $wert$ - 1) + 830.223746"
+          },
+          {
+            "amount": 44615,
+            "taxes": 0,
+            "percent": 0,
+            "formula": "-0.328507* $wert$ + 0.043108 * $wert$ * (log $wert$ - 1) + (-1249.444454)"
+          },
+          {
+            "amount": 111538,
+            "taxes": 0,
+            "percent": 0,
+            "formula": "0.051153* $wert$ + 0.010441 * $wert$ * (log $wert$ - 1) + (-4893.077017)"
+          },
+          {
+            "amount": 1282692,
+            "taxes": 0,
+            "percent": 0,
+            "formula": "235687.5410 + 0.1862 * ($wert$ - 1282692)"
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "FORMEL",
+        "splitting": 2,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 8366,
+            "taxes": 0,
+            "percent": 0,
+            "formula": "0.49 * $wert$ / 100"
+          },
+          {
+            "amount": 16731,
+            "taxes": 0,
+            "percent": 0,
+            "formula": "-0.827548* $wert$ + 0.089722* $wert$ * (log $wert$ - 1) + 830.223746"
+          },
+          {
+            "amount": 44615,
+            "taxes": 0,
+            "percent": 0,
+            "formula": "-0.328507* $wert$ + 0.043108 * $wert$ * (log $wert$ - 1) + (-1249.444454)"
+          },
+          {
+            "amount": 111538,
+            "taxes": 0,
+            "percent": 0,
+            "formula": "0.051153* $wert$ + 0.010441 * $wert$ * (log $wert$ - 1) + (-4893.077017)"
+          },
+          {
+            "amount": 1282692,
+            "taxes": 0,
+            "percent": 0,
+            "formula": "235687.5410 + 0.1862 * ($wert$ - 1282692)"
+          }
+        ]
+      }
+    ],
+    "BS": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 21
+          },
+          {
+            "amount": 212500,
+            "taxes": 44625,
+            "percent": 27.25
+          },
+          {
+            "amount": 316300,
+            "taxes": 72910.5,
+            "percent": 28.25
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 21
+          },
+          {
+            "amount": 424900,
+            "taxes": 89229,
+            "percent": 27.25
+          },
+          {
+            "amount": 632500,
+            "taxes": 145800,
+            "percent": 28.25
+          }
+        ]
+      }
+    ],
+    "FR": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "FREIBURG",
+        "splitting": 2,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 5199,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 5200,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 17500,
+            "taxes": 0,
+            "percent": 4.1745
+          },
+          {
+            "amount": 31400,
+            "taxes": 0,
+            "percent": 6.2139
+          },
+          {
+            "amount": 48300,
+            "taxes": 0,
+            "percent": 8.0352
+          },
+          {
+            "amount": 63800,
+            "taxes": 0,
+            "percent": 9.1042
+          },
+          {
+            "amount": 77600,
+            "taxes": 0,
+            "percent": 9.9846
+          },
+          {
+            "amount": 102100,
+            "taxes": 0,
+            "percent": 10.8662
+          },
+          {
+            "amount": 128700,
+            "taxes": 0,
+            "percent": 11.7172
+          },
+          {
+            "amount": 156000,
+            "taxes": 0,
+            "percent": 12.5355
+          },
+          {
+            "amount": 181000,
+            "taxes": 0,
+            "percent": 13.1097
+          },
+          {
+            "amount": 207100,
+            "taxes": 0,
+            "percent": 13.5
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "FREIBURG",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 5199,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 5200,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 10500,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 35000,
+            "taxes": 0,
+            "percent": 4.1745
+          },
+          {
+            "amount": 62800,
+            "taxes": 0,
+            "percent": 6.2139
+          },
+          {
+            "amount": 96600,
+            "taxes": 0,
+            "percent": 8.0352
+          },
+          {
+            "amount": 127600,
+            "taxes": 0,
+            "percent": 9.1042
+          },
+          {
+            "amount": 155200,
+            "taxes": 0,
+            "percent": 9.9846
+          },
+          {
+            "amount": 204200,
+            "taxes": 0,
+            "percent": 10.8662
+          },
+          {
+            "amount": 257400,
+            "taxes": 0,
+            "percent": 11.7172
+          },
+          {
+            "amount": 312000,
+            "taxes": 0,
+            "percent": 12.5355
+          },
+          {
+            "amount": 362000,
+            "taxes": 0,
+            "percent": 13.1097
+          },
+          {
+            "amount": 414200,
+            "taxes": 0,
+            "percent": 13.5
+          }
+        ]
+      }
+    ],
+    "GE": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "BUND",
+        "splitting": 2,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 18700,
+            "taxes": 0,
+            "percent": 7.3
+          },
+          {
+            "amount": 22530,
+            "taxes": 279.6,
+            "percent": 8.2
+          },
+          {
+            "amount": 24784,
+            "taxes": 464.4,
+            "percent": 9.1
+          },
+          {
+            "amount": 27036,
+            "taxes": 669.35,
+            "percent": 10
+          },
+          {
+            "amount": 29290,
+            "taxes": 894.75,
+            "percent": 10.9
+          },
+          {
+            "amount": 34922,
+            "taxes": 1508.65,
+            "percent": 11.3
+          },
+          {
+            "amount": 39428,
+            "taxes": 2017.8,
+            "percent": 12.3
+          },
+          {
+            "amount": 43935,
+            "taxes": 2572.2,
+            "percent": 12.8
+          },
+          {
+            "amount": 48441,
+            "taxes": 3148.95,
+            "percent": 13.2
+          },
+          {
+            "amount": 77730,
+            "taxes": 7015.1,
+            "percent": 14.2
+          },
+          {
+            "amount": 127297,
+            "taxes": 14053.6,
+            "percent": 15
+          },
+          {
+            "amount": 171231,
+            "taxes": 20643.7,
+            "percent": 15.6
+          },
+          {
+            "amount": 193762,
+            "taxes": 24158.55,
+            "percent": 15.8
+          },
+          {
+            "amount": 277125,
+            "taxes": 37329.9,
+            "percent": 16
+          },
+          {
+            "amount": 295150,
+            "taxes": 40213.9,
+            "percent": 16.8
+          },
+          {
+            "amount": 415688,
+            "taxes": 60464.3,
+            "percent": 17.6
+          },
+          {
+            "amount": 651131,
+            "taxes": 101902.25,
+            "percent": 18
+          }
+        ]
+      }
+    ],
+    "GL": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "BUND",
+        "splitting": 1.7,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 10300,
+            "taxes": 0,
+            "percent": 8
+          },
+          {
+            "amount": 20600,
+            "taxes": 824,
+            "percent": 11
+          },
+          {
+            "amount": 30900,
+            "taxes": 1957,
+            "percent": 13
+          },
+          {
+            "amount": 51600,
+            "taxes": 4648,
+            "percent": 15
+          },
+          {
+            "amount": 103200,
+            "taxes": 12388,
+            "percent": 16
+          },
+          {
+            "amount": 154700,
+            "taxes": 20628,
+            "percent": 17.5
+          },
+          {
+            "amount": 257900,
+            "taxes": 38688,
+            "percent": 19
+          },
+          {
+            "amount": 412600,
+            "taxes": 68081,
+            "percent": 21
+          },
+          {
+            "amount": 464200,
+            "taxes": 78917,
+            "percent": 17
+          }
+        ]
+      }
+    ],
+    "GR": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "BUND",
+        "splitting": 1.9,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 16895,
+            "taxes": 0,
+            "percent": 2.5
+          },
+          {
+            "amount": 17985,
+            "taxes": 27.25,
+            "percent": 4
+          },
+          {
+            "amount": 19075,
+            "taxes": 70.85,
+            "percent": 5
+          },
+          {
+            "amount": 20165,
+            "taxes": 125.35,
+            "percent": 6
+          },
+          {
+            "amount": 21255,
+            "taxes": 190.75,
+            "percent": 6.5
+          },
+          {
+            "amount": 22345,
+            "taxes": 261.6,
+            "percent": 7
+          },
+          {
+            "amount": 24525,
+            "taxes": 414.2,
+            "percent": 8
+          },
+          {
+            "amount": 31065,
+            "taxes": 937.4,
+            "percent": 8.5
+          },
+          {
+            "amount": 35425,
+            "taxes": 1308,
+            "percent": 9
+          },
+          {
+            "amount": 39785,
+            "taxes": 1700.4,
+            "percent": 9.5
+          },
+          {
+            "amount": 44145,
+            "taxes": 2114.6,
+            "percent": 10.3
+          },
+          {
+            "amount": 65945,
+            "taxes": 4360,
+            "percent": 10.6
+          },
+          {
+            "amount": 87745,
+            "taxes": 6670.8,
+            "percent": 10.7
+          },
+          {
+            "amount": 109545,
+            "taxes": 9003.4,
+            "percent": 11.2
+          },
+          {
+            "amount": 218545,
+            "taxes": 21211.4,
+            "percent": 11.3
+          },
+          {
+            "amount": 327545,
+            "taxes": 33528.4,
+            "percent": 11.4
+          },
+          {
+            "amount": 436545,
+            "taxes": 45954.4,
+            "percent": 11.6
+          },
+          {
+            "amount": 780440,
+            "taxes": 85846.22,
+            "percent": 11
+          },
+          {
+            "amount": 780441,
+            "taxes": 85848.51,
+            "percent": 11
+          }
+        ]
+      }
+    ],
+    "JU": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 6900,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 7800,
+            "taxes": 0,
+            "percent": 1.66702
+          },
+          {
+            "amount": 14000,
+            "taxes": 0,
+            "percent": 3.14902
+          },
+          {
+            "amount": 21800,
+            "taxes": 0,
+            "percent": 4.02902
+          },
+          {
+            "amount": 42200,
+            "taxes": 0,
+            "percent": 4.90902
+          },
+          {
+            "amount": 112500,
+            "taxes": 0,
+            "percent": 5.558
+          },
+          {
+            "amount": 9999999999,
+            "taxes": 0,
+            "percent": 5.78902
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 12600,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 6200,
+            "taxes": 0,
+            "percent": 0.88
+          },
+          {
+            "amount": 9300,
+            "taxes": 0,
+            "percent": 2.26902
+          },
+          {
+            "amount": 20300,
+            "taxes": 0,
+            "percent": 3.242
+          },
+          {
+            "amount": 42200,
+            "taxes": 0,
+            "percent": 4.122
+          },
+          {
+            "amount": 112500,
+            "taxes": 0,
+            "percent": 4.77102
+          },
+          {
+            "amount": 234500,
+            "taxes": 0,
+            "percent": 5.69702
+          },
+          {
+            "amount": 9999999999,
+            "taxes": 0,
+            "percent": 5.78902
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_KONKUBINAT",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 6900,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 7800,
+            "taxes": 0,
+            "percent": 1.66702
+          },
+          {
+            "amount": 14000,
+            "taxes": 0,
+            "percent": 3.14902
+          },
+          {
+            "amount": 21800,
+            "taxes": 0,
+            "percent": 4.02902
+          },
+          {
+            "amount": 42200,
+            "taxes": 0,
+            "percent": 4.90902
+          },
+          {
+            "amount": 112500,
+            "taxes": 0,
+            "percent": 5.558
+          },
+          {
+            "amount": 9999999999,
+            "taxes": 0,
+            "percent": 5.78902
+          }
+        ]
+      }
+    ],
+    "LU": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 9900,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 12300,
+            "taxes": 12,
+            "percent": 1
+          },
+          {
+            "amount": 15500,
+            "taxes": 44,
+            "percent": 2
+          },
+          {
+            "amount": 16700,
+            "taxes": 68,
+            "percent": 3
+          },
+          {
+            "amount": 17900,
+            "taxes": 104,
+            "percent": 4
+          },
+          {
+            "amount": 20800,
+            "taxes": 220,
+            "percent": 4.5
+          },
+          {
+            "amount": 25100,
+            "taxes": 413.5,
+            "percent": 5
+          },
+          {
+            "amount": 110100,
+            "taxes": 4663.5,
+            "percent": 5.25
+          },
+          {
+            "amount": 163900,
+            "taxes": 7488,
+            "percent": 5.5
+          },
+          {
+            "amount": 190100,
+            "taxes": 8929,
+            "percent": 5.8
+          },
+          {
+            "amount": 2096800,
+            "taxes": 119517.6,
+            "percent": 5.7
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 19900,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 24000,
+            "taxes": 20.5,
+            "percent": 1.5
+          },
+          {
+            "amount": 25000,
+            "taxes": 35.5,
+            "percent": 2.5
+          },
+          {
+            "amount": 26200,
+            "taxes": 65.5,
+            "percent": 3
+          },
+          {
+            "amount": 28300,
+            "taxes": 128.5,
+            "percent": 3.5
+          },
+          {
+            "amount": 32500,
+            "taxes": 275.5,
+            "percent": 4.5
+          },
+          {
+            "amount": 99200,
+            "taxes": 3277,
+            "percent": 5
+          },
+          {
+            "amount": 138100,
+            "taxes": 5222,
+            "percent": 5.5
+          },
+          {
+            "amount": 159200,
+            "taxes": 6382.5,
+            "percent": 5.8
+          },
+          {
+            "amount": 1425500,
+            "taxes": 79827.9,
+            "percent": 5.6
+          }
+        ]
+      }
+    ],
+    "NE": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "BUND",
+        "splitting": 1.9230769230769231,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 7700,
+            "taxes": 0,
+            "percent": 1.98
+          },
+          {
+            "amount": 10300,
+            "taxes": 51,
+            "percent": 3.96
+          },
+          {
+            "amount": 15500,
+            "taxes": 257,
+            "percent": 7.92
+          },
+          {
+            "amount": 20600,
+            "taxes": 661,
+            "percent": 11.484
+          },
+          {
+            "amount": 30900,
+            "taxes": 1844,
+            "percent": 11.781
+          },
+          {
+            "amount": 41200,
+            "taxes": 3058,
+            "percent": 12.177
+          },
+          {
+            "amount": 51500,
+            "taxes": 4312,
+            "percent": 12.672
+          },
+          {
+            "amount": 61800,
+            "taxes": 5617,
+            "percent": 13.167
+          },
+          {
+            "amount": 72100,
+            "taxes": 6973,
+            "percent": 13.662
+          },
+          {
+            "amount": 82400,
+            "taxes": 8380,
+            "percent": 14.058
+          },
+          {
+            "amount": 92700,
+            "taxes": 9828,
+            "percent": 14.355
+          },
+          {
+            "amount": 103000,
+            "taxes": 11307,
+            "percent": 14.652
+          },
+          {
+            "amount": 113300,
+            "taxes": 12816,
+            "percent": 14.949
+          },
+          {
+            "amount": 123600,
+            "taxes": 14356,
+            "percent": 15.246
+          },
+          {
+            "amount": 133900,
+            "taxes": 15926,
+            "percent": 15.345
+          },
+          {
+            "amount": 144200,
+            "taxes": 17507,
+            "percent": 15.444
+          },
+          {
+            "amount": 154500,
+            "taxes": 19097,
+            "percent": 15.543
+          },
+          {
+            "amount": 164800,
+            "taxes": 20698,
+            "percent": 15.741
+          },
+          {
+            "amount": 175100,
+            "taxes": 22320,
+            "percent": 15.939
+          },
+          {
+            "amount": 185400,
+            "taxes": 23961,
+            "percent": 16.038
+          },
+          {
+            "amount": 195700,
+            "taxes": 25613,
+            "percent": 16.038
+          },
+          {
+            "amount": 206000,
+            "taxes": 27265,
+            "percent": 13.365
+          },
+          {
+            "amount": 309000,
+            "taxes": 41031,
+            "percent": 13.6125
+          },
+          {
+            "amount": 412000,
+            "taxes": 55052,
+            "percent": 13.86
+          }
+        ]
+      }
+    ],
+    "NW": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 1.85,
+        "table": [
+          {
+            "amount": 11200,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 2300,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 1.2
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 1.4
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 1.6
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 1.8
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 2.2
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 2.4
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 2.6
+          },
+          {
+            "amount": 7800,
+            "taxes": 0,
+            "percent": 2.8
+          },
+          {
+            "amount": 16800,
+            "taxes": 0,
+            "percent": 2.9
+          },
+          {
+            "amount": 30200,
+            "taxes": 0,
+            "percent": 3
+          },
+          {
+            "amount": 33600,
+            "taxes": 0,
+            "percent": 3.1
+          },
+          {
+            "amount": 31800,
+            "taxes": 0,
+            "percent": 3.2
+          },
+          {
+            "amount": 16700,
+            "taxes": 0,
+            "percent": 3.3
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 2.75
+          }
+        ]
+      }
+    ],
+    "OW": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "FLATTAX",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 1,
+            "percent": 1.8
+          }
+        ]
+      }
+    ],
+    "SG": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 2,
+        "table": [
+          {
+            "amount": 11600,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 4200,
+            "taxes": 0,
+            "percent": 4
+          },
+          {
+            "amount": 18000,
+            "taxes": 0,
+            "percent": 6
+          },
+          {
+            "amount": 26500,
+            "taxes": 0,
+            "percent": 8
+          },
+          {
+            "amount": 38100,
+            "taxes": 0,
+            "percent": 9.2
+          },
+          {
+            "amount": 166100,
+            "taxes": 0,
+            "percent": 9.4
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 8.5
+          }
+        ]
+      }
+    ],
+    "SH": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "BUND",
+        "splitting": 1.9,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 6300,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 6600,
+            "taxes": 3,
+            "percent": 2
+          },
+          {
+            "amount": 8300,
+            "taxes": 37,
+            "percent": 3
+          },
+          {
+            "amount": 10400,
+            "taxes": 100,
+            "percent": 4
+          },
+          {
+            "amount": 12700,
+            "taxes": 192,
+            "percent": 5
+          },
+          {
+            "amount": 20600,
+            "taxes": 587,
+            "percent": 6
+          },
+          {
+            "amount": 28500,
+            "taxes": 1061,
+            "percent": 7
+          },
+          {
+            "amount": 36400,
+            "taxes": 1614,
+            "percent": 8
+          },
+          {
+            "amount": 44300,
+            "taxes": 2246,
+            "percent": 9
+          },
+          {
+            "amount": 56900,
+            "taxes": 3380,
+            "percent": 10
+          },
+          {
+            "amount": 69500,
+            "taxes": 4640,
+            "percent": 11
+          },
+          {
+            "amount": 141000,
+            "taxes": 12505,
+            "percent": 12
+          },
+          {
+            "amount": 210100,
+            "taxes": 20797,
+            "percent": 9.9
+          },
+          {
+            "amount": 210200,
+            "taxes": 20806.9,
+            "percent": 9.9
+          }
+        ]
+      }
+    ],
+    "SO": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "BUND",
+        "splitting": 1.9,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 12400,
+            "taxes": 0,
+            "percent": 4.5
+          },
+          {
+            "amount": 16500,
+            "taxes": 184.5,
+            "percent": 5
+          },
+          {
+            "amount": 20600,
+            "taxes": 389.5,
+            "percent": 6.5
+          },
+          {
+            "amount": 23700,
+            "taxes": 591,
+            "percent": 8
+          },
+          {
+            "amount": 25800,
+            "taxes": 759,
+            "percent": 9
+          },
+          {
+            "amount": 28900,
+            "taxes": 1038,
+            "percent": 9.5
+          },
+          {
+            "amount": 40200,
+            "taxes": 2111.5,
+            "percent": 10
+          },
+          {
+            "amount": 55700,
+            "taxes": 3661.5,
+            "percent": 10.5
+          },
+          {
+            "amount": 101100,
+            "taxes": 8428.5,
+            "percent": 11.5
+          },
+          {
+            "amount": 319900,
+            "taxes": 33590.5,
+            "percent": 10.5
+          }
+        ]
+      }
+    ],
+    "SZ": [
+      {
+        "groups": [
+          "VERHEIRATET"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 1.9,
+        "table": [
+          {
+            "amount": 1300,
+            "taxes": 0,
+            "percent": 0.25
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 1000,
+            "taxes": 0,
+            "percent": 0.75
+          },
+          {
+            "amount": 900,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 900,
+            "taxes": 0,
+            "percent": 1.25
+          },
+          {
+            "amount": 1000,
+            "taxes": 0,
+            "percent": 1.5
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 1.75
+          },
+          {
+            "amount": 1600,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 2100,
+            "taxes": 0,
+            "percent": 2.25
+          },
+          {
+            "amount": 3200,
+            "taxes": 0,
+            "percent": 2.5
+          },
+          {
+            "amount": 5300,
+            "taxes": 0,
+            "percent": 2.75
+          },
+          {
+            "amount": 7400,
+            "taxes": 0,
+            "percent": 3
+          },
+          {
+            "amount": 9500,
+            "taxes": 0,
+            "percent": 3.25
+          },
+          {
+            "amount": 10500,
+            "taxes": 0,
+            "percent": 3.5
+          },
+          {
+            "amount": 8400,
+            "taxes": 0,
+            "percent": 3.65
+          },
+          {
+            "amount": 175100,
+            "taxes": 0,
+            "percent": 3.9
+          },
+          {
+            "amount": 155500,
+            "taxes": 0,
+            "percent": 7
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 5
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 1300,
+            "taxes": 0,
+            "percent": 0.25
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 1000,
+            "taxes": 0,
+            "percent": 0.75
+          },
+          {
+            "amount": 900,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 900,
+            "taxes": 0,
+            "percent": 1.25
+          },
+          {
+            "amount": 1000,
+            "taxes": 0,
+            "percent": 1.5
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 1.75
+          },
+          {
+            "amount": 1600,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 2100,
+            "taxes": 0,
+            "percent": 2.25
+          },
+          {
+            "amount": 3200,
+            "taxes": 0,
+            "percent": 2.5
+          },
+          {
+            "amount": 5300,
+            "taxes": 0,
+            "percent": 2.75
+          },
+          {
+            "amount": 7400,
+            "taxes": 0,
+            "percent": 3
+          },
+          {
+            "amount": 9500,
+            "taxes": 0,
+            "percent": 3.25
+          },
+          {
+            "amount": 10500,
+            "taxes": 0,
+            "percent": 3.5
+          },
+          {
+            "amount": 8400,
+            "taxes": 0,
+            "percent": 3.65
+          },
+          {
+            "amount": 175100,
+            "taxes": 0,
+            "percent": 3.9
+          },
+          {
+            "amount": 155500,
+            "taxes": 0,
+            "percent": 7
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 5
+          }
+        ]
+      }
+    ],
+    "TG": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "BUND",
+        "splitting": 2,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 12200,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 14600,
+            "taxes": 48,
+            "percent": 3
+          },
+          {
+            "amount": 16800,
+            "taxes": 114,
+            "percent": 4
+          },
+          {
+            "amount": 18900,
+            "taxes": 198,
+            "percent": 5
+          },
+          {
+            "amount": 21000,
+            "taxes": 303,
+            "percent": 6
+          },
+          {
+            "amount": 36800,
+            "taxes": 1251,
+            "percent": 7
+          },
+          {
+            "amount": 84400,
+            "taxes": 4583,
+            "percent": 7.5
+          },
+          {
+            "amount": 158400,
+            "taxes": 10133,
+            "percent": 8
+          }
+        ]
+      }
+    ],
+    "TI": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 12400,
+            "taxes": 0,
+            "percent": 0.16
+          },
+          {
+            "amount": 12500,
+            "taxes": 20,
+            "percent": 5.232
+          },
+          {
+            "amount": 17400,
+            "taxes": 276.4,
+            "percent": 5.949
+          },
+          {
+            "amount": 20800,
+            "taxes": 478.65,
+            "percent": 3.923
+          },
+          {
+            "amount": 26000,
+            "taxes": 682.65,
+            "percent": 7.499
+          },
+          {
+            "amount": 30100,
+            "taxes": 990.1,
+            "percent": 9.461
+          },
+          {
+            "amount": 39900,
+            "taxes": 1917.25,
+            "percent": 10.377
+          },
+          {
+            "amount": 52700,
+            "taxes": 3245.5,
+            "percent": 10.988
+          },
+          {
+            "amount": 58700,
+            "taxes": 3838.85,
+            "percent": 11.8
+          },
+          {
+            "amount": 73000,
+            "taxes": 5597.05,
+            "percent": 11.597
+          },
+          {
+            "amount": 91400,
+            "taxes": 7730.95,
+            "percent": 12.47
+          },
+          {
+            "amount": 113900,
+            "taxes": 10536.6,
+            "percent": 13.08
+          },
+          {
+            "amount": 227800,
+            "taxes": 25435,
+            "percent": 14.04
+          },
+          {
+            "amount": 380600,
+            "taxes": 46888.1,
+            "percent": 14
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 20300,
+            "taxes": 0,
+            "percent": 0.145
+          },
+          {
+            "amount": 20400,
+            "taxes": 29.6,
+            "percent": 3.923
+          },
+          {
+            "amount": 24800,
+            "taxes": 202.25,
+            "percent": 4.36
+          },
+          {
+            "amount": 28200,
+            "taxes": 350.5,
+            "percent": 2.616
+          },
+          {
+            "amount": 33100,
+            "taxes": 478.65,
+            "percent": 3.923
+          },
+          {
+            "amount": 42300,
+            "taxes": 839.6,
+            "percent": 6.54
+          },
+          {
+            "amount": 47800,
+            "taxes": 1199.3,
+            "percent": 7.848
+          },
+          {
+            "amount": 60600,
+            "taxes": 2203.85,
+            "percent": 10.116
+          },
+          {
+            "amount": 79800,
+            "taxes": 4146.05,
+            "percent": 11.074
+          },
+          {
+            "amount": 90400,
+            "taxes": 5319.9,
+            "percent": 12.645
+          },
+          {
+            "amount": 122600,
+            "taxes": 9391.45,
+            "percent": 12.034
+          },
+          {
+            "amount": 141000,
+            "taxes": 11605.7,
+            "percent": 12.906
+          },
+          {
+            "amount": 183200,
+            "taxes": 17052.1,
+            "percent": 13.777
+          },
+          {
+            "amount": 227800,
+            "taxes": 23196.85,
+            "percent": 14.302
+          },
+          {
+            "amount": 303900,
+            "taxes": 34080.35,
+            "percent": 14.65
+          },
+          {
+            "amount": 761400,
+            "taxes": 101102.5,
+            "percent": 14
+          }
+        ]
+      }
+    ],
+    "UR": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "FLATTAX",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 7.1
+          }
+        ]
+      }
+    ],
+    "VD": [
+      {
+        "groups": [
+          "VERHEIRATET"
+        ],
+        "tableType": "BUND",
+        "splitting": 1.8,
+        "table": [
+          {
+            "amount": 100,
+            "taxes": 1,
+            "percent": 1
+          },
+          {
+            "amount": 1600,
+            "taxes": 16,
+            "percent": 2
+          },
+          {
+            "amount": 3400,
+            "taxes": 52,
+            "percent": 3
+          },
+          {
+            "amount": 5100,
+            "taxes": 103,
+            "percent": 4
+          },
+          {
+            "amount": 8300,
+            "taxes": 231,
+            "percent": 5
+          },
+          {
+            "amount": 11900,
+            "taxes": 411,
+            "percent": 6
+          },
+          {
+            "amount": 15100,
+            "taxes": 603,
+            "percent": 7
+          },
+          {
+            "amount": 23600,
+            "taxes": 1198,
+            "percent": 8
+          },
+          {
+            "amount": 40500,
+            "taxes": 2550,
+            "percent": 9
+          },
+          {
+            "amount": 57200,
+            "taxes": 4053,
+            "percent": 10
+          },
+          {
+            "amount": 74300,
+            "taxes": 5763,
+            "percent": 11
+          },
+          {
+            "amount": 91100,
+            "taxes": 7611,
+            "percent": 12
+          },
+          {
+            "amount": 108000,
+            "taxes": 9639,
+            "percent": 12.5
+          },
+          {
+            "amount": 134900,
+            "taxes": 13001.5,
+            "percent": 13
+          },
+          {
+            "amount": 161900,
+            "taxes": 16511.5,
+            "percent": 13.5
+          },
+          {
+            "amount": 192300,
+            "taxes": 20615.5,
+            "percent": 14
+          },
+          {
+            "amount": 222800,
+            "taxes": 24885.5,
+            "percent": 14.5
+          },
+          {
+            "amount": 255800,
+            "taxes": 29670.5,
+            "percent": 15
+          },
+          {
+            "amount": 291400,
+            "taxes": 35010.5,
+            "percent": 15.5
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 1.3,
+        "table": [
+          {
+            "amount": 100,
+            "taxes": 1,
+            "percent": 1
+          },
+          {
+            "amount": 1600,
+            "taxes": 16,
+            "percent": 2
+          },
+          {
+            "amount": 3400,
+            "taxes": 52,
+            "percent": 3
+          },
+          {
+            "amount": 5100,
+            "taxes": 103,
+            "percent": 4
+          },
+          {
+            "amount": 8300,
+            "taxes": 231,
+            "percent": 5
+          },
+          {
+            "amount": 11900,
+            "taxes": 411,
+            "percent": 6
+          },
+          {
+            "amount": 15100,
+            "taxes": 603,
+            "percent": 7
+          },
+          {
+            "amount": 23600,
+            "taxes": 1198,
+            "percent": 8
+          },
+          {
+            "amount": 40500,
+            "taxes": 2550,
+            "percent": 9
+          },
+          {
+            "amount": 57200,
+            "taxes": 4053,
+            "percent": 10
+          },
+          {
+            "amount": 74300,
+            "taxes": 5763,
+            "percent": 11
+          },
+          {
+            "amount": 91100,
+            "taxes": 7611,
+            "percent": 12
+          },
+          {
+            "amount": 108000,
+            "taxes": 9639,
+            "percent": 12.5
+          },
+          {
+            "amount": 134900,
+            "taxes": 13001.5,
+            "percent": 13
+          },
+          {
+            "amount": 161900,
+            "taxes": 16511.5,
+            "percent": 13.5
+          },
+          {
+            "amount": 192300,
+            "taxes": 20615.5,
+            "percent": 14
+          },
+          {
+            "amount": 222800,
+            "taxes": 24885.5,
+            "percent": 14.5
+          },
+          {
+            "amount": 255800,
+            "taxes": 29670.5,
+            "percent": 15
+          },
+          {
+            "amount": 291400,
+            "taxes": 35010.5,
+            "percent": 15.5
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_KONKUBINAT",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 1,
+        "table": [
+          {
+            "amount": 100,
+            "taxes": 1,
+            "percent": 1
+          },
+          {
+            "amount": 1600,
+            "taxes": 16,
+            "percent": 2
+          },
+          {
+            "amount": 3400,
+            "taxes": 52,
+            "percent": 3
+          },
+          {
+            "amount": 5100,
+            "taxes": 103,
+            "percent": 4
+          },
+          {
+            "amount": 8300,
+            "taxes": 231,
+            "percent": 5
+          },
+          {
+            "amount": 11900,
+            "taxes": 411,
+            "percent": 6
+          },
+          {
+            "amount": 15100,
+            "taxes": 603,
+            "percent": 7
+          },
+          {
+            "amount": 23600,
+            "taxes": 1198,
+            "percent": 8
+          },
+          {
+            "amount": 40500,
+            "taxes": 2550,
+            "percent": 9
+          },
+          {
+            "amount": 57200,
+            "taxes": 4053,
+            "percent": 10
+          },
+          {
+            "amount": 74300,
+            "taxes": 5763,
+            "percent": 11
+          },
+          {
+            "amount": 91100,
+            "taxes": 7611,
+            "percent": 12
+          },
+          {
+            "amount": 108000,
+            "taxes": 9639,
+            "percent": 12.5
+          },
+          {
+            "amount": 134900,
+            "taxes": 13001.5,
+            "percent": 13
+          },
+          {
+            "amount": 161900,
+            "taxes": 16511.5,
+            "percent": 13.5
+          },
+          {
+            "amount": 192300,
+            "taxes": 20615.5,
+            "percent": 14
+          },
+          {
+            "amount": 222800,
+            "taxes": 24885.5,
+            "percent": 14.5
+          },
+          {
+            "amount": 255800,
+            "taxes": 29670.5,
+            "percent": 15
+          },
+          {
+            "amount": 291400,
+            "taxes": 35010.5,
+            "percent": 15.5
+          }
+        ]
+      }
+    ],
+    "VS": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "FREIBURG",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 5000,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 10000,
+            "taxes": 0,
+            "percent": 2.8
+          },
+          {
+            "amount": 20000,
+            "taxes": 0,
+            "percent": 4.6
+          },
+          {
+            "amount": 30000,
+            "taxes": 0,
+            "percent": 6.3
+          },
+          {
+            "amount": 40000,
+            "taxes": 0,
+            "percent": 7.7
+          },
+          {
+            "amount": 50000,
+            "taxes": 0,
+            "percent": 9
+          },
+          {
+            "amount": 60000,
+            "taxes": 0,
+            "percent": 10.5
+          },
+          {
+            "amount": 70000,
+            "taxes": 0,
+            "percent": 11.8
+          },
+          {
+            "amount": 80000,
+            "taxes": 0,
+            "percent": 13
+          },
+          {
+            "amount": 90000,
+            "taxes": 0,
+            "percent": 13.3
+          },
+          {
+            "amount": 100000,
+            "taxes": 0,
+            "percent": 13.5
+          },
+          {
+            "amount": 200000,
+            "taxes": 0,
+            "percent": 14
+          }
+        ]
+      }
+    ],
+    "ZG": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 1100,
+            "taxes": 5.5,
+            "percent": 1
+          },
+          {
+            "amount": 3300,
+            "taxes": 27.5,
+            "percent": 2
+          },
+          {
+            "amount": 6100,
+            "taxes": 83.5,
+            "percent": 3
+          },
+          {
+            "amount": 10100,
+            "taxes": 203.5,
+            "percent": 3.25
+          },
+          {
+            "amount": 15300,
+            "taxes": 372.5,
+            "percent": 3.5
+          },
+          {
+            "amount": 21100,
+            "taxes": 575.5,
+            "percent": 4
+          },
+          {
+            "amount": 26900,
+            "taxes": 807.5,
+            "percent": 4.5
+          },
+          {
+            "amount": 34900,
+            "taxes": 1167.5,
+            "percent": 5.5
+          },
+          {
+            "amount": 46400,
+            "taxes": 1800,
+            "percent": 5.5
+          },
+          {
+            "amount": 59700,
+            "taxes": 2531.5,
+            "percent": 6.5
+          },
+          {
+            "amount": 74700,
+            "taxes": 3506.5,
+            "percent": 8
+          },
+          {
+            "amount": 94800,
+            "taxes": 5114.5,
+            "percent": 10
+          },
+          {
+            "amount": 120100,
+            "taxes": 7644.5,
+            "percent": 9
+          },
+          {
+            "amount": 149900,
+            "taxes": 10326.5,
+            "percent": 8
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "BUND",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 2200,
+            "taxes": 11,
+            "percent": 1
+          },
+          {
+            "amount": 6600,
+            "taxes": 55,
+            "percent": 2
+          },
+          {
+            "amount": 12200,
+            "taxes": 167,
+            "percent": 3
+          },
+          {
+            "amount": 20200,
+            "taxes": 407,
+            "percent": 3.25
+          },
+          {
+            "amount": 30600,
+            "taxes": 745,
+            "percent": 3.5
+          },
+          {
+            "amount": 42200,
+            "taxes": 1151,
+            "percent": 4
+          },
+          {
+            "amount": 53800,
+            "taxes": 1615,
+            "percent": 4.5
+          },
+          {
+            "amount": 69800,
+            "taxes": 2335,
+            "percent": 5.5
+          },
+          {
+            "amount": 92800,
+            "taxes": 3600,
+            "percent": 5.5
+          },
+          {
+            "amount": 119400,
+            "taxes": 5063,
+            "percent": 6.5
+          },
+          {
+            "amount": 149400,
+            "taxes": 7013,
+            "percent": 8
+          },
+          {
+            "amount": 189600,
+            "taxes": 10229,
+            "percent": 10
+          },
+          {
+            "amount": 240200,
+            "taxes": 15289,
+            "percent": 9
+          },
+          {
+            "amount": 299800,
+            "taxes": 20653,
+            "percent": 8
+          }
+        ]
+      }
+    ],
+    "ZH": [
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "LEDIG_OHNE_KINDER"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 7000,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 5000,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 4800,
+            "taxes": 0,
+            "percent": 3
+          },
+          {
+            "amount": 8000,
+            "taxes": 0,
+            "percent": 4
+          },
+          {
+            "amount": 9700,
+            "taxes": 0,
+            "percent": 5
+          },
+          {
+            "amount": 11200,
+            "taxes": 0,
+            "percent": 6
+          },
+          {
+            "amount": 13100,
+            "taxes": 0,
+            "percent": 7
+          },
+          {
+            "amount": 17600,
+            "taxes": 0,
+            "percent": 8
+          },
+          {
+            "amount": 34000,
+            "taxes": 0,
+            "percent": 9
+          },
+          {
+            "amount": 33700,
+            "taxes": 0,
+            "percent": 10
+          },
+          {
+            "amount": 53300,
+            "taxes": 0,
+            "percent": 11
+          },
+          {
+            "amount": 69300,
+            "taxes": 0,
+            "percent": 12
+          },
+          {
+            "amount": 99999999,
+            "taxes": 0,
+            "percent": 13
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT",
+          "VERHEIRATET",
+          "LEDIG_MIT_KINDER"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 14100,
+            "taxes": 0,
+            "percent": 0
+          },
+          {
+            "amount": 6400,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 8100,
+            "taxes": 0,
+            "percent": 3
+          },
+          {
+            "amount": 9800,
+            "taxes": 0,
+            "percent": 4
+          },
+          {
+            "amount": 11200,
+            "taxes": 0,
+            "percent": 5
+          },
+          {
+            "amount": 14500,
+            "taxes": 0,
+            "percent": 6
+          },
+          {
+            "amount": 32200,
+            "taxes": 0,
+            "percent": 7
+          },
+          {
+            "amount": 32400,
+            "taxes": 0,
+            "percent": 8
+          },
+          {
+            "amount": 48500,
+            "taxes": 0,
+            "percent": 9
+          },
+          {
+            "amount": 57900,
+            "taxes": 0,
+            "percent": 10
+          },
+          {
+            "amount": 62900,
+            "taxes": 0,
+            "percent": 11
+          },
+          {
+            "amount": 72600,
+            "taxes": 0,
+            "percent": 12
+          },
+          {
+            "amount": 99999999,
+            "taxes": 0,
+            "percent": 13
+          }
+        ]
+      }
+    ]
+  },
+  "cityTarifs": {
+    "SZ": [
+      {
+        "groups": [
+          "VERHEIRATET"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 1.9,
+        "table": [
+          {
+            "amount": 1300,
+            "taxes": 0,
+            "percent": 0.25
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 1000,
+            "taxes": 0,
+            "percent": 0.75
+          },
+          {
+            "amount": 900,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 900,
+            "taxes": 0,
+            "percent": 1.25
+          },
+          {
+            "amount": 1000,
+            "taxes": 0,
+            "percent": 1.5
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 1.75
+          },
+          {
+            "amount": 1600,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 2100,
+            "taxes": 0,
+            "percent": 2.25
+          },
+          {
+            "amount": 3200,
+            "taxes": 0,
+            "percent": 2.5
+          },
+          {
+            "amount": 5300,
+            "taxes": 0,
+            "percent": 2.75
+          },
+          {
+            "amount": 7400,
+            "taxes": 0,
+            "percent": 3
+          },
+          {
+            "amount": 9500,
+            "taxes": 0,
+            "percent": 3.25
+          },
+          {
+            "amount": 10500,
+            "taxes": 0,
+            "percent": 3.5
+          },
+          {
+            "amount": 8400,
+            "taxes": 0,
+            "percent": 3.65
+          },
+          {
+            "amount": 175100,
+            "taxes": 0,
+            "percent": 3.9
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 3.65
+          }
+        ]
+      },
+      {
+        "groups": [
+          "LEDIG_ALLEINE",
+          "LEDIG_KONKUBINAT"
+        ],
+        "tableType": "ZUERICH",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 1300,
+            "taxes": 0,
+            "percent": 0.25
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 0.5
+          },
+          {
+            "amount": 1000,
+            "taxes": 0,
+            "percent": 0.75
+          },
+          {
+            "amount": 900,
+            "taxes": 0,
+            "percent": 1
+          },
+          {
+            "amount": 900,
+            "taxes": 0,
+            "percent": 1.25
+          },
+          {
+            "amount": 1000,
+            "taxes": 0,
+            "percent": 1.5
+          },
+          {
+            "amount": 1100,
+            "taxes": 0,
+            "percent": 1.75
+          },
+          {
+            "amount": 1600,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 2100,
+            "taxes": 0,
+            "percent": 2.25
+          },
+          {
+            "amount": 3200,
+            "taxes": 0,
+            "percent": 2.5
+          },
+          {
+            "amount": 5300,
+            "taxes": 0,
+            "percent": 2.75
+          },
+          {
+            "amount": 7400,
+            "taxes": 0,
+            "percent": 3
+          },
+          {
+            "amount": 9500,
+            "taxes": 0,
+            "percent": 3.25
+          },
+          {
+            "amount": 10500,
+            "taxes": 0,
+            "percent": 3.5
+          },
+          {
+            "amount": 8400,
+            "taxes": 0,
+            "percent": 3.65
+          },
+          {
+            "amount": 175100,
+            "taxes": 0,
+            "percent": 3.9
+          },
+          {
+            "amount": 999999999,
+            "taxes": 0,
+            "percent": 3.65
+          }
+        ]
+      }
+    ],
+    "VS": [
+      {
+        "groups": [
+          "ALLE"
+        ],
+        "tableType": "FREIBURG",
+        "splitting": 0,
+        "table": [
+          {
+            "amount": 0,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 5000,
+            "taxes": 0,
+            "percent": 2
+          },
+          {
+            "amount": 10000,
+            "taxes": 0,
+            "percent": 2.7
+          },
+          {
+            "amount": 15000,
+            "taxes": 0,
+            "percent": 3.6
+          },
+          {
+            "amount": 20000,
+            "taxes": 0,
+            "percent": 4.4
+          },
+          {
+            "amount": 30000,
+            "taxes": 0,
+            "percent": 5.8
+          },
+          {
+            "amount": 40000,
+            "taxes": 0,
+            "percent": 6.8
+          },
+          {
+            "amount": 50000,
+            "taxes": 0,
+            "percent": 7.5
+          },
+          {
+            "amount": 60000,
+            "taxes": 0,
+            "percent": 8
+          },
+          {
+            "amount": 80000,
+            "taxes": 0,
+            "percent": 8.8
+          },
+          {
+            "amount": 90000,
+            "taxes": 0,
+            "percent": 9
+          },
+          {
+            "amount": 180000,
+            "taxes": 0,
+            "percent": 9.9
+          },
+          {
+            "amount": 200000,
+            "taxes": 0,
+            "percent": 10
+          }
+        ]
+      }
+    ]
+  }
+}

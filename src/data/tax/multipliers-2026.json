@@ -1,0 +1,168 @@
+{
+  "_meta": {
+    "source": "https://swisstaxcalculator.estv.admin.ch/#/taxdata",
+    "retrievedVia": "https://github.com/devbrains-com/swisstaxcalculator (MIT) — data/raw/2026",
+    "retrieved": "2026-07-12",
+    "taxYear": 2026,
+    "description": "Income-tax multipliers (Steuerfuesse) in percent of the cantonal base tariff, for each canton and its capital municipality. Church tax excluded (calculators show \"ohne Kirchensteuer\"). Municipal tax = base * cityPct/100, cantonal tax = base * cantonPct/100 — same model as the reference implementation.",
+    "license": "ESTV data is not open-data licensed; stored here as derived calculation parameters with attribution (see RESEARCH.md 4.4)."
+  },
+  "cantons": {
+    "ZH": {
+      "cantonPct": 95,
+      "cityPct": 119,
+      "capital": "Zürich",
+      "bfsId": 261
+    },
+    "BE": {
+      "cantonPct": 297.5,
+      "cityPct": 154,
+      "capital": "Bern",
+      "bfsId": 351
+    },
+    "LU": {
+      "cantonPct": 145,
+      "cityPct": 145,
+      "capital": "Luzern",
+      "bfsId": 1061
+    },
+    "UR": {
+      "cantonPct": 100,
+      "cityPct": 95,
+      "capital": "Altdorf (UR)",
+      "bfsId": 1201
+    },
+    "SZ": {
+      "cantonPct": 110,
+      "cityPct": 175,
+      "capital": "Schwyz",
+      "bfsId": 1372
+    },
+    "OW": {
+      "cantonPct": 325,
+      "cityPct": 386,
+      "capital": "Sarnen",
+      "bfsId": 1407
+    },
+    "NW": {
+      "cantonPct": 261,
+      "cityPct": 235,
+      "capital": "Stans",
+      "bfsId": 1509
+    },
+    "GL": {
+      "cantonPct": 59.7,
+      "cityPct": 61,
+      "capital": "Glarus",
+      "bfsId": 1632
+    },
+    "ZG": {
+      "cantonPct": 78,
+      "cityPct": 52,
+      "capital": "Zug",
+      "bfsId": 1711
+    },
+    "FR": {
+      "cantonPct": 96,
+      "cityPct": 80,
+      "capital": "Fribourg",
+      "bfsId": 2196
+    },
+    "SO": {
+      "cantonPct": 104,
+      "cityPct": 107,
+      "capital": "Solothurn",
+      "bfsId": 2601
+    },
+    "BS": {
+      "cantonPct": 50,
+      "cityPct": 50,
+      "capital": "Basel",
+      "bfsId": 2701
+    },
+    "BL": {
+      "cantonPct": 100,
+      "cityPct": 65,
+      "capital": "Liestal",
+      "bfsId": 2829
+    },
+    "SH": {
+      "cantonPct": 76,
+      "cityPct": 83,
+      "capital": "Schaffhausen",
+      "bfsId": 2939
+    },
+    "AR": {
+      "cantonPct": 330,
+      "cityPct": 410,
+      "capital": "Herisau",
+      "bfsId": 3001
+    },
+    "AI": {
+      "cantonPct": 96,
+      "cityPct": 56,
+      "capital": "Appenzell",
+      "bfsId": 3101
+    },
+    "SG": {
+      "cantonPct": 105,
+      "cityPct": 138,
+      "capital": "St. Gallen",
+      "bfsId": 3203
+    },
+    "GR": {
+      "cantonPct": 92,
+      "cityPct": 88,
+      "capital": "Chur",
+      "bfsId": 3901
+    },
+    "AG": {
+      "cantonPct": 103,
+      "cityPct": 96,
+      "capital": "Aarau",
+      "bfsId": 4001
+    },
+    "TG": {
+      "cantonPct": 109,
+      "cityPct": 144,
+      "capital": "Frauenfeld",
+      "bfsId": 4566
+    },
+    "TI": {
+      "cantonPct": 100,
+      "cityPct": 93,
+      "capital": "Bellinzona",
+      "bfsId": 5002
+    },
+    "VD": {
+      "cantonPct": 155,
+      "cityPct": 78.5,
+      "capital": "Lausanne",
+      "bfsId": 5586
+    },
+    "VS": {
+      "cantonPct": 100,
+      "cityPct": 110,
+      "capital": "Sion",
+      "bfsId": 6266
+    },
+    "NE": {
+      "cantonPct": 124,
+      "cityPct": 65,
+      "capital": "Neuchâtel",
+      "bfsId": 6458
+    },
+    "GE": {
+      "cantonPct": 147.5,
+      "cityPct": 45.49,
+      "capital": "Genève",
+      "bfsId": 6621
+    },
+    "JU": {
+      "cantonPct": 285,
+      "cityPct": 190,
+      "capital": "Delémont",
+      "bfsId": 6711
+    }
+  }
+}

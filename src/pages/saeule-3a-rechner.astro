@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ThreeACalculator from '../components/ThreeACalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
+import { formatCHF } from '../lib/format';
+import { cantonTax } from '../lib/tax/engine';
+import limits from '../data/saeule-3a-2026.json';
+
+const path = '/saeule-3a-rechner/';
+const title = `Säule 3a Rechner ${SITE_YEAR} – Steuerersparnis berechnen | ${BRAND}`;
+const description = `Wie viel Steuern spart Ihre Säule-3a-Einzahlung? Ersparnis nach Kanton und Einkommen berechnen. Maximalbetrag ${SITE_YEAR}: CHF 7'258 mit Pensionskasse.`;
+
+const maxPK = limits.withPensionFund;
+const exBefore = cantonTax(100_000, 'ZH', 'single');
+const exAfter = cantonTax(100_000 - maxPK, 'ZH', 'single');
+const exSaving = Math.round((exBefore.totalTax - exAfter.totalTax));
+
+const faqs = [
+  {
+    q: `Wie hoch ist der Säule-3a-Maximalbetrag ${SITE_YEAR}?`,
+    a: `Erwerbstätige mit Pensionskasse dürfen ${SITE_YEAR} maximal CHF 7'258 einzahlen. Ohne Pensionskasse (z.B. Selbständige) sind es 20% des Erwerbseinkommens, höchstens CHF 36'288. Die Beträge legt das Bundesamt für Sozialversicherungen (BSV) jährlich fest.`,
+  },
+  {
+    q: 'Wie viel Steuern spare ich mit der Säule 3a?',
+    a: `Die Einzahlung wird vollständig vom steuerbaren Einkommen abgezogen — die Ersparnis entspricht Ihrem Grenzsteuersatz. Je nach Kanton und Einkommen sind das typischerweise 20-40% der Einzahlung: Beim Maximalbetrag also grob CHF 1'500 bis CHF 2'900 pro Jahr. Der Rechner oben zeigt Ihren exakten Wert.`,
+  },
+  {
+    q: 'Lohnt sich die Säule 3a auch bei tiefem Einkommen?',
+    a: 'Der Steuereffekt ist bei tiefen Einkommen kleiner, weil der Grenzsteuersatz tiefer ist. Die Säule 3a bleibt aber als Vorsorgeinstrument sinnvoll — und jede Einzahlung senkt die Steuern zumindest etwas. Rechnen Sie Ihren Fall oben durch.',
+  },
+  {
+    q: 'Wird die Auszahlung später besteuert?',
+    a: 'Ja, beim Bezug wird das 3a-Kapital separat vom übrigen Einkommen zu einem reduzierten Satz besteuert (Kapitalauszahlungssteuer, kantonal unterschiedlich). Die Ersparnis während der Einzahlungsjahre übersteigt diese Bezugssteuer in aller Regel deutlich. Mit gestaffelten Bezügen über mehrere Jahre lässt sie sich zusätzlich senken.',
+  },
+  {
+    q: 'Bis wann muss ich einzahlen?',
+    a: 'Die Einzahlung muss bis Ende Jahr (Valuta) auf dem 3a-Konto verbucht sein, damit sie im selben Steuerjahr abgezogen werden kann. Viele Banken empfehlen eine Überweisung bis Mitte Dezember.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Säule 3a Steuerrechner',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'de-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Säule-3a-Rechner' }]} />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Säule-3a-Rechner {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Berechnen Sie, wie viel Steuern Ihre Einzahlung in die Säule 3a spart — nach Kanton, Einkommen und Zivilstand, mit
+    offiziellen Tarifen {SITE_YEAR}.
+  </p>
+
+  <ThreeACalculator />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Wie wird gerechnet?</h2>
+    <p>
+      Ihre 3a-Einzahlung wird vom steuerbaren Einkommen abgezogen. Wir berechnen Ihre Einkommenssteuer (Kanton +
+      Gemeinde am Hauptort + direkte Bundessteuer) einmal ohne und einmal mit Abzug — die Differenz ist Ihre
+      Steuerersparnis. Grundlage sind die kantonalen Tarife und Steuerfüsse {SITE_YEAR} aus den ESTV-Steuerdaten.
+    </p>
+    <h3>Rechenbeispiel</h3>
+    <p>Steuerbares Einkommen {formatCHF(100000, 0)}, alleinstehend, Kanton Zürich, Einzahlung {formatCHF(maxPK, 0)}:</p>
+    <ul>
+      <li>Steuern ohne Einzahlung: {formatCHF(exBefore.totalTax, 0)}</li>
+      <li>Steuern mit Einzahlung: {formatCHF(exAfter.totalTax, 0)}</li>
+      <li><strong>Ersparnis: rund {formatCHF(exSaving, 0)} pro Jahr</strong></li>
+    </ul>
+    <h3>Grenzen dieser Berechnung</h3>
+    <ul>
+      <li>Steuerfuss des Kantonshauptorts; Ihre Gemeinde kann abweichen. Ohne Kirchensteuer.</li>
+      <li>Die spätere Kapitalauszahlungssteuer beim Bezug ist nicht Teil dieser Rechnung.</li>
+      <li>Vergleich auf Basis des steuerbaren Einkommens (nach übrigen Abzügen).</li>
+    </ul>
+
+    <h2>Häufige Fragen</h2>
+    {
+      faqs.map((f) => (
+        <div class="mb-4">
+          <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+          <p class="text-slate-700">{f.a}</p>
+        </div>
+      ))
+    }
+  </div>
+
+  <RelatedTools current="saeule-3a-rechner" />
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Quellen:</strong> Maximalbeträge:
+      <a class="underline" href="https://faq.bsv.admin.ch/de/3-saeule/welche-beitraege-kann-ich-die-saeule-3a-einzahlen" rel="noopener">BSV</a>.
+      Steuertarife und Steuerfüsse:
+      <a class="underline" href="https://swisstaxcalculator.estv.admin.ch/" rel="noopener">ESTV Steuerdaten {SITE_YEAR}</a>.
+      Alle Quellen mit Stichdatum unter <a class="underline" href="/quellen/">Quellen</a>.
+    </p>
+    <p>Zuletzt aktualisiert: 12.07.2026 · Datenstand Steuerjahr {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

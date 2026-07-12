@@ -1,0 +1,14 @@
+{
+  "_meta": {
+    "source": "https://faq.bsv.admin.ch/de/3-saeule/welche-beitraege-kann-ich-die-saeule-3a-einzahlen",
+    "retrieved": "2026-07-12",
+    "taxYear": 2026,
+    "description": "Saeule 3a maximum deductible contributions for 2026, set annually by the BSV.",
+    "note": "Cross-checked against UBS/Raiffeisen/finpension 2026 pages on 2026-07-12."
+  },
+  "withPensionFund": 7258,
+  "withoutPensionFund": {
+    "rateOfIncome": 0.2,
+    "cap": 36288
+  }
+}

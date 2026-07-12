@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import TaxComparison from '../components/TaxComparison.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
+import { formatCHF } from '../lib/format';
+import { cantonTax } from '../lib/tax/engine';
+
+const path = '/steuervergleich/';
+const title = `Steuervergleich Kantone ${SITE_YEAR} – alle 26 im Ranking | ${BRAND}`;
+const description = `Ein Einkommen, alle 26 Kantone: Kantons-, Gemeinde- und Bundessteuer im direkten Vergleich der Hauptorte. Mit offiziellen ESTV-Tarifen ${SITE_YEAR}.`;
+
+// Worked-example figures rendered server-side from the engine (single source of truth).
+const zh = cantonTax(100_000, 'ZH', 'single');
+const zg = cantonTax(100_000, 'ZG', 'single');
+
+const faqs = [
+  {
+    q: 'Welcher Kanton hat die tiefsten Einkommenssteuern?',
+    a: `Bei ${formatCHF(100000, 0)} steuerbarem Einkommen (alleinstehend) ist Zug am günstigsten, gefolgt von Schwyz und den Innerschweizer Kantonen. Das Ranking hängt aber von Einkommen und Zivilstand ab — bei anderen Werten kann sich die Reihenfolge verschieben. Der Rechner oben zeigt Ihr persönliches Ranking.`,
+  },
+  {
+    q: 'Was bedeutet «steuerbares Einkommen»?',
+    a: 'Das steuerbare Einkommen ist Ihr Einkommen nach allen Abzügen (Berufsauslagen, Versicherungsprämien, Säule 3a usw.). Es steht in Ihrer letzten Steuerveranlagung. Da die Abzüge je nach Kanton leicht unterschiedlich sind, ist der Vergleich auf Basis des steuerbaren Einkommens eine Annäherung.',
+  },
+  {
+    q: 'Wie setzt sich die Steuerbelastung zusammen?',
+    a: 'Aus drei Ebenen: der Kantonssteuer (kantonaler Tarif × kantonaler Steuerfuss), der Gemeindesteuer (Steuerfuss der Gemeinde) und der direkten Bundessteuer (einheitlicher Bundestarif). Wir rechnen mit den Steuerfüssen der Kantonshauptorte, ohne Kirchensteuer.',
+  },
+  {
+    q: 'Warum unterscheiden sich die Kantone so stark?',
+    a: `Jeder Kanton bestimmt Tarif und Steuerfuss selbst — die Bandbreite ist enorm. Beispiel bei ${formatCHF(100000, 0)} (alleinstehend): In Zug zahlen Sie total rund ${formatCHF(zg.totalTax, 0)}, in Zürich rund ${formatCHF(zh.totalTax, 0)} pro Jahr. Über ein Erwerbsleben summieren sich solche Unterschiede auf sechsstellige Beträge.`,
+  },
+  {
+    q: 'Gilt der Vergleich auch für meine Gemeinde?',
+    a: 'Der Vergleich nutzt den Steuerfuss des jeweiligen Kantonshauptorts. Ihre Gemeinde kann günstiger oder teurer sein — innerhalb eines Kantons unterscheiden sich die Gemeinden teils um mehr als 30 Steuerfuss-Prozentpunkte.',
+  },
+  {
+    q: 'Ist die Quellensteuer berücksichtigt?',
+    a: 'Nein. Dieser Vergleich gilt für ordentlich veranlagte Personen (Schweizer:innen und Ausweis C). Für quellenbesteuerte Arbeitnehmende gelten eigene Tarife.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Steuervergleich Kantone Schweiz',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'de-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Steuervergleich' }]} />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Steuervergleich: alle 26 Kantone {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Geben Sie Ihr steuerbares Einkommen ein und sehen Sie sofort, was Sie in jedem Kantonshauptort an Kantons-,
+    Gemeinde- und Bundessteuer zahlen würden — als Ranking.
+  </p>
+
+  <TaxComparison />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Wie wird gerechnet?</h2>
+    <p>
+      Für jeden Kanton berechnen wir die <strong>einfache Staatssteuer</strong> nach dem kantonalen Einkommenssteuertarif
+      {SITE_YEAR} (Quelle: ESTV-Steuerdaten) und multiplizieren sie mit den Steuerfüssen von Kanton und Hauptort. Dazu
+      kommt die <strong>direkte Bundessteuer</strong> nach Bundestarif. Kirchensteuer und Personalsteuern sind nicht
+      enthalten. In Kantonen mit eigenem Gemeindetarif (Schwyz, Sitten) verwenden wir den offiziellen Gemeindetarif.
+    </p>
+    <h3>Rechenbeispiel</h3>
+    <p>Steuerbares Einkommen {formatCHF(100000, 0)}, alleinstehend, Hauptort Zürich:</p>
+    <ul>
+      <li>Einfache Staatssteuer (ZH-Tarif): {formatCHF(zh.baseTax, 0)}</li>
+      <li>Kantonssteuer (Steuerfuss 95%): {formatCHF(zh.cantonTax, 0)}</li>
+      <li>Gemeindesteuer Stadt Zürich (119%): {formatCHF(zh.cityTax, 0)}</li>
+      <li>Direkte Bundessteuer: {formatCHF(zh.federalTax, 0)}</li>
+      <li><strong>Total: {formatCHF(zh.totalTax, 0)} ({(zh.effectiveRate * 100).toFixed(1)}% effektiv)</strong></li>
+    </ul>
+    <h3>Grenzen dieser Berechnung</h3>
+    <ul>
+      <li>Vergleich auf Basis des <strong>steuerbaren Einkommens</strong> — kantonale Unterschiede bei den Abzügen sind darin nicht abgebildet.</li>
+      <li>Steuerfüsse der <strong>Hauptorte</strong>; Ihre Gemeinde kann abweichen.</li>
+      <li>Ohne Kirchensteuer, Personalsteuer und Vermögenssteuer.</li>
+    </ul>
+
+    <h2>Häufige Fragen</h2>
+    {
+      faqs.map((f) => (
+        <div class="mb-4">
+          <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+          <p class="text-slate-700">{f.a}</p>
+        </div>
+      ))
+    }
+  </div>
+
+  <RelatedTools current="steuervergleich" />
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Quellen:</strong> Tarife, Steuerfüsse und Abzüge:
+      <a class="underline" href="https://swisstaxcalculator.estv.admin.ch/" rel="noopener">
+        ESTV Steuerrechner / Steuerdaten {SITE_YEAR}</a>. Berechnungslogik validiert gegen die
+      MIT-lizenzierte Referenzimplementation
+      <a class="underline" href="https://github.com/devbrains-com/swisstaxcalculator" rel="noopener">devbrains swisstaxcalculator</a>.
+      Alle Quellen mit Stichdatum unter <a class="underline" href="/quellen/">Quellen</a>.
+    </p>
+    <p>Zuletzt aktualisiert: 12.07.2026 · Datenstand Steuerjahr {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

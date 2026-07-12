@@ -49,6 +49,25 @@ import { BRAND } from '../lib/site';
       gesetzliche Minimum.
     </p>
 
+    <h3>Steuervergleich (26 Kantone)</h3>
+    <p>
+      Der <a href="/steuervergleich/">Steuervergleich</a> berechnet pro Kanton die einfache Staatssteuer nach dem
+      kantonalen Einkommenssteuertarif 2026 und multipliziert sie mit den Steuerfüssen von Kanton und Hauptort; dazu
+      kommt die direkte Bundessteuer nach Bundestarif. Datenquelle sind die offiziellen ESTV-Steuerdaten
+      (swisstaxcalculator.estv.admin.ch). In Kantonen mit eigenem Gemeindetarif (Schwyz, Sitten) verwenden wir den
+      offiziellen Gemeindetarif. Nicht enthalten: Kirchensteuer, Personalsteuern, Vermögenssteuer. Der Vergleich
+      basiert auf dem steuerbaren Einkommen; kantonale Unterschiede bei den Abzügen sind darin nicht abgebildet. Die
+      Berechnungslogik ist gegen die MIT-lizenzierte Referenzimplementation devbrains/swisstaxcalculator validiert,
+      die auf denselben ESTV-Daten aufbaut.
+    </p>
+
+    <h3>Säule-3a-Rechner</h3>
+    <p>
+      Der <a href="/saeule-3a-rechner/">Säule-3a-Rechner</a> berechnet die Einkommenssteuer (gleiche Methodik wie der
+      Steuervergleich) einmal ohne und einmal mit 3a-Abzug; die Differenz ist die Steuerersparnis. Maximalbeträge 2026
+      gemäss BSV: CHF 7'258 mit Pensionskasse, 20% des Erwerbseinkommens bzw. maximal CHF 36'288 ohne Pensionskasse.
+    </p>
+
     <p>Die Methodik weiterer Rechner erscheint hier mit deren Veröffentlichung.</p>
   </article>
 </BaseLayout>

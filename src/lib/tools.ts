@@ -27,13 +27,13 @@ export const TOOLS: Tool[] = [
     id: 'steuervergleich',
     name: 'Steuervergleich aller 26 Kantone',
     description: 'Ein Einkommen, alle Kantone: wo zahlen Sie wie viel Einkommenssteuer?',
-    href: null,
+    href: '/steuervergleich/',
   },
   {
     id: 'saeule-3a-rechner',
     name: 'Säule-3a-Rechner',
     description: 'Wie viel Steuern spart Ihre Einzahlung in die Säule 3a? Nach Kanton und Einkommen.',
-    href: null,
+    href: '/saeule-3a-rechner/',
   },
   {
     id: 'franchise-rechner',
