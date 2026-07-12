@@ -6,6 +6,7 @@
  * added per page once those locales ship (SEO_SPEC §2).
  */
 import { absoluteUrl, BRAND, SITE_URL } from '../lib/site';
+import { LOCALE_LANG, LOCALE_OG, type Alternate, type Locale } from '../lib/locales';
 
 interface Props {
   title: string;
@@ -15,13 +16,21 @@ interface Props {
   /** Extra JSON-LD blocks for this page (BreadcrumbList comes from <Breadcrumbs/>). */
   jsonLd?: object[];
   ogImage?: string;
+  locale?: Locale;
+  /** hreflang alternates for translated pages; omit for single-locale pages. */
+  alternates?: Alternate[];
 }
 
-const { title, description, path, jsonLd = [], ogImage = '/og-default.png' } = Astro.props;
+const { title, description, path, jsonLd = [], ogImage = '/og-default.png', locale = 'de', alternates } = Astro.props;
 if (!path.endsWith('/')) throw new Error(`SEO path must end with a trailing slash (SEO_SPEC §1): ${path}`);
 if (title.length > 65) throw new Error(`Title too long (${title.length} > 65): ${title}`);
 
 const canonical = absoluteUrl(path);
+// Single-locale pages keep self-referencing hreflang; paired pages emit the set.
+const hreflangs: Alternate[] = alternates ?? [
+  { hreflang: LOCALE_LANG[locale], href: canonical },
+  { hreflang: 'x-default', href: canonical },
+];
 
 const organization = {
   '@context': 'https://schema.org',
@@ -39,8 +48,7 @@ const blocks = [organization, ...jsonLd];
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 
-<link rel="alternate" hreflang="de-CH" href={canonical} />
-<link rel="alternate" hreflang="x-default" href={canonical} />
+{hreflangs.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content={BRAND} />
@@ -48,7 +56,7 @@ const blocks = [organization, ...jsonLd];
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={absoluteUrl(ogImage)} />
-<meta property="og:locale" content="de_CH" />
+<meta property="og:locale" content={LOCALE_OG[locale]} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />

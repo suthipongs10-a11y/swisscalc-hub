@@ -2,14 +2,17 @@
 
 ## Current state
 
-**M4 built — E-E-A-T content layer live. This completes the planned build (M0–M4). Awaiting review.**
+**M5 built — French locale foundation live (site is now bilingual DE + FR). Awaiting review.**
 
-41 pages total: 3 tools + 26 canton pages + 4 Ratgeber articles + Ratgeber index + trust/legal. Build clean (0 errors/warnings/hints), tests 65/65, Lighthouse **100×4** on all sampled pages incl. Ratgeber, CI enforces link integrity + ß-scanner over article content. Responsive nav (mobile hamburger + desktop tool bar) shipped between M3 and M4.
+45 pages: 29 German (3 tools + 26 canton) + 5 German editorial + German trust/legal + **4 French** (/fr/ home + 3 tools). Build clean, tests 65/65, Lighthouse **100×4** on all sampled pages incl. all French. Deployed on Cloudflare Pages (calcswiss.ch live, sitemap fixed via `build:pages`).
+
+**French locale (M5):** salary, cross-canton comparison, 3e pilier — sharing the exact German engines (same numbers, verified: net CHF 75'007, Zoug rank 1, 3a ZH CHF 1'887.78) with French UI, French canton names (Genève/Vaud/Valais…), reciprocal de↔fr hreflang, language switcher. German output verified byte-identical (only JS-bundle hashes changed from the shared-renderer refactor). FR canton pages + FR articles + FR legal/methodik are a deliberate follow-up.
 
 **Remaining work (all optional / owner-driven, none block anything):**
-- **Quellensteuer-Rechner** — deferred since M2, pending tariff files (owner downloads 5 files from estv.admin.ch in a normal browser; instructions ready on request). The Quellensteuer *guide* article is already live and links to the live tools.
-- **Backlog tools** — Franchise-Rechner (needs Sept BAG data), `/fr/` + `/en/` locales.
-- **Owner deploy + verification checklist** — see below.
+- **Quellensteuer-Rechner** — deferred since M2, pending tariff files (owner downloads 5 files from estv.admin.ch; instructions ready on request). Quellensteuer *guide* article already live.
+- **FR depth** — French canton pages (26), French Ratgeber, translate legal/methodik to FR; then `/en/` expat hub.
+- **Backlog tools** — Franchise-Rechner (needs Sept BAG data).
+- **Owner verification checklist** — see below.
 
 Live tools: `/brutto-netto-rechner/`, `/steuervergleich/` (all 26 cantons), `/saeule-3a-rechner/`. Build ✓, tests 65/65 ✓, Lighthouse **100×4** on all sampled pages, both new calculators **driven live in Chromium** (values match the pinned engine references exactly, no console errors).
 
@@ -48,6 +51,14 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-12 — Session 7: M5 — French locale foundation (+ Cloudflare deploy fix)
+
+- **Deploy:** owner connected Cloudflare Pages; sitemap 404 traced to `astro check` flaking the hosted build → added `build:pages` script (`astro build`, no check) for Pages; `astro check` stays in GitHub CI. `public/_headers`, `.node-version`, `DEPLOY.md` added earlier this session.
+- **Locale plumbing:** `src/lib/locales.ts` (Locale type, LOCALE_LANG/OG, `PAGE_PAIRS` de↔fr map, `alternatesFor`, `counterpartOf`); `src/i18n/fr.json`; SEO component gained `locale` + opt-in `alternates` (single-locale pages stay byte-identical); BaseLayout/Header/Footer/Breadcrumbs are locale-aware; language switcher renders only on paired pages.
+- **Renderer refactor:** extracted hardcoded German strings from `renderResult`/`renderComparison`/`render3a` into label objects (`SALARY_LABELS_DE/FR`, `COMPARISON_LABELS_DE/FR`, `THREEA_LABELS_DE/FR` incl. French canton names). German defaults reproduce output **byte-identical** — verified by snapshot diff (only JS-bundle content-hashes changed).
+- **French pages:** `/fr/` home + `/fr/calculateur-salaire-brut-net/`, `/fr/comparatif-impots-cantons/`, `/fr/calculateur-3e-pilier/`. Separate French island components under `components/fr/` (German islands untouched) sharing the engines/renderers with FR labels. Full §3.1 anatomy, WebApplication + FAQPage schema, French sources.
+- **Verified:** German SSR byte-identical (3 tools), hreflang reciprocal de↔fr, `lang="fr-CH"`, link check 44 pages green, all 3 FR calculators driven in Chromium (values match German engine exactly, no console errors), DE→FR switcher round-trip, Lighthouse 100×4 on all 4 FR pages, tests 65/65. Committed, stopped for review.
 
 ### 2026-07-12 — Session 6: M4 — E-E-A-T content layer (+ mobile nav)
 

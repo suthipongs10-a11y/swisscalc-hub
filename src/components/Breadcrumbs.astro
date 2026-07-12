@@ -5,6 +5,7 @@
  */
 import { absoluteUrl } from '../lib/site';
 import { useTranslations } from '../lib/i18n';
+import type { Locale } from '../lib/locales';
 
 interface Crumb {
   name: string;
@@ -14,11 +15,13 @@ interface Crumb {
 
 interface Props {
   crumbs: Crumb[];
+  locale?: Locale;
 }
 
-const t = useTranslations('de');
-const { crumbs } = Astro.props;
-const all: Crumb[] = [{ name: t('common.breadcrumbHome'), path: '/' }, ...crumbs];
+const { crumbs, locale = 'de' } = Astro.props;
+const t = useTranslations(locale);
+const home = locale === 'fr' ? '/fr/' : '/';
+const all: Crumb[] = [{ name: t('common.breadcrumbHome'), path: home }, ...crumbs];
 
 const jsonLd = {
   '@context': 'https://schema.org',

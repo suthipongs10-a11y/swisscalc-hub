@@ -1,13 +1,12 @@
 import de from '../i18n/de.json';
+import fr from '../i18n/fr.json';
+import type { Locale } from './locales';
 
 /**
  * CLAUDE.md: no hardcoded UI copy in components — all strings live in
- * /src/i18n/*.json. Only German exists today; the locale parameter is the
- * plumbing for /fr/ and /en/ (SEO_SPEC §2).
+ * /src/i18n/*.json. German is the launch locale; French ships with /fr/.
  */
-const locales = { de } as const;
-
-export type Locale = keyof typeof locales;
+const locales = { de, fr } as const;
 
 export function useTranslations(locale: Locale = 'de') {
   const table = locales[locale];

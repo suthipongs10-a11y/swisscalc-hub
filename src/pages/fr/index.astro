@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BRAND, SITE_URL, SITE_YEAR } from '../../lib/site';
+
+const path = '/fr/';
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/fr/#website`,
+  name: BRAND,
+  url: `${SITE_URL}/fr/`,
+  inLanguage: 'fr-CH',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+
+const tools = [
+  {
+    href: '/fr/calculateur-salaire-brut-net/',
+    name: `Calculateur salaire brut-net ${SITE_YEAR}`,
+    description: 'Du salaire brut au salaire net : AVS, AI, APG, AC, AANP et LPP détaillés de façon transparente.',
+  },
+  {
+    href: '/fr/comparatif-impots-cantons/',
+    name: 'Comparatif des impôts des 26 cantons',
+    description: 'Un revenu, tous les cantons : où payez-vous combien d’impôt sur le revenu ?',
+  },
+  {
+    href: '/fr/calculateur-3e-pilier/',
+    name: 'Calculateur 3e pilier',
+    description: 'Combien votre versement au 3e pilier vous fait-il économiser ? Par canton et par revenu.',
+  },
+];
+---
+
+<BaseLayout
+  title={`Calculateurs d’impôts et de salaire Suisse ${SITE_YEAR} | ${BRAND}`}
+  description="Calculateurs gratuits d’impôts et de finances pour la Suisse : salaire brut-net, comparatif des impôts des 26 cantons, 3e pilier. Sans publicité, sans cookies."
+  path={path}
+  locale="fr"
+  jsonLd={[websiteJsonLd]}
+>
+  <h1 class="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">Calculateurs d’impôts et de finances pour la Suisse</h1>
+  <p class="mb-10 max-w-2xl text-lg leading-relaxed text-slate-700">
+    CalcSwiss propose des calculateurs précis et gratuits pour le salaire, les impôts et la prévoyance — avec une
+    méthodologie transparente et des sources officielles pour les 26 cantons.
+  </p>
+
+  <h2 class="mb-4 text-2xl font-bold">Nos calculateurs</h2>
+  <ul class="grid gap-4 sm:grid-cols-2">
+    {
+      tools.map((tool) => (
+        <li class="rounded-lg border border-slate-200 p-5">
+          <h3 class="mb-1 font-semibold">
+            <a href={tool.href} class="text-blue-700 hover:underline">
+              {tool.name}
+            </a>
+          </h3>
+          <p class="text-sm leading-relaxed text-slate-600">{tool.description}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <section class="prose-content mt-12 max-w-2xl">
+    <h2>Pourquoi CalcSwiss ?</h2>
+    <p>
+      Chaque chiffre de ce site provient d’une source officielle — AFC, OFS, OFSP ou les administrations fiscales
+      cantonales — et est documenté avec sa source et sa date. Nos calculs sont fournis à titre indicatif ; seule la
+      taxation officielle fait foi. Sans publicité, sans cookies, sans inscription.
+    </p>
+  </section>
+</BaseLayout>

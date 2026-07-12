@@ -1,0 +1,79 @@
+---
+/** French 3e pilier savings island (shares engine + renderer; FR labels). */
+import cantonData from '../../data/cantons.json';
+import limits from '../../data/saeule-3a-2026.json';
+import { render3aHtml } from '../../lib/tax/render3a';
+import { THREEA_LABELS_FR, frName } from '../../lib/tax/labels';
+
+const cantons = cantonData.cantons;
+const DEFAULTS = { income: 100000, contribution: limits.withPensionFund, canton: 'ZH', relationship: 'single' as const };
+const initialHtml = render3aHtml(
+  { taxableIncome: DEFAULTS.income, contribution: DEFAULTS.contribution, canton: DEFAULTS.canton, relationship: DEFAULTS.relationship },
+  THREEA_LABELS_FR,
+);
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section aria-label="Calculateur 3e pilier" class="grid gap-6 md:grid-cols-2">
+  <form id="ta-form" class="space-y-4" novalidate>
+    <div>
+      <label class={labelClass} for="ta-income">Revenu imposable (CHF / an, avant déduction 3a)</label>
+      <input class={inputClass} type="number" id="ta-income" name="income" min="0" step="1000" inputmode="numeric" value={DEFAULTS.income} />
+    </div>
+    <div>
+      <label class={labelClass} for="ta-contribution">Versement 3a prévu (CHF)</label>
+      <input class={inputClass} type="number" id="ta-contribution" name="contribution" min="0" max={limits.withoutPensionFund.cap} step="100" inputmode="numeric" value={DEFAULTS.contribution} />
+      <p class="mt-1 text-xs text-slate-500">
+        Maximum {new Intl.NumberFormat('fr-CH').format(limits.withPensionFund)} (avec caisse de pension) ou 20% du revenu
+        d’activité, au maximum {new Intl.NumberFormat('fr-CH').format(limits.withoutPensionFund.cap)} (sans caisse de pension).
+      </p>
+    </div>
+    <div>
+      <label class={labelClass} for="ta-canton">Canton</label>
+      <select class={inputClass} id="ta-canton" name="canton">
+        {cantons.map((c) => <option value={c.abbr} selected={c.abbr === DEFAULTS.canton}>{frName(c.abbr)}</option>)}
+      </select>
+    </div>
+    <fieldset>
+      <legend class={labelClass}>État civil</legend>
+      <div class="mt-1 inline-flex rounded-md border border-slate-300 p-0.5">
+        <label class="cursor-pointer">
+          <input type="radio" name="relationship" value="single" class="peer sr-only" checked />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">Célibataire</span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="relationship" value="married" class="peer sr-only" />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">Marié(e)</span>
+        </label>
+      </div>
+    </fieldset>
+  </form>
+
+  <div id="ta-result" aria-live="polite" set:html={initialHtml}></div>
+</section>
+
+<script>
+  import { render3aHtml } from '../../lib/tax/render3a';
+  import { THREEA_LABELS_FR } from '../../lib/tax/labels';
+
+  const form = document.getElementById('ta-form') as HTMLFormElement | null;
+  const resultEl = document.getElementById('ta-result');
+  if (form && resultEl) {
+    const recompute = () => {
+      const num = (name: string) => parseFloat((form.elements.namedItem(name) as HTMLInputElement).value);
+      const income = num('income');
+      const contribution = num('contribution');
+      const canton = (form.elements.namedItem('canton') as HTMLSelectElement).value;
+      const relationship =
+        (form.elements.namedItem('relationship') as RadioNodeList).value === 'married' ? 'married' : 'single';
+      if (Number.isFinite(income) && income >= 0 && Number.isFinite(contribution) && contribution >= 0) {
+        resultEl.innerHTML = render3aHtml({ taxableIncome: income, contribution, canton, relationship }, THREEA_LABELS_FR);
+      }
+    };
+    form.addEventListener('input', recompute);
+    form.addEventListener('change', recompute);
+  }
+</script>

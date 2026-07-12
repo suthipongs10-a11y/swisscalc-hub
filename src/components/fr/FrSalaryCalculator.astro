@@ -1,0 +1,121 @@
+---
+/**
+ * French salary calculator island. Shares the engine + renderer with the German
+ * one; only the form copy and the renderer labels (SALARY_LABELS_FR) differ.
+ */
+import cantonData from '../../data/cantons.json';
+import { calculateSalary, annualFromMonthly } from '../../lib/salary/engine';
+import { renderResultHtml, SALARY_LABELS_FR } from '../../lib/salary/renderResult';
+import { frName } from '../../lib/tax/labels';
+
+const cantons = cantonData.cantons;
+const DEFAULTS = { monthly: 6500, payouts: 13 as const, age: 40, nbuPct: 1.4, bvg: true };
+const initialResult = calculateSalary({
+  annualGross: annualFromMonthly(DEFAULTS.monthly, DEFAULTS.payouts),
+  age: DEFAULTS.age,
+  nbuRate: DEFAULTS.nbuPct / 100,
+  includeBvg: DEFAULTS.bvg,
+});
+const initialHtml = renderResultHtml(initialResult, SALARY_LABELS_FR);
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section aria-label="Calculateur salaire brut-net" class="grid gap-6 md:grid-cols-2">
+  <form id="salary-form" class="space-y-4" novalidate>
+    <div>
+      <label class={labelClass} for="monthly">Salaire brut par mois (CHF)</label>
+      <input class={inputClass} type="number" id="monthly" name="monthly" min="0" step="100" inputmode="numeric" value={DEFAULTS.monthly} />
+    </div>
+
+    <fieldset>
+      <legend class={labelClass}>Nombre de versements</legend>
+      <div class="mt-1 inline-flex rounded-md border border-slate-300 p-0.5">
+        <label class="cursor-pointer">
+          <input type="radio" name="payouts" value="12" class="peer sr-only" />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">12×</span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="payouts" value="13" class="peer sr-only" checked />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">13× (13e salaire)</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div>
+      <label class={labelClass} for="age">Âge (pour le taux LPP)</label>
+      <input class={inputClass} type="number" id="age" name="age" min="17" max="70" step="1" value={DEFAULTS.age} />
+    </div>
+
+    <div>
+      <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+        <input type="checkbox" id="bvg" name="bvg" class="h-4 w-4 rounded border-slate-300" checked />
+        Affilié à une caisse de pension (LPP)
+      </label>
+    </div>
+
+    <details class="text-sm">
+      <summary class="cursor-pointer text-slate-600 hover:text-slate-900">Paramètres avancés</summary>
+      <div class="mt-3 space-y-4">
+        <div>
+          <label class={labelClass} for="nbu">Taux AANP (accidents non prof., %)</label>
+          <input class={inputClass} type="number" id="nbu" name="nbu" min="0" max="5" step="0.01" value={DEFAULTS.nbuPct} />
+          <p class="mt-1 text-xs text-slate-500">
+            Le taux AANP est fixé par l’employeur/l’assureur. Valeur indicative – à adapter selon votre décompte de salaire.
+          </p>
+        </div>
+        <div>
+          <label class={labelClass} for="canton">Canton (pour le calcul d’impôt ultérieur)</label>
+          <select class={inputClass} id="canton" name="canton">
+            {cantons.map((c) => <option value={c.slug}>{frName(c.abbr)}</option>)}
+          </select>
+          <p class="mt-1 text-xs text-slate-500">
+            Les cotisations sociales sont identiques dans tous les cantons. L’impôt cantonal est taxé séparément –
+            comparez-le dans le <a href="/fr/comparatif-impots-cantons/" class="underline">comparatif des 26 cantons</a>.
+          </p>
+        </div>
+      </div>
+    </details>
+  </form>
+
+  <div>
+    <div id="salary-result" aria-live="polite" set:html={initialHtml}></div>
+    <p class="mt-3 text-xs text-slate-500">
+      Le salaire net s’entend <strong>avant impôt sur le revenu</strong>. En Suisse, l’impôt n’est pas déduit du salaire
+      pour les citoyens suisses et les titulaires d’un permis C, mais taxé séparément. Un calculateur d’impôt à la source
+      suivra.
+    </p>
+  </div>
+</section>
+
+<script>
+  import { calculateSalary, annualFromMonthly } from '../../lib/salary/engine';
+  import { renderResultHtml, SALARY_LABELS_FR } from '../../lib/salary/renderResult';
+
+  const form = document.getElementById('salary-form') as HTMLFormElement | null;
+  const resultEl = document.getElementById('salary-result');
+  if (form && resultEl) {
+    const num = (name: string): number => {
+      const el = form.elements.namedItem(name) as HTMLInputElement | null;
+      const v = el ? parseFloat(el.value) : NaN;
+      return Number.isFinite(v) ? v : 0;
+    };
+    const recompute = () => {
+      const monthly = num('monthly');
+      const payouts = (form.elements.namedItem('payouts') as RadioNodeList).value === '12' ? 12 : 13;
+      const age = num('age');
+      const nbuRate = num('nbu') / 100;
+      const bvg = (form.elements.namedItem('bvg') as HTMLInputElement).checked;
+      try {
+        const result = calculateSalary({ annualGross: annualFromMonthly(monthly, payouts), age, nbuRate, includeBvg: bvg });
+        resultEl.innerHTML = renderResultHtml(result, SALARY_LABELS_FR);
+      } catch {
+        /* keep last valid result */
+      }
+    };
+    form.addEventListener('input', recompute);
+    form.addEventListener('change', recompute);
+  }
+</script>

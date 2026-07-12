@@ -2,13 +2,17 @@
 import { useTranslations } from '../lib/i18n';
 import { BRAND } from '../lib/site';
 import { TOOLS } from '../lib/tools';
+import { counterpartOf, type Locale } from '../lib/locales';
 
-const t = useTranslations('de');
+interface Props {
+  locale?: Locale;
+  path?: string;
+}
+const { locale = 'de', path = '/' } = Astro.props;
+const t = useTranslations(locale);
 
-// Only shipped tools appear in navigation (no broken links, SEO_SPEC §5).
+// German nav (live German tools + guide + methodik).
 const liveTools = TOOLS.filter((tool) => tool.href !== null);
-
-// Short labels for the desktop bar; the mobile panel uses full names.
 const shortNames: Record<string, string> = {
   'brutto-netto-rechner': 'Brutto-Netto',
   'quellensteuer-rechner': 'Quellensteuer',
@@ -16,11 +20,24 @@ const shortNames: Record<string, string> = {
   'saeule-3a-rechner': 'Säule 3a',
   'franchise-rechner': 'Franchise',
 };
+
+// French nav (the three shipped French tools).
+const frTools = [
+  { href: '/fr/calculateur-salaire-brut-net/', short: 'Salaire net', full: 'Calculateur salaire brut-net' },
+  { href: '/fr/comparatif-impots-cantons/', short: 'Comparatif impôts', full: 'Comparatif des impôts cantonaux' },
+  { href: '/fr/calculateur-3e-pilier/', short: '3e pilier', full: 'Calculateur 3e pilier' },
+];
+
+// Language switcher: only when a counterpart page exists (keeps single-locale
+// pages free of dead toggles and byte-identical to before).
+const otherLocale: Locale = locale === 'de' ? 'fr' : 'de';
+const switchHref = counterpartOf(path, otherLocale);
+const switchLabel = otherLocale.toUpperCase();
 ---
 
 <header class="border-b border-slate-200 bg-white">
   <div class="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
-    <a href="/" class="flex items-center gap-2 text-lg font-bold text-slate-900" aria-label={BRAND}>
+    <a href={locale === 'fr' ? '/fr/' : '/'} class="flex items-center gap-2 text-lg font-bold text-slate-900" aria-label={BRAND}>
       <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
         <rect width="24" height="24" rx="5" fill="#0f4c81"></rect>
         <rect x="6" y="7" width="12" height="2.5" rx="1.25" fill="#fff"></rect>
@@ -31,21 +48,49 @@ const shortNames: Record<string, string> = {
     </a>
 
     <!-- Desktop navigation -->
-    <nav aria-label="Hauptnavigation" class="hidden md:block">
-      <ul class="flex items-center gap-5 text-sm text-slate-600">
-        {
-          liveTools.map((tool) => (
-            <li>
-              <a href={tool.href} class="hover:text-slate-900 hover:underline">
-                {shortNames[tool.id] ?? tool.name}
-              </a>
-            </li>
-          ))
-        }
-        <li><a href="/ratgeber/" class="hover:text-slate-900 hover:underline">{t('nav.guide')}</a></li>
-        <li><a href="/methodik/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
-      </ul>
-    </nav>
+    {
+      locale === 'de' ? (
+        <nav aria-label="Hauptnavigation" class="hidden md:block">
+          <ul class="flex items-center gap-5 text-sm text-slate-600">
+            {liveTools.map((tool) => (
+              <li>
+                <a href={tool.href} class="hover:text-slate-900 hover:underline">
+                  {shortNames[tool.id] ?? tool.name}
+                </a>
+              </li>
+            ))}
+            <li><a href="/ratgeber/" class="hover:text-slate-900 hover:underline">{t('nav.guide')}</a></li>
+            <li><a href="/methodik/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
+            {switchHref && (
+              <li>
+                <a href={switchHref} rel="alternate" hreflang={otherLocale} class="rounded border border-slate-300 px-2 py-1 text-xs font-medium hover:bg-slate-100">
+                  {switchLabel}
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
+      ) : (
+        <nav aria-label="Navigation principale" class="hidden md:block">
+          <ul class="flex items-center gap-5 text-sm text-slate-600">
+            {frTools.map((tool) => (
+              <li>
+                <a href={tool.href} class="hover:text-slate-900 hover:underline">
+                  {tool.short}
+                </a>
+              </li>
+            ))}
+            {switchHref && (
+              <li>
+                <a href={switchHref} rel="alternate" hreflang={otherLocale} class="rounded border border-slate-300 px-2 py-1 text-xs font-medium hover:bg-slate-100">
+                  {switchLabel}
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
+      )
+    }
 
     <!-- Mobile menu: <details> disclosure — works without JavaScript -->
     <details class="group relative md:hidden">
@@ -53,73 +98,60 @@ const shortNames: Record<string, string> = {
         class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-md text-slate-700 hover:bg-slate-100 [&::-webkit-details-marker]:hidden"
         aria-label={t('nav.menu')}
       >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          aria-hidden="true"
-          class="block group-open:hidden"
-        >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" class="block group-open:hidden">
           <line x1="4" y1="6" x2="20" y2="6"></line>
           <line x1="4" y1="12" x2="20" y2="12"></line>
           <line x1="4" y1="18" x2="20" y2="18"></line>
         </svg>
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          aria-hidden="true"
-          class="hidden group-open:block"
-        >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" class="hidden group-open:block">
           <line x1="6" y1="6" x2="18" y2="18"></line>
           <line x1="18" y1="6" x2="6" y2="18"></line>
         </svg>
       </summary>
 
-      <nav
-        aria-label="Mobile Navigation"
-        class="absolute right-0 top-full z-50 mt-2 w-64 rounded-lg border border-slate-200 bg-white p-2 shadow-lg"
-      >
-        <p class="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-          {t('nav.allTools')}
-        </p>
+      <nav aria-label="Mobile Navigation" class="absolute right-0 top-full z-50 mt-2 w-64 rounded-lg border border-slate-200 bg-white p-2 shadow-lg">
+        <p class="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-slate-400">{t('nav.allTools')}</p>
         <ul>
           {
-            liveTools.map((tool) => (
-              <li>
-                <a href={tool.href} class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
-                  {tool.name}
-                </a>
-              </li>
-            ))
+            locale === 'de'
+              ? liveTools.map((tool) => (
+                  <li>
+                    <a href={tool.href} class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
+                      {tool.name}
+                    </a>
+                  </li>
+                ))
+              : frTools.map((tool) => (
+                  <li>
+                    <a href={tool.href} class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
+                      {tool.full}
+                    </a>
+                  </li>
+                ))
           }
         </ul>
-        <div class="my-1 border-t border-slate-100" role="presentation"></div>
-        <ul>
-          <li>
-            <a href="/ratgeber/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
-              {t('nav.guide')}
-            </a>
-          </li>
-          <li>
-            <a href="/methodik/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
-              {t('nav.methodology')}
-            </a>
-          </li>
-          <li>
-            <a href="/ueber-uns/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
-              {t('nav.about')}
-            </a>
-          </li>
-        </ul>
+        {
+          locale === 'de' && (
+            <>
+              <div class="my-1 border-t border-slate-100" role="presentation" />
+              <ul>
+                <li><a href="/ratgeber/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.guide')}</a></li>
+                <li><a href="/methodik/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.methodology')}</a></li>
+                <li><a href="/ueber-uns/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.about')}</a></li>
+              </ul>
+            </>
+          )
+        }
+        {
+          switchHref && (
+            <>
+              <div class="my-1 border-t border-slate-100" role="presentation" />
+              <a href={switchHref} rel="alternate" hreflang={otherLocale} class="block rounded-md px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                {otherLocale === 'fr' ? 'Français' : 'Deutsch'}
+              </a>
+            </>
+          )
+        }
       </nav>
     </details>
   </div>

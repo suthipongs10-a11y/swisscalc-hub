@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FrThreeACalculator from '../../components/fr/FrThreeACalculator.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF } from '../../lib/format';
+import { cantonTax } from '../../lib/tax/engine';
+import limits from '../../data/saeule-3a-2026.json';
+
+const path = '/fr/calculateur-3e-pilier/';
+const title = `Calculateur 3e pilier Suisse ${SITE_YEAR} | ${BRAND}`;
+const description = `Combien d’impôt votre versement au 3e pilier vous fait-il économiser ? Par canton et par revenu. Montant maximal ${SITE_YEAR} : CHF 7'258 avec caisse de pension.`;
+
+const maxPK = limits.withPensionFund;
+const before = cantonTax(100_000, 'ZH', 'single');
+const after = cantonTax(100_000 - maxPK, 'ZH', 'single');
+const saving = Math.round(before.totalTax - after.totalTax);
+
+const faqs = [
+  {
+    q: `Quel est le montant maximal du 3e pilier en ${SITE_YEAR} ?`,
+    a: `Les personnes actives affiliées à une caisse de pension peuvent verser au maximum CHF 7'258 en ${SITE_YEAR}. Sans caisse de pension (indépendants), c’est 20% du revenu d’activité, au maximum CHF 36'288. Les montants sont fixés chaque année par l’Office fédéral des assurances sociales (OFAS).`,
+  },
+  {
+    q: 'Combien d’impôt puis-je économiser avec le 3e pilier ?',
+    a: `Le versement est entièrement déduit du revenu imposable — l’économie correspond à votre taux marginal. Selon le canton et le revenu, cela représente typiquement 20 à 40% du versement : pour le montant maximal, environ CHF 1'500 à 2'900 par an. Le calculateur ci-dessus affiche votre valeur exacte.`,
+  },
+  {
+    q: 'Le versement en vaut-il la peine même avec un revenu modeste ?',
+    a: 'L’effet fiscal est plus faible pour les revenus bas, car le taux marginal est plus bas. Le 3e pilier reste toutefois un instrument de prévoyance judicieux, et chaque versement réduit au moins un peu les impôts. Faites votre calcul ci-dessus.',
+  },
+  {
+    q: 'Le capital est-il imposé au moment du retrait ?',
+    a: 'Oui, à la sortie, le capital du 3e pilier est imposé séparément du reste du revenu, à un taux réduit (impôt sur les prestations en capital, variable selon le canton). L’économie durant les années de versement dépasse en règle générale nettement cet impôt de sortie. Des retraits échelonnés sur plusieurs années la réduisent encore.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Calculateur 3e pilier',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'fr-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="fr" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Calculateur 3e pilier' }]} locale="fr" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Calculateur 3e pilier {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Calculez combien votre versement au 3e pilier (pilier 3a) vous fait économiser en impôts — par canton, revenu et
+    état civil, avec les tarifs officiels {SITE_YEAR}.
+  </p>
+
+  <FrThreeACalculator />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Comment le calcul est-il effectué ?</h2>
+    <p>
+      Votre versement 3a est déduit du revenu imposable. Nous calculons votre impôt sur le revenu (canton + commune du
+      chef-lieu + impôt fédéral direct) une fois sans et une fois avec la déduction — la différence est votre économie
+      d’impôt. La base : les tarifs et coefficients cantonaux {SITE_YEAR} issus des données fiscales de l’AFC.
+    </p>
+    <h3>Exemple de calcul</h3>
+    <p>Revenu imposable {formatCHF(100000, 0)}, célibataire, canton de Zurich, versement {formatCHF(maxPK, 0)} :</p>
+    <ul>
+      <li>Impôts sans versement : {formatCHF(before.totalTax, 0)}</li>
+      <li>Impôts avec versement : {formatCHF(after.totalTax, 0)}</li>
+      <li><strong>Économie : environ {formatCHF(saving, 0)} par an</strong></li>
+    </ul>
+    <h3>Limites de ce calcul</h3>
+    <ul>
+      <li>Coefficient du chef-lieu ; votre commune peut différer. Sans impôt ecclésiastique.</li>
+      <li>L’impôt ultérieur sur les prestations en capital (au retrait) ne fait pas partie de ce calcul.</li>
+    </ul>
+
+    <h2>Questions fréquentes</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+  </div>
+
+  <section aria-label="Autres calculateurs" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Autres calculateurs</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/calculateur-salaire-brut-net/" class="font-semibold text-blue-700 hover:underline">Calculateur salaire brut-net</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Du salaire brut au salaire net.</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/comparatif-impots-cantons/" class="font-semibold text-blue-700 hover:underline">Comparatif des impôts des 26 cantons</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Où payez-vous le moins d’impôt ?</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources :</strong> montants maximaux :
+      <a class="underline" href="https://faq.bsv.admin.ch/fr/3-pilier/quelles-cotisations-puis-je-verser-dans-le-pilier-3a" rel="noopener">OFAS</a>.
+      Tarifs fiscaux :
+      <a class="underline" href="https://swisstaxcalculator.estv.admin.ch/" rel="noopener">données AFC {SITE_YEAR}</a>.
+    </p>
+    <p>Dernière mise à jour : 12.07.2026 · Données {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

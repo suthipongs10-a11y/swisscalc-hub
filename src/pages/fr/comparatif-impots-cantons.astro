@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FrTaxComparison from '../../components/fr/FrTaxComparison.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF } from '../../lib/format';
+import { cantonTax } from '../../lib/tax/engine';
+
+const path = '/fr/comparatif-impots-cantons/';
+const title = `Comparatif impôts cantons Suisse ${SITE_YEAR} | ${BRAND}`;
+const description = `Un revenu, les 26 cantons : impôt cantonal, communal et fédéral des chefs-lieux comparés. Avec les tarifs officiels AFC ${SITE_YEAR}.`;
+
+const zh = cantonTax(100_000, 'ZH', 'single');
+const zg = cantonTax(100_000, 'ZG', 'single');
+
+const faqs = [
+  {
+    q: 'Quel canton a les impôts sur le revenu les plus bas ?',
+    a: `Pour un revenu imposable de ${formatCHF(100000, 0)} (célibataire), Zoug est le moins cher, suivi de Schwytz et des cantons de Suisse centrale. Le classement dépend toutefois du revenu et de l’état civil — le calculateur ci-dessus affiche votre classement personnel.`,
+  },
+  {
+    q: 'Que signifie « revenu imposable » ?',
+    a: 'Le revenu imposable est votre revenu après toutes les déductions (frais professionnels, primes d’assurance, 3e pilier, etc.). Il figure sur votre dernière taxation. Comme les déductions varient légèrement selon le canton, la comparaison sur cette base est une approximation.',
+  },
+  {
+    q: 'Comment se compose la charge fiscale ?',
+    a: 'De trois niveaux : l’impôt cantonal (tarif cantonal × coefficient cantonal), l’impôt communal (coefficient de la commune) et l’impôt fédéral direct (tarif fédéral uniforme). Nous utilisons les coefficients des chefs-lieux cantonaux, sans impôt ecclésiastique.',
+  },
+  {
+    q: 'La comparaison vaut-elle aussi pour ma commune ?',
+    a: 'La comparaison utilise le coefficient du chef-lieu cantonal. Votre commune peut être moins ou plus chère ; au sein d’un même canton, les communes diffèrent parfois de plus de 30 points de coefficient.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Comparatif des impôts cantonaux Suisse',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'fr-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="fr" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Comparatif des impôts cantonaux' }]} locale="fr" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Comparatif des impôts : les 26 cantons {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Indiquez votre revenu imposable et voyez immédiatement ce que vous paieriez, dans chaque chef-lieu cantonal, en
+    impôt cantonal, communal et fédéral — sous forme de classement.
+  </p>
+
+  <FrTaxComparison />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Comment le calcul est-il effectué ?</h2>
+    <p>
+      Pour chaque canton, nous calculons l’<strong>impôt cantonal simple</strong> selon le tarif cantonal {SITE_YEAR}
+      (source : données fiscales de l’AFC) et le multiplions par les coefficients du canton et du chef-lieu. S’y ajoute
+      l’<strong>impôt fédéral direct</strong>. L’impôt ecclésiastique et les impôts personnels ne sont pas compris.
+    </p>
+    <h3>Exemple de calcul</h3>
+    <p>Revenu imposable {formatCHF(100000, 0)}, célibataire, chef-lieu Zurich :</p>
+    <ul>
+      <li>Impôt cantonal simple (tarif ZH) : {formatCHF(zh.baseTax, 0)}</li>
+      <li>Impôt cantonal (coefficient 95%) : {formatCHF(zh.cantonTax, 0)}</li>
+      <li>Impôt communal ville de Zurich (119%) : {formatCHF(zh.cityTax, 0)}</li>
+      <li>Impôt fédéral direct : {formatCHF(zh.federalTax, 0)}</li>
+      <li><strong>Total : {formatCHF(zh.totalTax, 0)} ({(zh.effectiveRate * 100).toFixed(1)}% effectif)</strong> — à Zoug : {formatCHF(zg.totalTax, 0)}</li>
+    </ul>
+    <h3>Limites de ce calcul</h3>
+    <ul>
+      <li>Comparaison sur la base du <strong>revenu imposable</strong> — les différences cantonales de déductions n’y figurent pas.</li>
+      <li>Coefficients des <strong>chefs-lieux</strong> ; votre commune peut différer.</li>
+      <li>Sans impôt ecclésiastique, impôt personnel ni impôt sur la fortune.</li>
+    </ul>
+
+    <h2>Questions fréquentes</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+  </div>
+
+  <section aria-label="Autres calculateurs" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Autres calculateurs</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/calculateur-salaire-brut-net/" class="font-semibold text-blue-700 hover:underline">Calculateur salaire brut-net</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Du salaire brut au salaire net.</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/calculateur-3e-pilier/" class="font-semibold text-blue-700 hover:underline">Calculateur 3e pilier</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Votre économie d’impôt grâce au 3e pilier.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources :</strong> tarifs et coefficients :
+      <a class="underline" href="https://swisstaxcalculator.estv.admin.ch/" rel="noopener">calculateur fiscal AFC / données {SITE_YEAR}</a>.
+    </p>
+    <p>Dernière mise à jour : 12.07.2026 · Données {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

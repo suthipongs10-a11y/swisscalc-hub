@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "tools": "Calculateurs",
+    "guide": "Guide",
+    "methodology": "Méthodologie",
+    "about": "À propos",
+    "menu": "Ouvrir le menu",
+    "allTools": "Tous les calculateurs"
+  },
+  "footer": {
+    "legal": "Informations légales",
+    "imprint": "Mentions légales",
+    "privacy": "Protection des données",
+    "sources": "Sources",
+    "tagline": "Calculateurs d'impôts et de finances indépendants pour la Suisse — gratuits, sans publicité, sans cookies.",
+    "disclaimer": "Tous les calculs sont fournis à titre indicatif. Seule la taxation officielle des autorités compétentes fait foi."
+  },
+  "common": {
+    "lastUpdated": "Dernière mise à jour",
+    "sources": "Sources",
+    "breadcrumbHome": "Accueil"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "message": "Cette page n'existe pas ou a été déplacée.",
+    "backHome": "Retour à l'accueil"
+  }
+}

@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FrSalaryCalculator from '../../components/fr/FrSalaryCalculator.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF } from '../../lib/format';
+
+const path = '/fr/calculateur-salaire-brut-net/';
+const title = `Calculateur salaire brut-net Suisse ${SITE_YEAR} | ${BRAND}`;
+const description = `Convertir le salaire brut en salaire net : AVS, AI, APG, AC, AANP et LPP détaillés. Gratuit, sans inscription, avec les taux officiels ${SITE_YEAR}.`;
+
+const faqs = [
+  {
+    q: 'Quelle est la différence entre salaire brut et salaire net ?',
+    a: 'Le salaire brut est le salaire convenu avant déductions. Le salaire net est le montant versé après déduction des cotisations sociales (AVS/AI/APG, AC, AANP, LPP). L’impôt sur le revenu n’y est pas encore compris : il est taxé séparément.',
+  },
+  {
+    q: 'Quelles déductions sont prélevées sur le salaire brut ?',
+    a: 'Sur le salaire brut sont déduites : l’AVS/AI/APG (5.3%), l’AC (1.1% jusqu’à CHF 148’200), l’assurance-accidents non professionnels AANP (selon l’employeur) et la cotisation LPP à la caisse de pension (selon l’âge, sur le salaire coordonné). Ces taux sont identiques dans toute la Suisse.',
+  },
+  {
+    q: 'L’impôt sur le revenu est-il déduit du salaire ?',
+    a: 'Pour les citoyens suisses et les titulaires d’un permis C, non : ils paient l’impôt séparément via la taxation annuelle. Seules les personnes imposées à la source voient l’impôt prélevé directement sur le salaire.',
+  },
+  {
+    q: `À combien s’élèvent les cotisations AVS/AI/APG en ${SITE_YEAR} ?`,
+    a: 'La cotisation totale est de 10.6%, répartie par moitié : les salariés paient 5.3% du salaire brut, sans limite supérieure. Le taux reste inchangé malgré l’introduction de la 13e rente AVS, financée par la TVA et non par des cotisations salariales.',
+  },
+  {
+    q: 'Comment fonctionne la déduction LPP (caisse de pension) ?',
+    a: 'La bonification de vieillesse LPP est calculée sur le salaire coordonné — le salaire brut moins la déduction de coordination (CHF 26’460), plafonné entre CHF 3’780 et CHF 64’260. Le taux augmente avec l’âge (7% à 18%) et est pris en charge au moins pour moitié par le salarié.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Calculateur salaire brut-net Suisse',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'fr-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="fr" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Calculateur salaire brut-net' }]} locale="fr" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Calculateur salaire brut-net Suisse {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Calculez votre salaire net en quelques secondes : toutes les cotisations sociales — AVS, AI, APG, AC, AANP et LPP —
+    détaillées de façon transparente, avec les taux officiels {SITE_YEAR}.
+  </p>
+
+  <FrSalaryCalculator />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Comment le calcul est-il effectué ?</h2>
+    <p>
+      Le calculateur déduit du salaire annuel brut les cotisations sociales légales à la charge du salarié. Ces taux
+      sont fédéraux et identiques dans tous les cantons. Déterminants pour {SITE_YEAR} :
+    </p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-300 text-left">
+          <th class="py-2 pr-2">Cotisation</th>
+          <th class="py-2 px-2">Taux (salarié)</th>
+          <th class="py-2 pl-2">Base</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">AVS / AI / APG</td><td class="py-2 px-2">5.3%</td><td class="py-2 pl-2">salaire brut entier</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">AC</td><td class="py-2 px-2">1.1%</td><td class="py-2 pl-2">jusqu’à {formatCHF(148200, 0)} / an</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">AANP (accidents non prof.)</td><td class="py-2 px-2">selon l’employeur</td><td class="py-2 pl-2">jusqu’à {formatCHF(148200, 0)} / an</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">LPP (caisse de pension)</td><td class="py-2 px-2">7–18% × 50%, selon l’âge</td><td class="py-2 pl-2">salaire coordonné</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Limites de ce calcul</h3>
+    <ul>
+      <li>Le taux <strong>AANP</strong> et les cotisations <strong>LPP</strong> dépendent de l’employeur et de la caisse de pension ; nous utilisons le minimum légal (régime obligatoire LPP, part de 50%).</li>
+      <li>L’<strong>impôt sur le revenu</strong> n’est pas compris (taxation séparée).</li>
+    </ul>
+
+    <h2>Questions fréquentes</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+  </div>
+
+  <section aria-label="Autres calculateurs" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Autres calculateurs</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/comparatif-impots-cantons/" class="font-semibold text-blue-700 hover:underline">Comparatif des impôts des 26 cantons</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Où payez-vous le moins d’impôt sur le revenu ?</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/calculateur-3e-pilier/" class="font-semibold text-blue-700 hover:underline">Calculateur 3e pilier</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Votre économie d’impôt grâce au 3e pilier.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources :</strong>
+      <a class="underline" href="https://www.ahv-iv.ch/p/2.01.f" rel="noopener">AVS/AI/APG</a>,
+      <a class="underline" href="https://www.ahv-iv.ch/p/2.08.f" rel="noopener">AC</a>,
+      <a class="underline" href="https://www.koordination.ch/fileadmin/files/bvg/masszahlen/bvg-masszahlen-2026.pdf" rel="noopener">valeurs LPP 2026</a>.
+    </p>
+    <p>Dernière mise à jour : 12.07.2026 · Données {SITE_YEAR}</p>
+  </div>
+</BaseLayout>
