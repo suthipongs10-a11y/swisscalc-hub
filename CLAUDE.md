@@ -4,14 +4,16 @@ Single source of truth for this project. If any other doc conflicts with this fi
 
 ## What this is
 
-SwissCalc Hub — a static website of Swiss financial/tax calculators (German-first, Swiss market), built for organic search. Research basis: `RESEARCH.md`. Execution plan: `BUILD_PLAN.md`. Current state: `STATUS.md`.
+SwissCalc Hub — a static website of Swiss financial/tax calculators (German-first, Swiss market), built for organic search. **Domain: calcswiss.ch · Brand: CalcSwiss.** Research basis: `RESEARCH.md`. Execution plan: `BUILD_PLAN.md`. SEO & site architecture (binding): `SEO_SPEC.md`. Current state: `STATUS.md`.
+
+This project may be built by different assistants/models across sessions. The docs are the contract: follow them exactly; when something is undefined, extend the relevant doc first (and say so in `STATUS.md`), then build. Do not improvise URL structures, schema, or data handling.
 
 ## Hard constraints (non-negotiable)
 
 1. **Stack:** Astro + Tailwind CSS, fully static output. Deployed on **Cloudflare Pages**. **No backend, no server functions, no database.** Calculators run as client-side islands (vanilla TS or minimal framework islands); everything else is static HTML.
 2. **Data:** ALL calculation parameters live in `/src/data/*.json`, imported at build time. **Every numeric value carries a source**: each data file has a `_meta` block with `source` (URL), `retrieved` (date), and `taxYear`/`validFor`. No number appears in the codebase or content without a traceable official source. The site never calls external APIs at runtime.
 3. **Performance:** Lighthouse ≥ 95 on all four categories, every page, mobile. Budget: no render-blocking third-party JS, no web fonts unless subsetted + self-hosted, images optimized.
-4. **SEO:** JSON-LD structured data on every page (`WebApplication`/`SoftwareApplication` for tools, `FAQPage` where FAQs exist, `BreadcrumbList` everywhere, `Organization` sitewide). Unique title/meta description per page. `hreflang` set up from day one.
+4. **SEO:** `SEO_SPEC.md` is binding — URL map, page anatomy, JSON-LD schema map, internal-linking topology, technical checklist, KPIs. Summary: JSON-LD on every page, unique title/meta per page, `hreflang` from day one, hub-and-spoke internal linking with no orphan pages, programmatic pages must pass the anti-doorway uniqueness rules (SEO_SPEC §3.2).
 5. **Milestone gates:** Never start the next milestone in `BUILD_PLAN.md` without explicit user approval. Every milestone ends: build passes → update `STATUS.md` → git commit → stop and wait for review.
 
 ## Languages & localization
@@ -24,7 +26,7 @@ SwissCalc Hub — a static website of Swiss financial/tax calculators (German-fi
 
 ## Data sources & licensing posture
 
-- Tax parameters derive from **ESTV** (swisstaxcalculator.estv.admin.ch — scales, multipliers, deductions). ⚠️ Not open-data licensed (see RESEARCH.md §4.4): we store **derived calculation parameters** with citations, not verbatim mirrors of ESTV exports; ESTV is attributed prominently on every tax page. A written consent request to ESTV is a pending action item.
+- Tax parameters derive from **ESTV** (swisstaxcalculator.estv.admin.ch — scales, multipliers, deductions). ⚠️ Not open-data licensed (see RESEARCH.md §4.4): we store **derived calculation parameters** with citations, not verbatim mirrors of ESTV exports; ESTV is attributed prominently on every tax page. Consent request letter is drafted at `docs/estv-consent-request.md` — send once the site is live with an Impressum.
 - Health premiums: **BAG dataset on opendata.swiss** (true open data, refreshed ~late September).
 - Municipality registry: **BFS** IDs are the canonical location key (canton → municipality).
 - Quellensteuer tariffs: per-canton tariff files from cantonal tax offices; start with ZH, GE, ZG, VD, BS.
@@ -39,7 +41,7 @@ SwissCalc Hub — a static website of Swiss financial/tax calculators (German-fi
 
 ## Privacy & monetization
 
-- Launch **ad-free and cookie-free**: no CMP, no cookie banner needed under nFADP if analytics are cookieless (Cloudflare Web Analytics or self-hosted Plausible). This is a deliberate speed/UX edge.
+- Launch **ad-free and cookie-free**: no CMP, no cookie banner. Analytics decision (locked): **Cloudflare Web Analytics** (cookieless, CH/EU-compatible, zero-config). This is a deliberate speed/UX edge.
 - nFADP requires: privacy policy naming controller, purposes, recipient countries. Keep analytics EU/CH-hosted or disclose.
 - If ads are ever added: Google requires a certified TCF CMP for Swiss traffic (since 31 Jul 2024) — that becomes its own milestone; never bolt ads on casually.
 

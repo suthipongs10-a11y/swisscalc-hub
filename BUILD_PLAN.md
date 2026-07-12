@@ -1,6 +1,8 @@
 # BUILD_PLAN.md — SwissCalc Hub
 
-Milestone-gated plan. **Every milestone ends the same way: build passes → update `STATUS.md` → git commit → STOP and wait for review.** No milestone starts without explicit approval. Constraints in `CLAUDE.md` apply throughout; evidence in `RESEARCH.md`.
+Milestone-gated plan. **Every milestone ends the same way: build passes → update `STATUS.md` → git commit → STOP and wait for review.** No milestone starts without explicit approval. Constraints in `CLAUDE.md` and the architecture in `SEO_SPEC.md` apply throughout; evidence in `RESEARCH.md`.
+
+Domain: **calcswiss.ch** (registered by owner). Builder note: follow `SEO_SPEC.md` for every URL, page template, schema block, and internal link — it is not advisory.
 
 ---
 
@@ -12,10 +14,12 @@ Milestone-gated plan. **Every milestone ends the same way: build passes → upda
 - Layout system: base layout, header/footer, SEO component (title/meta/canonical/hreflang/JSON-LD injection), `BreadcrumbList` + `Organization` schema sitewide.
 - i18n plumbing: `/src/i18n/de.json` (Swiss German, ss-only), URL structure reserving `/fr/` and `/en/`; DE at root.
 - `/src/data/` convention established with `_meta` (source, retrieved, taxYear) — validated by a Vitest schema test.
-- Static pages: homepage shell, `/impressum`, `/datenschutz` (nFADP-compliant privacy policy: controller, purposes, recipient countries), `/methodik` stub.
+- Static pages: homepage shell, `/impressum/`, `/datenschutz/` (nFADP-compliant privacy policy: controller, purposes, recipient countries), `/methodik/` stub, `/ueber-uns/`, `/quellen/` stub, 404 page.
+- Technical SEO per SEO_SPEC §6: sitemap.xml, robots.txt, canonical + trailing-slash discipline, www→apex 301, OG/Twitter cards, `lang="de-CH"`, hreflang plumbing.
 - Cookieless analytics (Cloudflare Web Analytics) — no banner.
 - CI: build + tests on push; Lighthouse CI config for key pages.
-- Deploy to Cloudflare Pages; verify Lighthouse ≥ 95 ×4 mobile on homepage.
+- Deploy to Cloudflare Pages on calcswiss.ch; verify Lighthouse ≥ 95 ×4 mobile on homepage.
+- **Google Search Console + Bing Webmaster verified, sitemap submitted, IndexNow enabled** (SEO_SPEC §8).
 
 **Exit gate:** live URL, green build, Lighthouse proof. → STATUS.md → commit → **stop for review**.
 
@@ -28,8 +32,10 @@ Milestone-gated plan. **Every milestone ends the same way: build passes → upda
 - Data: `/src/data/social-contributions-2026.json` (rates + thresholds from official sources: AHV/ALV from BSV, BVG parameters), fully sourced.
 - Pure-function engine `/src/lib/salary/` with unit tests pinned to published example calculations.
 - Tool page `/brutto-netto-rechner/`: calculator island above the fold, monthly/yearly toggle, 13th salary, canton selector (for later tax integration), methodology section, FAQ (+ `FAQPage` schema), `WebApplication` schema.
+- Tool page follows SEO_SPEC §3.1 anatomy exactly (calculator above fold → methodology → worked example → FAQ → related tools → sources).
 - Keyword validation task: run priority keywords through Google Keyword Planner; record actuals in RESEARCH.md addendum; adjust page titles if needed.
-- ESTV written-consent request drafted (pending decision in STATUS.md).
+- Send ESTV consent request (`docs/estv-consent-request.md`) now that the site is live with an Impressum; log send date in STATUS.md.
+- Post-ship: GSC request-indexing for the new page; begin SEO_SPEC §8 step 3 (directories, genuinely-useful forum answers).
 
 **Exit gate:** engine tests green incl. edge cases; Lighthouse ≥ 95 ×4; JSON-LD validates. → STATUS.md → commit → **stop for review**.
 
@@ -53,9 +59,9 @@ Milestone-gated plan. **Every milestone ends the same way: build passes → upda
 **Goal:** `steuerrechner-[kanton]` × 26 from one template + data.
 
 - Import pipeline `/scripts/import-estv.ts` → per-canton JSON (scales, multipliers, deductions) with `_meta` sources.
-- Template: canton-specific calculator defaults, canton tax facts (Steuerfuss range, capital city numbers), comparison teaser vs. neighbors, canton tax office link, unique intro copy per canton (no doorway-page boilerplate — each page needs genuinely distinct data-driven content).
-- `BreadcrumbList` + `WebApplication` schema; XML sitemap; internal-link mesh (canton ↔ comparison ↔ tools).
-- Decision point recorded in STATUS.md: whether municipality-level pages (~2,110) are warranted — **default no** until canton pages show impressions.
+- Template: **must pass SEO_SPEC §3.2 anti-doorway rules** — canton-preset calculator, 100–150-word data-driven unique intro, canton data table, neighbour comparison teaser, 3+ canton-specific FAQs, canton tax office link, ≥400 words canton-specific content. A canton page that can't meet this doesn't ship.
+- `BreadcrumbList` + `WebApplication` schema; internal-link mesh per SEO_SPEC §5 (canton ↔ steuervergleich ↔ neighbours ↔ tools); add orphan-page check script to CI.
+- Decision point recorded in STATUS.md: whether municipality-level pages (~2,110) are warranted — **default no** until canton pages pass the SEO_SPEC §10 gate (M3+3 months: ≥13/26 pages with GSC impressions).
 
 **Exit gate:** 26 pages build from data alone; spot-check 5 cantons against ESTV calculator outputs; Lighthouse sampled ≥ 95. → STATUS.md → commit → **stop for review**.
 

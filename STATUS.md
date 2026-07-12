@@ -1,30 +1,36 @@
-# STATUS.md — SwissCalc Hub
+# STATUS.md — SwissCalc Hub (calcswiss.ch)
 
 ## Current state
 
-**Phase 0 + 0.5 complete — awaiting review. Do not start M0 without approval.**
+**Phase 0 + 0.5 complete. Docs finalized for handoff. M0 is APPROVED to start** (owner decision, 2026-07-12) — the builder may begin M0 immediately; all later milestones still require explicit approval per CLAUDE.md gate rules.
+
+Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milestone) → `SEO_SPEC.md` → this file. `RESEARCH.md` is the evidence base.
+
+## Decisions (locked)
+
+| Decision | Value | Date |
+|---|---|---|
+| Domain / brand | **calcswiss.ch** / CalcSwiss (owner registering) | 2026-07-12 |
+| Analytics | Cloudflare Web Analytics (cookieless, no banner) | 2026-07-12 |
+| Monetization at launch | None — ad-free, no CMP. Ads = future milestone with certified TCF CMP | 2026-07-12 |
+| ESTV data posture | Derived parameters + citations + prominent attribution; consent letter drafted at `docs/estv-consent-request.md`, send after M1 Impressum is live | 2026-07-12 |
+| Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
 
-### 2026-07-12 — Session 1: Phase 0 research + project docs
+### 2026-07-12 — Session 1: Phase 0 research + project docs + handoff prep
 
-- Ran deep research (5 angles, ~58 research agents; 10 key claims adversarially verified 3-0) → `RESEARCH.md`.
-- Wrote `CLAUDE.md` (constraints/stack/conventions), `BUILD_PLAN.md` (M0–M4 milestone-gated), this file.
-- Key findings:
-  - Quellensteuer calculator = biggest SEO gap (no ESTV tool, prose-only competition). Chosen as SEO flagship; brutto-netto ships first (M1) because its contribution engine unblocks it.
-  - ESTV JSON backend feeds all-canton programmatic data (2010–2026), but is **not open-data licensed** — adopted derived-parameters + attribution posture, consent request pending (see decisions).
-  - BAG premium data is true open data (opendata.swiss), refreshed ~late September.
-  - No cookie banner needed at launch (nFADP + cookieless analytics, ad-free). Google-certified TCF CMP only becomes mandatory if we ever run Google ads.
-  - Swiss orthography hard rule: never ß, always ss.
-- Committed as `P0: research + project docs`. **Stopped for review.**
+- Deep research (5 angles, ~58 agents; 10 key claims adversarially verified 3-0) → `RESEARCH.md`.
+- Wrote `CLAUDE.md`, `BUILD_PLAN.md`, `STATUS.md`; committed `P0: research + project docs`.
+- Owner review: domain calcswiss.ch chosen ($18.98/yr), risk/effort assessment accepted, decision to proceed.
+- Handoff prep: added `SEO_SPEC.md` (binding URL map, page anatomies incl. anti-doorway rules for programmatic pages, JSON-LD map, internal-linking topology, technical checklist, indexing/launch checklist, KPI gates, maintenance calendar) and `docs/estv-consent-request.md` (German draft letter + sending protocol). Wired SEO_SPEC tasks into BUILD_PLAN milestones. **M0 approved.**
 
-## Pending decisions (need user input)
+## Pending / action items
 
-1. **Domain name** — needed before M0 (Cloudflare Pages setup, canonical URLs, Organization schema).
-2. **ESTV written consent request** — send early (recommended in RESEARCH.md §4.4)? Needs a sender identity/email.
-3. **Analytics choice** — Cloudflare Web Analytics (zero-config, recommended) vs. self-hosted Plausible.
-4. **Keyword-volume validation** — RESEARCH.md volume tiers are directional estimates; plan says validate via Google Keyword Planner in M1. Needs a Google Ads account (free) — user-provided or skip?
-5. **Approval to start M0.**
+1. **Owner:** register calcswiss.ch; connect to Cloudflare Pages when M0 deploys.
+2. **M1:** send ESTV letter (needs `[NAME]`, `[ADRESSE]`, `[E-MAIL]` = Impressum identity); log send date here.
+3. **M1:** validate keyword volumes via Google Keyword Planner; append actuals to RESEARCH.md.
+4. **Open question (M2):** Quellensteuer tariff-file formats per canton not yet inspected — first task of M2 is a data spike on ZH + GE tariff files before building the tool UI.
 
 ## Data-freshness watchlist
 
@@ -34,3 +40,8 @@
 | ESTV 2026 tax data completeness (22/26 cantons live as of research) | Before M3 import |
 | BAG premium dataset (next drop ~Sept 2026) | Before premium-finder tool |
 | EMBAG open-data transition (may resolve ESTV licensing) | ~Jan 2027 |
+
+## KPI checkpoints (from SEO_SPEC §10)
+
+- M1 + 3 months: brutto-netto page shows GSC impressions.
+- M3 + 3 months: ≥13/26 canton pages with impressions; any top-30 ranking for a `steuerrechner [kanton]` term → unlocks municipality/`/fr/` consideration.
