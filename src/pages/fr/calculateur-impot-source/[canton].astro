@@ -59,7 +59,7 @@ const faqSchema = {
 };
 ---
 
-<BaseLayout title={title} description={description} path={path} locale="fr" jsonLd={[webApp, faqSchema]}>
+<BaseLayout title={title} description={description} path={path} locale="fr" heroLabel={abbr} jsonLd={[webApp, faqSchema]}>
   <Breadcrumbs crumbs={[{ name: 'Impôt à la source', path: '/fr/calculateur-impot-source/' }, { name: `Canton de ${name}` }]} locale="fr" />
 
   <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Impôt à la source canton de {name} {SITE_YEAR}</h1>

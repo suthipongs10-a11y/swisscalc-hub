@@ -6,7 +6,9 @@
 import SEO from '../components/SEO.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import HeroArt from '../components/HeroArt.astro';
 import { LOCALE_LANG, alternatesFor, type Locale } from '../lib/locales';
+import { resolveHeroVariant, type HeroVariant } from '../lib/hero';
 import '../styles/global.css';
 
 interface Props {
@@ -15,10 +17,15 @@ interface Props {
   path: string;
   jsonLd?: object[];
   locale?: Locale;
+  /** Override the path-derived hero illustration; `null` hides it entirely. */
+  hero?: HeroVariant | null;
+  /** Canton abbreviation printed on the canton/withholding-canton illustrations. */
+  heroLabel?: string;
 }
 
-const { title, description, path, jsonLd, locale = 'de' } = Astro.props;
+const { title, description, path, jsonLd, locale = 'de', hero, heroLabel } = Astro.props;
 const alternates = alternatesFor(path);
+const heroVariant = hero === null ? null : (hero ?? resolveHeroVariant(path));
 ---
 
 <!doctype html>
@@ -33,6 +40,7 @@ const alternates = alternatesFor(path);
   <body class="min-h-screen bg-white font-sans text-slate-900 antialiased">
     <Header locale={locale} path={path} />
     <main class="mx-auto max-w-4xl px-4 py-8">
+      {heroVariant && <HeroArt variant={heroVariant} label={heroLabel} />}
       <slot />
     </main>
     <Footer locale={locale} />

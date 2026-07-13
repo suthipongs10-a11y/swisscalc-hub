@@ -2,7 +2,9 @@
 
 ## Current state
 
-**M11 built — 78 per-canton Quellensteuer SEO pages (26 × 3 languages). Awaiting review.**
+**Latest (Session 15): hero illustrations on every page** — a decorative inline-SVG hero band (`HeroArt.astro`), 10 on-topic variants, path-driven from `BaseLayout`; canton pages print their abbreviation. No new pages, no new numbers, link graph unchanged; build/tests/Lighthouse green. Awaiting review.
+
+**M11 built — 78 per-canton Quellensteuer SEO pages (26 × 3 languages).**
 
 **202 pages**, trilingual DE + FR + EN. The QST flagship now has per-canton landing pages targeting the "quellensteuer [kanton]" / "impôt à la source [canton]" long-tail: `/quellensteuer-rechner/[kanton]/`, `/fr/calculateur-impot-source/[canton]/`, `/en/withholding-tax-calculator/[canton]/` for all 26 cantons. Build clean, tests 85/85, Lighthouse **100×4** on sampled QST canton pages. Deployed on Cloudflare Pages (calcswiss.ch live).
 
@@ -60,6 +62,13 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-13 — Session 15: Hero illustrations on every page (inline SVG)
+
+- **`src/components/HeroArt.astro`** — a decorative hero band shown at the top of **every** page. Pure inline SVG (no raster assets, no external requests, no web fonts → respects the CLAUDE.md performance budget and the Cloudflare-Pages CSP). Flat, brand-coloured (blue scale + Swiss-red cross + amber coins) illustrations on a soft gradient band; the motif is right-aligned and scales to the band height, so it stays crisp at any width. Purely decorative → `aria-hidden` (the page H1 already carries the meaning), keeping screen-reader output clean and a11y green.
+- **10 on-topic variants**, one per page family: `home` (calculator + Swiss badge + coins), `salary` (payslip → coins), `comparison` (ascending bars + location pin), `pillar3a` (jar + growing plant + "3a"), `withholding` (document + % + cross-border line), `withholdingCanton` (pin holding % + canton tag), `canton` (location pin printing the **canton abbreviation**, e.g. ZH/GE), `guide` (open book + lightbulb), `legal` (shield + check + Swiss cross), `about` (people + Swiss badge), plus a `notfound` for 404.
+- **Path-driven wiring** (`src/lib/hero.ts` → `resolveHeroVariant(path)`): `BaseLayout` derives the variant from the page path, so all 202 pages — and any future page — get the right illustration with no per-page work. Overridable via a `hero` prop (`null` hides it); the 6 canton templates pass `heroLabel={abbr}` so each of the 156 canton pages shows its own abbreviation. Band height `h-24 sm:h-32 md:h-36` (96px on mobile) keeps the calculator above the fold.
+- **Re-checked before push:** build clean (**202 pages**), tests **85/85**, link/orphan green (201 pages), internal-linking audit still clean (the band adds **no** anchors → link graph unchanged). **Driven in Chromium** — screenshotted all 11 variants (DE/FR/EN) + a mobile viewport; every motif renders correctly, canton pins show the right abbreviation, calculator stays above the fold on mobile. Lighthouse ≥95×4 on the 18 sampled LHCI URLs. No ß. Committed, stopped for review.
 
 ### 2026-07-13 — Session 14: Internal-linking audit (all locales)
 

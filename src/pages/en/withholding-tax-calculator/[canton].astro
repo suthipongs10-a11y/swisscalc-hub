@@ -59,7 +59,7 @@ const faqSchema = {
 };
 ---
 
-<BaseLayout title={title} description={description} path={path} locale="en" jsonLd={[webApp, faqSchema]}>
+<BaseLayout title={title} description={description} path={path} locale="en" heroLabel={abbr} jsonLd={[webApp, faqSchema]}>
   <Breadcrumbs crumbs={[{ name: 'Withholding tax calculator', path: '/en/withholding-tax-calculator/' }, { name: `Canton of ${name}` }]} locale="en" />
 
   <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Withholding tax canton of {name} {SITE_YEAR}</h1>

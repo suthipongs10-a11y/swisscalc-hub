@@ -1,0 +1,235 @@
+---
+/**
+ * Decorative hero illustration band shown at the top of every page.
+ *
+ * Pure inline SVG — no raster assets, no external requests, no web fonts
+ * (CLAUDE.md performance budget & Cloudflare-Pages CSP). Flat, two/three-colour
+ * brand illustrations on a soft gradient band; the motif is right-aligned and
+ * scales to the band height, so it stays crisp at any container width. Purely
+ * decorative → aria-hidden (the page H1 already carries the meaning), which also
+ * keeps screen-reader output clean and Lighthouse a11y green.
+ *
+ * `variant` normally comes from the path (see lib/hero.ts, wired in BaseLayout);
+ * `label` prints a canton abbreviation on the canton variants (e.g. "ZH").
+ */
+import type { HeroVariant } from '../lib/hero';
+
+interface Props {
+  variant: HeroVariant;
+  label?: string;
+  class?: string;
+}
+const { variant, label, class: className = '' } = Astro.props;
+
+// Swiss-red flag square (white cross) — shared brand cue, reused across motifs.
+const swissCross = (x: number, y: number, s: number) => ({ x, y, s });
+---
+
+<div
+  class:list={[
+    'relative isolate mb-6 flex h-24 items-center overflow-hidden rounded-2xl border border-slate-200/70 bg-gradient-to-br from-blue-50 via-white to-slate-50 sm:h-32 md:h-36',
+    className,
+  ]}
+  aria-hidden="true"
+>
+  {/* Soft brand glow + faint oversized watermark glyph on the left */}
+  <svg class="pointer-events-none absolute -left-8 -bottom-10 h-44 w-44 text-blue-100" viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="50" r="46" fill="currentColor" opacity="0.55"></circle>
+    <rect x="38" y="30" width="24" height="40" rx="6" fill="#fff" opacity="0.6"></rect>
+    <rect x="46" y="22" width="8" height="56" rx="4" fill="currentColor" opacity="0.5"></rect>
+  </svg>
+
+  {/* Focal motif, right-aligned, scales to band height */}
+  <svg
+    class="absolute inset-y-0 right-3 h-full w-auto sm:right-6"
+    viewBox="0 0 240 200"
+    fill="none"
+    role="presentation"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* ── HOME: calculator card + Swiss badge + coins ── */}
+    {variant === 'home' && (
+      <g>
+        <rect x="46" y="34" width="112" height="132" rx="14" fill="#fff" stroke="#cbd5e1" stroke-width="3"></rect>
+        <rect x="60" y="48" width="84" height="30" rx="6" fill="#dbeafe"></rect>
+        <text x="136" y="70" text-anchor="end" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">CHF</text>
+        {[0, 1, 2].map((r) =>
+          [0, 1, 2].map((c) => (
+            <rect x={60 + c * 30} y={92 + r * 24} width="22" height="16" rx="4" fill={r === 2 && c === 2 ? '#2563eb' : '#e2e8f0'}></rect>
+          )),
+        )}
+        <g>
+          <rect x="150" y="24" width="46" height="46" rx="10" fill="#da291c"></rect>
+          <rect x="169" y="34" width="8" height="26" rx="2" fill="#fff"></rect>
+          <rect x="160" y="43" width="26" height="8" rx="2" fill="#fff"></rect>
+        </g>
+        <circle cx="150" cy="158" r="18" fill="#fbbf24" stroke="#d97706" stroke-width="2"></circle>
+        <circle cx="132" cy="166" r="14" fill="#fcd34d" stroke="#d97706" stroke-width="2"></circle>
+      </g>
+    )}
+
+    {/* ── SALARY: payslip → arrow → coin stack (brutto → netto) ── */}
+    {variant === 'salary' && (
+      <g>
+        <rect x="30" y="36" width="96" height="128" rx="10" fill="#fff" stroke="#cbd5e1" stroke-width="3"></rect>
+        <rect x="30" y="36" width="96" height="26" rx="10" fill="#2563eb"></rect>
+        <rect x="30" y="52" width="96" height="10" fill="#2563eb"></rect>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <rect x="44" y={78 + i * 16} width={i === 4 ? 40 : 68} height="7" rx="3.5" fill={i === 4 ? '#2563eb' : '#e2e8f0'}></rect>
+        ))}
+        <path d="M138 100 h34" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"></path>
+        <path d="M166 90 l14 10 l-14 10" fill="none" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+        <g>
+          <ellipse cx="204" cy="150" rx="26" ry="9" fill="#fbbf24" stroke="#d97706" stroke-width="2"></ellipse>
+          <ellipse cx="204" cy="136" rx="26" ry="9" fill="#fcd34d" stroke="#d97706" stroke-width="2"></ellipse>
+          <ellipse cx="204" cy="122" rx="26" ry="9" fill="#fbbf24" stroke="#d97706" stroke-width="2"></ellipse>
+          <ellipse cx="204" cy="108" rx="26" ry="9" fill="#fcd34d" stroke="#d97706" stroke-width="2"></ellipse>
+        </g>
+      </g>
+    )}
+
+    {/* ── COMPARISON: ascending bars + location pin (cantons) ── */}
+    {variant === 'comparison' && (
+      <g>
+        <path d="M40 168 H208" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"></path>
+        <rect x="48" y="120" width="30" height="48" rx="5" fill="#bfdbfe"></rect>
+        <rect x="90" y="96" width="30" height="72" rx="5" fill="#60a5fa"></rect>
+        <rect x="132" y="72" width="30" height="96" rx="5" fill="#3b82f6"></rect>
+        <rect x="174" y="52" width="30" height="116" rx="5" fill="#2563eb"></rect>
+        <g>
+          <path d="M189 8 c-16 0 -28 12 -28 28 c0 20 28 44 28 44 c0 0 28 -24 28 -44 c0 -16 -12 -28 -28 -28 Z" fill="#da291c"></path>
+          <rect x="185" y="22" width="8" height="24" rx="2" fill="#fff"></rect>
+          <rect x="177" y="30" width="24" height="8" rx="2" fill="#fff"></rect>
+        </g>
+      </g>
+    )}
+
+    {/* ── PILLAR 3A: pillar/jar with growing plant + upward arrow ── */}
+    {variant === 'pillar3a' && (
+      <g>
+        <path d="M96 168 V90 a44 44 0 0 1 88 0 V168 Z" fill="#dbeafe" stroke="#93c5fd" stroke-width="3"></path>
+        <rect x="90" y="160" width="100" height="14" rx="6" fill="#2563eb"></rect>
+        <path d="M140 150 V96" stroke="#10b981" stroke-width="6" stroke-linecap="round"></path>
+        <path d="M140 112 c-22 -6 -30 -22 -28 -36 c18 -2 32 12 28 36 Z" fill="#10b981"></path>
+        <path d="M140 100 c18 -8 34 -2 40 10 c-16 8 -34 6 -40 -10 Z" fill="#34d399"></path>
+        <circle cx="126" cy="150" r="10" fill="#fbbf24" stroke="#d97706" stroke-width="2"></circle>
+        <circle cx="150" cy="152" r="10" fill="#fcd34d" stroke="#d97706" stroke-width="2"></circle>
+        <path d="M168 52 v-26 m0 0 l-9 9 m9 -9 l9 9" stroke="#059669" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+        <text x="140" y="140" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="26" font-weight="800" fill="#1d4ed8">3a</text>
+      </g>
+    )}
+
+    {/* ── WITHHOLDING: document with % stamp + cross-border dashed line ── */}
+    {variant === 'withholding' && (
+      <g>
+        <path d="M100 30 h56 l26 26 v110 a6 6 0 0 1 -6 6 h-76 a6 6 0 0 1 -6 -6 V36 a6 6 0 0 1 6 -6 Z" fill="#fff" stroke="#cbd5e1" stroke-width="3"></path>
+        <path d="M156 30 v26 h26" fill="none" stroke="#cbd5e1" stroke-width="3"></path>
+        {[0, 1, 2].map((i) => (
+          <rect x="112" y={74 + i * 14} width="52" height="7" rx="3.5" fill="#e2e8f0"></rect>
+        ))}
+        <circle cx="150" cy="140" r="30" fill="#dbeafe" stroke="#2563eb" stroke-width="3"></circle>
+        <text x="150" y="151" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="30" font-weight="800" fill="#1d4ed8">%</text>
+        <path d="M40 20 V180" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 8" stroke-linecap="round"></path>
+        <path d="M52 100 h26 m0 0 l-9 -8 m9 8 l-9 8" stroke="#da291c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+      </g>
+    )}
+
+    {/* ── WITHHOLDING-CANTON: pin holding % + canton tag ── */}
+    {variant === 'withholdingCanton' && (
+      <g>
+        <path d="M132 14 c-30 0 -54 23 -54 53 c0 40 54 86 54 86 c0 0 54 -46 54 -86 c0 -30 -24 -53 -54 -53 Z" fill="#2563eb"></path>
+        <circle cx="132" cy="66" r="34" fill="#fff"></circle>
+        <text x="132" y="78" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="34" font-weight="800" fill="#1d4ed8">%</text>
+        <g>
+          <rect x="150" y="18" width="40" height="40" rx="9" fill="#da291c"></rect>
+          <rect x="166" y="27" width="8" height="22" rx="2" fill="#fff"></rect>
+          <rect x="159" y="34" width="22" height="8" rx="2" fill="#fff"></rect>
+        </g>
+        {label && (
+          <g>
+            <rect x="92" y="164" width="80" height="30" rx="8" fill="#0f172a"></rect>
+            <text x="132" y="185" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="700" fill="#fff" letter-spacing="1">{label}</text>
+          </g>
+        )}
+      </g>
+    )}
+
+    {/* ── CANTON: big location pin with the canton abbreviation ── */}
+    {variant === 'canton' && (
+      <g>
+        <ellipse cx="130" cy="180" rx="40" ry="10" fill="#cbd5e1" opacity="0.6"></ellipse>
+        <path d="M130 8 c-36 0 -64 27 -64 62 c0 47 64 104 64 104 c0 0 64 -57 64 -104 c0 -35 -28 -62 -64 -62 Z" fill="#2563eb"></path>
+        <path d="M130 8 c-36 0 -64 27 -64 62 c0 12 4 24 11 36 c10 -50 71 -70 111 -44 c-9 -32 -34 -54 -58 -54 Z" fill="#3b82f6"></path>
+        <circle cx="130" cy="72" r="42" fill="#fff"></circle>
+        {label ? (
+          <text x="130" y="86" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size={label.length > 2 ? 30 : 38} font-weight="800" fill="#1d4ed8">{label}</text>
+        ) : (
+          <g>
+            <rect x="126" y="52" width="8" height="40" rx="2" fill="#da291c"></rect>
+            <rect x="110" y="68" width="40" height="8" rx="2" fill="#da291c"></rect>
+          </g>
+        )}
+      </g>
+    )}
+
+    {/* ── GUIDE: open book + lightbulb ── */}
+    {variant === 'guide' && (
+      <g>
+        <path d="M40 150 V70 c22 -14 48 -14 70 0 V150 c-22 -12 -48 -12 -70 0 Z" fill="#fff" stroke="#cbd5e1" stroke-width="3"></path>
+        <path d="M180 150 V70 c-22 -14 -48 -14 -70 0 V150 c22 -12 48 -12 70 0 Z" fill="#eff6ff" stroke="#cbd5e1" stroke-width="3"></path>
+        <path d="M110 70 V150" stroke="#94a3b8" stroke-width="3"></path>
+        {[0, 1, 2].map((i) => (
+          <path d={`M54 ${88 + i * 16} h44`} stroke="#e2e8f0" stroke-width="5" stroke-linecap="round"></path>
+        ))}
+        {[0, 1, 2].map((i) => (
+          <path d={`M122 ${88 + i * 16} h44`} stroke="#cbd5e1" stroke-width="5" stroke-linecap="round"></path>
+        ))}
+        <g>
+          <circle cx="150" cy="40" r="22" fill="#fcd34d"></circle>
+          <path d="M150 62 v10" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"></path>
+          <rect x="142" y="60" width="16" height="8" rx="3" fill="#f59e0b"></rect>
+          <path d="M150 26 v-10 M126 40 h-10 M184 40 h-10 M133 23 l-7 -7 M167 23 l7 -7" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"></path>
+        </g>
+      </g>
+    )}
+
+    {/* ── LEGAL / TRUST: shield with check + Swiss cross ── */}
+    {variant === 'legal' && (
+      <g>
+        <path d="M132 20 l52 20 v46 c0 42 -30 70 -52 82 c-22 -12 -52 -40 -52 -82 V40 Z" fill="#2563eb"></path>
+        <path d="M132 20 l52 20 v46 c0 42 -30 70 -52 82 Z" fill="#1d4ed8"></path>
+        <path d="M108 92 l16 18 l32 -40" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"></path>
+        <g>
+          <rect x="176" y="26" width="40" height="40" rx="9" fill="#da291c"></rect>
+          <rect x="192" y="35" width="8" height="22" rx="2" fill="#fff"></rect>
+          <rect x="185" y="42" width="22" height="8" rx="2" fill="#fff"></rect>
+        </g>
+      </g>
+    )}
+
+    {/* ── ABOUT: Swiss badge + two people ── */}
+    {variant === 'about' && (
+      <g>
+        <circle cx="104" cy="76" r="24" fill="#60a5fa"></circle>
+        <path d="M68 158 c0 -26 16 -46 36 -46 c20 0 36 20 36 46 Z" fill="#60a5fa"></path>
+        <circle cx="158" cy="86" r="20" fill="#2563eb"></circle>
+        <path d="M128 158 c0 -22 14 -40 30 -40 c16 0 30 18 30 40 Z" fill="#2563eb"></path>
+        <g>
+          <rect x="150" y="24" width="44" height="44" rx="10" fill="#da291c"></rect>
+          <rect x="168" y="34" width="8" height="24" rx="2" fill="#fff"></rect>
+          <rect x="160" y="42" width="24" height="8" rx="2" fill="#fff"></rect>
+        </g>
+      </g>
+    )}
+
+    {/* ── 404: magnifier over map pin ── */}
+    {variant === 'notfound' && (
+      <g>
+        <path d="M150 40 c-26 0 -46 20 -46 45 c0 34 46 73 46 73 c0 0 46 -39 46 -73 c0 -25 -20 -45 -46 -45 Z" fill="#dbeafe" stroke="#93c5fd" stroke-width="3"></path>
+        <circle cx="118" cy="96" r="34" fill="#fff" stroke="#2563eb" stroke-width="7"></circle>
+        <path d="M142 120 l26 26" stroke="#2563eb" stroke-width="10" stroke-linecap="round"></path>
+        <text x="118" y="106" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="26" font-weight="800" fill="#1d4ed8">?</text>
+      </g>
+    )}
+  </svg>
+</div>

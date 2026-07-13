@@ -95,7 +95,7 @@ const compareRows = meta.compare.map((other) => {
 });
 ---
 
-<BaseLayout title={title} description={description} path={path} locale="en" jsonLd={[webApp, faqSchema]}>
+<BaseLayout title={title} description={description} path={path} locale="en" heroLabel={abbr} jsonLd={[webApp, faqSchema]}>
   <Breadcrumbs
     crumbs={[{ name: 'Cantonal tax comparison', path: '/en/cantonal-tax-comparison/' }, { name: `Canton of ${name}` }]}
     locale="en"

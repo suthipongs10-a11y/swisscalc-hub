@@ -103,7 +103,7 @@ const compareRows = editorial.compare.map((other) => {
 });
 ---
 
-<BaseLayout title={title} description={description} path={path} jsonLd={[webApp, faqSchema]}>
+<BaseLayout title={title} description={description} path={path} heroLabel={abbr} jsonLd={[webApp, faqSchema]}>
   <Breadcrumbs crumbs={[{ name: 'Steuervergleich', path: '/steuervergleich/' }, { name: `Kanton ${name}` }]} />
 
   <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Steuerrechner Kanton {name} {SITE_YEAR}</h1>
