@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "home": "Home",
+    "tools": "Calculators",
+    "guide": "Guide",
+    "methodology": "Methodology",
+    "about": "About",
+    "menu": "Open the menu",
+    "allTools": "All calculators"
+  },
+  "footer": {
+    "legal": "Legal information",
+    "imprint": "Legal notice",
+    "privacy": "Privacy",
+    "sources": "Sources",
+    "tagline": "Independent tax and finance calculators for Switzerland — free, ad-free and cookie-free.",
+    "disclaimer": "All calculations are provided for guidance only. Only the official assessment by the competent authorities is binding."
+  },
+  "common": {
+    "lastUpdated": "Last updated",
+    "sources": "Sources",
+    "breadcrumbHome": "Home"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "This page does not exist or has been moved.",
+    "backHome": "Back to home"
+  }
+}

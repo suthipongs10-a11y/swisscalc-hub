@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND } from '../../lib/site';
+---
+
+<BaseLayout
+  title={`Methodology: how we calculate | ${BRAND}`}
+  description="How CalcSwiss calculates: official data sources (FTA, FSO, FOPH), reference dates, formulas and known limits — fully disclosed."
+  path="/en/methodology/"
+  locale="en"
+>
+  <Breadcrumbs crumbs={[{ name: 'Methodology' }]} locale="en" />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Methodology</h1>
+    <p>
+      Every calculator on calcswiss.ch discloses how it calculates. On this page we document, for each tool, the
+      formulas, the parameters used and their official sources, with the reference date.
+    </p>
+    <h2>Our principles</h2>
+    <ul>
+      <li>
+        <strong>Every figure has a source.</strong> Calculation parameters come from official publications (FTA, FSO,
+        FOPH, cantonal tax administrations) and are versioned with their retrieval date.
+      </li>
+      <li>
+        <strong>Tested formulas.</strong> Every tax formula is tested automatically against official example
+        calculations before it goes live.
+      </li>
+      <li>
+        <strong>We name the limits.</strong> Where a calculation simplifies (e.g. pension-fund contributions at the
+        statutory minimum rather than regulatory values), this is stated with the relevant calculator.
+      </li>
+    </ul>
+    <h2>Documentation per calculator</h2>
+
+    <h3>Salary calculator</h3>
+    <p>
+      The <a href="/en/salary-calculator/">salary calculator</a> deducts the statutory employee contributions from the
+      gross annual salary: AHV/IV/EO (5.3%, no limit), ALV (1.1% up to CHF 148’200 per year), NBU (employer-dependent)
+      and BVG (retirement credit on the coordinated salary, 7–18% by age, half the employee’s share). Rates and
+      limit amounts as of 2026, sources: FSIO, ahv-iv.ch and the BVG key figures. Details and a worked example
+      directly with the calculator.
+    </p>
+    <p>
+      Not included: income tax (assessed separately, or withholding tax) and voluntary contributions such as daily
+      sickness benefits. NBU and BVG deductions depend on the employer and pension fund; the calculator uses the
+      statutory minimum.
+    </p>
+
+    <h3>Cantonal tax comparison (26 cantons)</h3>
+    <p>
+      The <a href="/en/cantonal-tax-comparison/">cantonal tax comparison</a> calculates, for each canton, the simple
+      cantonal tax under the 2026 cantonal income-tax schedule and multiplies it by the canton and capital multipliers;
+      added to this is the direct federal tax under the federal schedule. The data source is the official FTA tax data
+      (swisstaxcalculator.estv.admin.ch). In cantons with their own municipal schedule (Schwyz, Sion) we use the
+      official municipal schedule. Not included: church tax, personal taxes, wealth tax. The comparison is based on
+      taxable income; cantonal differences in deductions are not reflected. The calculation logic is validated against
+      the MIT-licensed reference implementation devbrains/swisstaxcalculator, which builds on the same FTA data.
+    </p>
+
+    <h3>Pillar 3a calculator</h3>
+    <p>
+      The <a href="/en/pillar-3a-calculator/">pillar 3a calculator</a> calculates income tax (the same method as the
+      comparison) once without and once with the 3a deduction; the difference is the tax saving. Maximum amounts 2026
+      per the FSIO: CHF 7'258 with a pension fund, 20% of earned income or a maximum of CHF 36'288 without a pension
+      fund.
+    </p>
+
+    <p>The methodology of further calculators will appear here as they are published.</p>
+
+    <h2>Data currency and update cadence</h2>
+    <p>
+      Tax and social-insurance parameters change annually. We update the data according to the following calendar —
+      each figure carries an internal retrieval date that we keep with it on changes:
+    </p>
+    <ul>
+      <li>
+        <strong>Start of year:</strong> new tax year — FTA schedules and multipliers, AHV/ALV contribution rates,
+        pillar 3a maximum amounts and BVG key figures are brought up to date.
+      </li>
+      <li>
+        <strong>End of September:</strong> the approved health-insurance premiums of the Federal Office of Public
+        Health (FOPH) appear — relevant for the planned franchise calculator.
+      </li>
+      <li>
+        <strong>On publication of new withholding-tax schedules:</strong> update of the covered cantons.
+      </li>
+    </ul>
+    <p>
+      Every tool-relevant figure is stored in versioned data files with <code>source</code> (official link),
+      <code>retrieved</code> (retrieval date) and <code>taxYear</code>. The “Last updated” note shown on each
+      calculator page corresponds to this retrieval date, not to the time of the last page build — we do not display
+      artificial currency.
+    </p>
+
+    <h2>Known limits</h2>
+    <p>So that you can interpret the results correctly, here are the main simplifications:</p>
+    <ul>
+      <li>
+        <strong>Taxable income as the basis.</strong> Our tax calculators start from taxable income (after
+        deductions). We do not reproduce the deduction rules that differ by canton — they would be needed for an exact
+        comparison at the gross-income level.
+      </li>
+      <li>
+        <strong>Capitals as the reference.</strong> For cantonal taxes we use the multiplier of the cantonal capital.
+        Your municipality of residence can be cheaper or more expensive; the canton pages show the range.
+      </li>
+      <li>
+        <strong>Excluding church and personal tax.</strong> Denominational taxes and fixed personal taxes are not
+        included.
+      </li>
+      <li>
+        <strong>Income only.</strong> Wealth tax is not part of the current calculators.
+      </li>
+      <li>
+        <strong>Employer-dependent social deductions.</strong> NBU and BVG contributions vary by employer and pension
+        fund; we calculate with the statutory minimum.
+      </li>
+    </ul>
+    <p>
+      All calculations are for guidance only. Binding is the official assessment by the competent tax authority. All
+      data sources are listed under <a href="/en/sources/">Sources</a>.
+    </p>
+  </article>
+</BaseLayout>

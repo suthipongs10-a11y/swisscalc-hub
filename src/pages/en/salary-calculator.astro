@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import EnSalaryCalculator from '../../components/en/EnSalaryCalculator.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF } from '../../lib/format';
+
+const path = '/en/salary-calculator/';
+const title = `Swiss salary calculator ${SITE_YEAR} (gross to net) | ${BRAND}`;
+const description = `Convert gross salary to net: AHV, IV, EO, ALV, NBU and BVG broken down. Free, no sign-up, with the official ${SITE_YEAR} rates.`;
+
+const faqs = [
+  {
+    q: 'What is the difference between gross and net salary?',
+    a: 'The gross salary is the agreed salary before deductions. The net salary is what is paid out after the social-security contributions (AHV/IV/EO, ALV, NBU, BVG) have been deducted. Income tax is not yet included: it is assessed separately.',
+  },
+  {
+    q: 'Which deductions are taken from the gross salary?',
+    a: 'From the gross salary are deducted: AHV/IV/EO (5.3%), ALV (1.1% up to CHF 148’200), non-occupational accident insurance NBU (depending on the employer) and the BVG pension-fund contribution (depending on age, on the coordinated salary). These rates are the same throughout Switzerland.',
+  },
+  {
+    q: 'Is income tax deducted from the salary?',
+    a: 'For Swiss citizens and C-permit holders, no: they pay tax separately via the annual assessment. Only people taxed at source have the tax deducted directly from their salary.',
+  },
+  {
+    q: `How high are the AHV/IV/EO contributions in ${SITE_YEAR}?`,
+    a: 'The total contribution is 10.6%, split in half: employees pay 5.3% of the gross salary, with no upper limit. The rate is unchanged despite the introduction of the 13th AHV pension, which is financed through VAT rather than payroll contributions.',
+  },
+  {
+    q: 'How does the BVG (pension fund) deduction work?',
+    a: 'The BVG retirement credit is calculated on the coordinated salary — the gross salary minus the coordination deduction (CHF 26’460), capped between CHF 3’780 and CHF 64’260. The rate rises with age (7% to 18%) and is paid at least half by the employee.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Swiss salary calculator',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'en-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="en" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Salary calculator' }]} locale="en" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Swiss salary calculator {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Work out your net salary in seconds: all social-security contributions — AHV, IV, EO, ALV, NBU and BVG — broken
+    down transparently, with the official {SITE_YEAR} rates.
+  </p>
+
+  <EnSalaryCalculator />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>How is the calculation done?</h2>
+    <p>
+      The calculator deducts the statutory employee contributions from the gross annual salary. These rates are federal
+      and identical in every canton. Decisive for {SITE_YEAR}:
+    </p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-300 text-left">
+          <th class="py-2 pr-2">Contribution</th>
+          <th class="py-2 px-2">Rate (employee)</th>
+          <th class="py-2 pl-2">Basis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">AHV / IV / EO</td><td class="py-2 px-2">5.3%</td><td class="py-2 pl-2">entire gross salary</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">ALV</td><td class="py-2 px-2">1.1%</td><td class="py-2 pl-2">up to {formatCHF(148200, 0)} / year</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">NBU (non-occupational accident)</td><td class="py-2 px-2">employer-dependent</td><td class="py-2 pl-2">up to {formatCHF(148200, 0)} / year</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">BVG (pension fund)</td><td class="py-2 px-2">7–18% × 50%, by age</td><td class="py-2 pl-2">coordinated salary</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Limits of this calculation</h3>
+    <ul>
+      <li>The <strong>NBU</strong> rate and <strong>BVG</strong> contributions depend on the employer and pension fund; we use the statutory minimum (mandatory BVG, 50% share).</li>
+      <li><strong>Income tax</strong> is not included (assessed separately).</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+  </div>
+
+  <section aria-label="Other calculators" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Other calculators</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/cantonal-tax-comparison/" class="font-semibold text-blue-700 hover:underline">Cantonal tax comparison (26 cantons)</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Where do you pay the least income tax?</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/pillar-3a-calculator/" class="font-semibold text-blue-700 hover:underline">Pillar 3a calculator</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Your tax saving from pillar 3a.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources:</strong>
+      <a class="underline" href="https://www.ahv-iv.ch/en/" rel="noopener">AHV/IV/EO</a>,
+      <a class="underline" href="https://www.koordination.ch/fileadmin/files/bvg/masszahlen/bvg-masszahlen-2026.pdf" rel="noopener">BVG values 2026</a>.
+      Methodology: <a class="underline" href="/en/methodology/">methodology</a> ·
+      <a class="underline" href="/en/sources/">all sources</a>.
+    </p>
+    <p>Last updated: 13.07.2026 · {SITE_YEAR} data</p>
+  </div>
+</BaseLayout>

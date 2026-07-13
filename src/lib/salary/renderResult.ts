@@ -55,6 +55,24 @@ export const SALARY_LABELS_FR: SalaryLabels = {
   },
 };
 
+export const SALARY_LABELS_EN: SalaryLabels = {
+  netPerYear: 'Net salary per year',
+  netPerMonth: 'Net salary per month (÷ 12)',
+  colDeduction: 'Deduction',
+  colRate: 'Rate',
+  colAmount: 'Amount / year',
+  totalDeductions: 'Total deductions',
+  grossPerYear: 'Gross salary per year',
+  coordNote: (chf) => `Coordinated salary for the BVG calculation: ${chf}.`,
+  noBvgNote: 'No mandatory BVG coverage (below the entry threshold or under 25).',
+  deductionLabels: {
+    ahvIvEo: 'AHV / IV / EO (social security)',
+    alv: 'ALV (unemployment insurance)',
+    nbu: 'NBU (non-occupational accident)',
+    bvg: 'BVG (occupational pension)',
+  },
+};
+
 export function renderResultHtml(r: SalaryResult, labels: SalaryLabels = SALARY_LABELS_DE): string {
   const rows = r.deductions
     .map(

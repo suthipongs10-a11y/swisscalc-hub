@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND } from '../../lib/site';
+
+// nFADP-compliant privacy policy: controller, purposes, recipient countries.
+// TODO_OWNER: controller identity before public launch.
+---
+
+<BaseLayout
+  title={`Privacy | ${BRAND}`}
+  description={`Privacy policy of ${BRAND}: no cookies, no advertising, cookieless statistics — your inputs never leave your browser.`}
+  path="/en/privacy/"
+  locale="en"
+>
+  <Breadcrumbs crumbs={[{ name: 'Privacy' }]} locale="en" />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Privacy policy</h1>
+
+    <h2>Controller</h2>
+    <p>[OPERATOR NAME], [STREET NO.], [POSTAL CODE, TOWN] — contact: [E-MAIL]</p>
+
+    <h2>The essentials in brief</h2>
+    <ul>
+      <li>calcswiss.ch uses <strong>no cookies</strong> and shows <strong>no advertising</strong>.</li>
+      <li>
+        Your inputs into our calculators (salary, tax data, etc.) are processed <strong>exclusively in your
+        browser</strong> and are never transmitted to a server or stored.
+      </li>
+      <li>There is no registration or sign-in option.</li>
+    </ul>
+
+    <h2>Hosting</h2>
+    <p>
+      This website is hosted with Cloudflare, Inc. (USA) (Cloudflare Pages). When the website is accessed, Cloudflare
+      processes technically necessary connection data (e.g. the IP address) to deliver and protect the website.
+      Recipient country: USA. Cloudflare commits to the recognised data-protection frameworks for the transfer;
+      details in Cloudflare’s privacy policy.
+    </p>
+
+    <h2>Web statistics (cookieless)</h2>
+    <p>
+      We use Cloudflare Web Analytics, a cookieless audience measurement. No cookies are set, no personal profiles are
+      built and no users are tracked across websites. Purpose: aggregated statistics (page views, load times) to
+      improve the website.
+    </p>
+
+    <h2>Your rights</h2>
+    <p>
+      Under the Swiss Data Protection Act (FADP), you have the right to access, rectification and erasure of personal
+      data concerning you. As we ourselves store no personal data, please direct requests regarding connection data to
+      the hosting provider or to the contact address given above.
+    </p>
+
+    <h2>Version</h2>
+    <p>This privacy policy is adapted when the service changes. Version: July 2026.</p>
+  </article>
+</BaseLayout>

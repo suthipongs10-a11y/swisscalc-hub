@@ -1,0 +1,120 @@
+---
+/**
+ * English salary calculator island. Shares the engine + renderer with the German
+ * one; only the form copy and the renderer labels (SALARY_LABELS_EN) differ.
+ */
+import cantonData from '../../data/cantons.json';
+import { calculateSalary, annualFromMonthly } from '../../lib/salary/engine';
+import { renderResultHtml, SALARY_LABELS_EN } from '../../lib/salary/renderResult';
+import { enName } from '../../lib/tax/labels';
+
+const cantons = cantonData.cantons;
+const DEFAULTS = { monthly: 6500, payouts: 13 as const, age: 40, nbuPct: 1.4, bvg: true };
+const initialResult = calculateSalary({
+  annualGross: annualFromMonthly(DEFAULTS.monthly, DEFAULTS.payouts),
+  age: DEFAULTS.age,
+  nbuRate: DEFAULTS.nbuPct / 100,
+  includeBvg: DEFAULTS.bvg,
+});
+const initialHtml = renderResultHtml(initialResult, SALARY_LABELS_EN);
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section aria-label="Salary calculator" class="grid gap-6 md:grid-cols-2">
+  <form id="salary-form" class="space-y-4" novalidate>
+    <div>
+      <label class={labelClass} for="monthly">Gross salary per month (CHF)</label>
+      <input class={inputClass} type="number" id="monthly" name="monthly" min="0" step="100" inputmode="numeric" value={DEFAULTS.monthly} />
+    </div>
+
+    <fieldset>
+      <legend class={labelClass}>Number of payments</legend>
+      <div class="mt-1 inline-flex rounded-md border border-slate-300 p-0.5">
+        <label class="cursor-pointer">
+          <input type="radio" name="payouts" value="12" class="peer sr-only" />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">12×</span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="payouts" value="13" class="peer sr-only" checked />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">13× (13th salary)</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div>
+      <label class={labelClass} for="age">Age (for the BVG rate)</label>
+      <input class={inputClass} type="number" id="age" name="age" min="17" max="70" step="1" value={DEFAULTS.age} />
+    </div>
+
+    <div>
+      <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+        <input type="checkbox" id="bvg" name="bvg" class="h-4 w-4 rounded border-slate-300" checked />
+        Enrolled in a pension fund (BVG)
+      </label>
+    </div>
+
+    <details class="text-sm">
+      <summary class="cursor-pointer text-slate-600 hover:text-slate-900">Advanced settings</summary>
+      <div class="mt-3 space-y-4">
+        <div>
+          <label class={labelClass} for="nbu">NBU rate (non-occupational accident, %)</label>
+          <input class={inputClass} type="number" id="nbu" name="nbu" min="0" max="5" step="0.01" value={DEFAULTS.nbuPct} />
+          <p class="mt-1 text-xs text-slate-500">
+            The NBU rate is set by the employer/insurer. Indicative value – adjust it to your own payslip.
+          </p>
+        </div>
+        <div>
+          <label class={labelClass} for="canton">Canton (for later income tax)</label>
+          <select class={inputClass} id="canton" name="canton">
+            {cantons.map((c) => <option value={c.slug}>{enName(c.abbr)}</option>)}
+          </select>
+          <p class="mt-1 text-xs text-slate-500">
+            Social-security contributions are identical in every canton. Income tax is assessed separately –
+            compare it in the <a href="/en/cantonal-tax-comparison/" class="underline">comparison of all 26 cantons</a>.
+          </p>
+        </div>
+      </div>
+    </details>
+  </form>
+
+  <div>
+    <div id="salary-result" aria-live="polite" set:html={initialHtml}></div>
+    <p class="mt-3 text-xs text-slate-500">
+      The net salary is <strong>before income tax</strong>. In Switzerland, tax is not deducted from the salary for
+      Swiss citizens and C-permit holders, but assessed separately. A withholding-tax calculator will follow.
+    </p>
+  </div>
+</section>
+
+<script>
+  import { calculateSalary, annualFromMonthly } from '../../lib/salary/engine';
+  import { renderResultHtml, SALARY_LABELS_EN } from '../../lib/salary/renderResult';
+
+  const form = document.getElementById('salary-form') as HTMLFormElement | null;
+  const resultEl = document.getElementById('salary-result');
+  if (form && resultEl) {
+    const num = (name: string): number => {
+      const el = form.elements.namedItem(name) as HTMLInputElement | null;
+      const v = el ? parseFloat(el.value) : NaN;
+      return Number.isFinite(v) ? v : 0;
+    };
+    const recompute = () => {
+      const monthly = num('monthly');
+      const payouts = (form.elements.namedItem('payouts') as RadioNodeList).value === '12' ? 12 : 13;
+      const age = num('age');
+      const nbuRate = num('nbu') / 100;
+      const bvg = (form.elements.namedItem('bvg') as HTMLInputElement).checked;
+      try {
+        const result = calculateSalary({ annualGross: annualFromMonthly(monthly, payouts), age, nbuRate, includeBvg: bvg });
+        resultEl.innerHTML = renderResultHtml(result, SALARY_LABELS_EN);
+      } catch {
+        /* keep last valid result */
+      }
+    };
+    form.addEventListener('input', recompute);
+    form.addEventListener('change', recompute);
+  }
+</script>

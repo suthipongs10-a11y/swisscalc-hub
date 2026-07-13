@@ -1,0 +1,59 @@
+---
+/** English cross-canton comparison island (shares engine + renderer; EN labels). */
+import { renderComparisonHtml } from '../../lib/tax/renderComparison';
+import { COMPARISON_LABELS_EN } from '../../lib/tax/labels';
+
+const DEFAULTS = { income: 100000, relationship: 'single' as const };
+const initialHtml = renderComparisonHtml(DEFAULTS.income, DEFAULTS.relationship, COMPARISON_LABELS_EN);
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section aria-label="Cantonal tax comparison">
+  <form id="cmp-form" class="mb-6 grid gap-4 sm:grid-cols-2" novalidate>
+    <div>
+      <label class={labelClass} for="cmp-income">Taxable income (CHF / year)</label>
+      <input class={inputClass} type="number" id="cmp-income" name="income" min="0" step="1000" inputmode="numeric" value={DEFAULTS.income} />
+      <p class="mt-1 text-xs text-slate-500">
+        Taxable income = income after all deductions (shown on your tax return/assessment).
+      </p>
+    </div>
+    <fieldset>
+      <legend class={labelClass}>Marital status</legend>
+      <div class="mt-1 inline-flex rounded-md border border-slate-300 p-0.5">
+        <label class="cursor-pointer">
+          <input type="radio" name="relationship" value="single" class="peer sr-only" checked />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">Single</span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="relationship" value="married" class="peer sr-only" />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">Married</span>
+        </label>
+      </div>
+    </fieldset>
+  </form>
+
+  <div id="cmp-result" aria-live="polite" set:html={initialHtml}></div>
+</section>
+
+<script>
+  import { renderComparisonHtml } from '../../lib/tax/renderComparison';
+  import { COMPARISON_LABELS_EN } from '../../lib/tax/labels';
+
+  const form = document.getElementById('cmp-form') as HTMLFormElement | null;
+  const resultEl = document.getElementById('cmp-result');
+  if (form && resultEl) {
+    const recompute = () => {
+      const income = parseFloat((form.elements.namedItem('income') as HTMLInputElement).value);
+      const relationship =
+        (form.elements.namedItem('relationship') as RadioNodeList).value === 'married' ? 'married' : 'single';
+      if (Number.isFinite(income) && income >= 0 && income <= 100_000_000) {
+        resultEl.innerHTML = renderComparisonHtml(income, relationship, COMPARISON_LABELS_EN);
+      }
+    };
+    form.addEventListener('input', recompute);
+    form.addEventListener('change', recompute);
+  }
+</script>

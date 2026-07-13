@@ -1,0 +1,211 @@
+---
+/**
+ * Programmatic English canton pages — the English counterpart of
+ * /steuerrechner/[kanton]/ and /fr/calculateur-impots/[canton]/. Same
+ * SEO_SPEC §3.2 anti-doorway discipline: every quantitative block is computed
+ * from this canton's data; the intro and one FAQ are individually written per
+ * canton (src/lib/cantonContentEn.ts).
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import EnCantonCalculator from '../../../components/en/EnCantonCalculator.astro';
+import cantonData from '../../../data/cantons.json';
+import statsData from '../../../data/tax/canton-stats-2026.json';
+import cantonalData from '../../../data/tax/cantonal-income-2026.json';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../../lib/site';
+import { formatCHF, formatNumber } from '../../../lib/format';
+import { cantonTax, compareCantons, cantonMultipliers } from '../../../lib/tax/engine';
+import { CANTON_CONTENT } from '../../../lib/cantonContent';
+import { CANTON_CONTENT_EN } from '../../../lib/cantonContentEn';
+import { enName, enSlugOf, enGenitive, enCapital, TARIF_LABELS_EN } from '../../../lib/tax/labels';
+
+export function getStaticPaths() {
+  return cantonData.cantons.map((c) => ({ params: { canton: enSlugOf(c.abbr)! }, props: { canton: c } }));
+}
+
+interface CantonInfo {
+  bfs: number;
+  abbr: string;
+  name: string;
+  slug: string;
+}
+const { canton } = Astro.props as { canton: CantonInfo };
+const { abbr } = canton;
+
+const editorial = CANTON_CONTENT_EN[abbr];
+const meta = CANTON_CONTENT[abbr]; // language-neutral compare + portal
+if (!editorial || !meta) throw new Error(`Missing English editorial content for ${abbr}`);
+
+const name = enName(abbr);
+const genitive = enGenitive(abbr);
+
+const stats = (statsData.cantons as Record<string, { municipalityCount: number; minCity: { name: string; pct: number }; maxCity: { name: string; pct: number } }>)[abbr]!;
+const m = cantonMultipliers(abbr);
+
+const ref = cantonTax(100_000, abbr, 'single');
+const capital = enCapital(ref.capital);
+const ranking = compareCantons(100_000, 'single');
+const rank = ranking.findIndex((r) => r.abbr === abbr) + 1;
+const cheapest = ranking[0]!;
+
+const cantonTarifs = (cantonalData.cantons as Record<string, { tableType: string }[]>)[abbr]!;
+const tarifLabel = TARIF_LABELS_EN[cantonTarifs[0]!.tableType] ?? cantonTarifs[0]!.tableType;
+
+const path = `/en/tax-calculator/${enSlugOf(abbr)}/`;
+const longTitle = `Tax calculator canton ${genitive} ${SITE_YEAR} | ${BRAND}`;
+const title = longTitle.length <= 65 ? longTitle : `Taxes canton ${genitive} ${SITE_YEAR} | ${BRAND}`;
+const description = `${SITE_YEAR} taxes in the canton ${genitive}: cantonal, municipal and federal tax in ${capital}. Rank ${rank} of 26 for ${formatCHF(100000, 0)} — with the official FTA schedules.`;
+
+const faqs = [
+  {
+    q: `How high are the taxes in the canton ${genitive}?`,
+    a: `For a taxable income of ${formatCHF(100000, 0)} (single), you pay in ${capital} about ${formatCHF(ref.totalTax, 0)} per year (cantonal, municipal and federal tax, excluding church tax) — an effective rate of ${(ref.effectiveRate * 100).toFixed(1)}% and rank ${rank} of 26 cantonal capitals. For your income, use the calculator above.`,
+  },
+  {
+    q: `Which municipality in the canton ${genitive} has the lowest taxes?`,
+    a: `The lowest municipal multiplier is currently ${stats.minCity.name} (${formatNumber(stats.minCity.pct, 0)}%), the highest ${stats.maxCity.name} (${formatNumber(stats.maxCity.pct, 0)}%) — across ${stats.municipalityCount} municipalities in total. Our calculator uses the capital ${capital}; in another municipality the municipal tax shifts according to the multiplier.`,
+  },
+  {
+    q: `How is the tax in ${capital} made up?`,
+    a: `On the simple cantonal tax under the ${abbr} schedule (${tarifLabel}), the canton applies a multiplier of ${formatNumber(m.cantonPct, 0)}%, the municipality of ${capital} ${formatNumber(m.cityPct, 0)}%. Added to this is the direct federal tax, under the uniform federal schedule.`,
+  },
+  editorial.faq,
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: `Tax calculator canton of ${name}`,
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'en-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+
+const compareRows = meta.compare.map((other) => {
+  const r = cantonTax(100_000, other, 'single');
+  return { ...r, name: enName(other), slug: enSlugOf(other), capitalEn: enCapital(r.capital) };
+});
+---
+
+<BaseLayout title={title} description={description} path={path} locale="en" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs
+    crumbs={[{ name: 'Cantonal tax comparison', path: '/en/cantonal-tax-comparison/' }, { name: `Canton of ${name}` }]}
+    locale="en"
+  />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Tax calculator canton {genitive} {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Calculate the cantonal, municipal and federal tax for the canton {genitive} — with the official {SITE_YEAR}
+    schedules and the multipliers of the capital {capital}.
+  </p>
+
+  <EnCantonCalculator abbr={abbr} />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Taxes in the canton {genitive}</h2>
+    <p>{editorial.intro}</p>
+
+    <h3>The key figures {SITE_YEAR}</h3>
+    <table class="w-full text-sm">
+      <tbody>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Schedule system</td>
+          <td class="py-2 pl-2 text-right">{tarifLabel}</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Cantonal multiplier</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(m.cantonPct, 2)}%</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Multiplier {capital} (capital)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(m.cityPct, 2)}%</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Cheapest municipality</td>
+          <td class="py-2 pl-2 text-right">{stats.minCity.name} ({formatNumber(stats.minCity.pct, 0)}%)</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Most expensive municipality</td>
+          <td class="py-2 pl-2 text-right">{stats.maxCity.name} ({formatNumber(stats.maxCity.pct, 0)}%)</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Number of municipalities</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{stats.municipalityCount}</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-2">Rank for {formatCHF(100000, 0)} (single)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{rank} of 26</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>{name} in comparison</h3>
+    <p>
+      For a taxable income of {formatCHF(100000, 0)} (single), the capital {capital} costs
+      {' '}{formatCHF(ref.totalTax, 0)} per year.
+      {rank === 1
+        ? ' That makes it the cheapest cantonal capital in Switzerland.'
+        : ` The cheapest capital (${enCapital(cheapest.capital)}, ${formatCHF(cheapest.totalTax, 0)}) is ${formatCHF(ref.totalTax - cheapest.totalTax, 0)} below that.`}
+    </p>
+    <ul>
+      {
+        compareRows.map((r) => (
+          <li>
+            <a href={`/en/tax-calculator/${r.slug}/`}>Canton of {r.name}</a>: {formatCHF(r.totalTax, 0)} (
+            {(r.effectiveRate * 100).toFixed(1)}% effective in {r.capitalEn})
+          </li>
+        ))
+      }
+    </ul>
+    <p>
+      All 26 cantons for your income: <a href="/en/cantonal-tax-comparison/">see the comparison</a>. Optimise your
+      deductions: <a href="/en/pillar-3a-calculator/">pillar 3a calculator</a>. From gross to net salary:
+      <a href="/en/salary-calculator/">salary calculator</a>.
+    </p>
+
+    <h2>Frequently asked questions</h2>
+    {
+      faqs.map((f) => (
+        <div class="mb-4">
+          <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+          <p class="text-slate-700">{f.a}</p>
+        </div>
+      ))
+    }
+
+    <p>
+      Binding information and the official assessment:
+      <a href={meta.portal} rel="noopener">tax administration of the canton {genitive}</a>.
+    </p>
+  </div>
+
+  <section aria-label="Other calculators" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Other calculators</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/cantonal-tax-comparison/" class="font-semibold text-blue-700 hover:underline">Cantonal tax comparison (26 cantons)</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Where do you pay the least income tax?</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/salary-calculator/" class="font-semibold text-blue-700 hover:underline">Swiss salary calculator</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">From gross to net salary.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources:</strong> {SITE_YEAR} schedules and multipliers:
+      <a class="underline" href="https://swisstaxcalculator.estv.admin.ch/" rel="noopener">FTA tax data</a>.
+    </p>
+    <p>Last updated: 13.07.2026 · {SITE_YEAR} tax-year data</p>
+  </div>
+</BaseLayout>

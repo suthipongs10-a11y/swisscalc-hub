@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import EnThreeACalculator from '../../components/en/EnThreeACalculator.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF } from '../../lib/format';
+import { cantonTax } from '../../lib/tax/engine';
+import limits from '../../data/saeule-3a-2026.json';
+
+const path = '/en/pillar-3a-calculator/';
+const title = `Pillar 3a calculator Switzerland ${SITE_YEAR} | ${BRAND}`;
+const description = `How much tax does your pillar 3a contribution save you? By canton and income. Maximum ${SITE_YEAR}: CHF 7'258 with a pension fund.`;
+
+const maxPK = limits.withPensionFund;
+const before = cantonTax(100_000, 'ZH', 'single');
+const after = cantonTax(100_000 - maxPK, 'ZH', 'single');
+const saving = Math.round(before.totalTax - after.totalTax);
+
+const faqs = [
+  {
+    q: `What is the maximum pillar 3a contribution in ${SITE_YEAR}?`,
+    a: `Employed people who belong to a pension fund can pay in at most CHF 7'258 in ${SITE_YEAR}. Without a pension fund (self-employed), it is 20% of earned income, up to a maximum of CHF 36'288. The amounts are set each year by the Federal Social Insurance Office (FSIO).`,
+  },
+  {
+    q: 'How much tax can I save with pillar 3a?',
+    a: `The contribution is fully deducted from taxable income — the saving equals your marginal rate. Depending on canton and income, that is typically 20 to 40% of the contribution: for the maximum amount, roughly CHF 1'500 to 2'900 per year. The calculator above shows your exact figure.`,
+  },
+  {
+    q: 'Is it worth contributing even on a modest income?',
+    a: 'The tax effect is smaller for low incomes, because the marginal rate is lower. Pillar 3a nonetheless remains a sensible retirement-savings instrument, and every contribution reduces tax at least a little. Run your own figures above.',
+  },
+  {
+    q: 'Is the capital taxed on withdrawal?',
+    a: 'Yes, on withdrawal the pillar 3a capital is taxed separately from the rest of your income, at a reduced rate (capital-benefits tax, varying by canton). The saving during the contribution years generally clearly exceeds this exit tax. Staggering withdrawals over several years reduces it further.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Pillar 3a calculator',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'en-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="en" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Pillar 3a calculator' }]} locale="en" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Pillar 3a calculator {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Work out how much your pillar 3a contribution saves you in tax — by canton, income and marital status, with the
+    official {SITE_YEAR} schedules.
+  </p>
+
+  <EnThreeACalculator />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>How is the calculation done?</h2>
+    <p>
+      Your 3a contribution is deducted from taxable income. We calculate your income tax (canton + capital municipality
+      + direct federal tax) once without and once with the deduction — the difference is your tax saving. The basis:
+      the cantonal {SITE_YEAR} schedules and multipliers from the FTA tax data.
+    </p>
+    <h3>Worked example</h3>
+    <p>Taxable income {formatCHF(100000, 0)}, single, canton of Zurich, contribution {formatCHF(maxPK, 0)}:</p>
+    <ul>
+      <li>Tax without contribution: {formatCHF(before.totalTax, 0)}</li>
+      <li>Tax with contribution: {formatCHF(after.totalTax, 0)}</li>
+      <li><strong>Saving: about {formatCHF(saving, 0)} per year</strong></li>
+    </ul>
+    <h3>Limits of this calculation</h3>
+    <ul>
+      <li>Capital’s multiplier; your municipality can differ. Excluding church tax.</li>
+      <li>The later capital-benefits tax (on withdrawal) is not part of this calculation.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+  </div>
+
+  <section aria-label="Other calculators" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Other calculators</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/salary-calculator/" class="font-semibold text-blue-700 hover:underline">Swiss salary calculator</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">From gross to net salary.</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/cantonal-tax-comparison/" class="font-semibold text-blue-700 hover:underline">Cantonal tax comparison (26 cantons)</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Where do you pay the least tax?</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources:</strong> maximum amounts:
+      <a class="underline" href="https://www.bsv.admin.ch/bsv/en/home.html" rel="noopener">FSIO</a>.
+      Tax schedules:
+      <a class="underline" href="https://swisstaxcalculator.estv.admin.ch/" rel="noopener">FTA {SITE_YEAR} data</a>.
+      Methodology: <a class="underline" href="/en/methodology/">methodology</a>.
+    </p>
+    <p>Last updated: 13.07.2026 · {SITE_YEAR} data</p>
+  </div>
+</BaseLayout>

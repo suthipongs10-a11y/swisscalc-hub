@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BRAND, SITE_URL, SITE_YEAR } from '../../lib/site';
+
+const path = '/en/';
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/en/#website`,
+  name: BRAND,
+  url: `${SITE_URL}/en/`,
+  inLanguage: 'en-CH',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+
+const tools = [
+  {
+    href: '/en/salary-calculator/',
+    name: `Swiss salary calculator ${SITE_YEAR}`,
+    description: 'From gross to net salary: AHV, ALV, NBU and BVG broken down transparently.',
+  },
+  {
+    href: '/en/cantonal-tax-comparison/',
+    name: 'Cantonal tax comparison (26 cantons)',
+    description: 'One income, every canton: where do you pay the least income tax in Switzerland?',
+  },
+  {
+    href: '/en/pillar-3a-calculator/',
+    name: 'Pillar 3a calculator',
+    description: 'How much does your pillar 3a contribution save you? By canton and income.',
+  },
+];
+---
+
+<BaseLayout
+  title={`Swiss tax & salary calculators ${SITE_YEAR} | ${BRAND}`}
+  description="Free tax and finance calculators for Switzerland: gross-to-net salary, cantonal tax comparison across all 26 cantons, pillar 3a. Ad-free and cookie-free."
+  path={path}
+  locale="en"
+  jsonLd={[websiteJsonLd]}
+>
+  <h1 class="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">Swiss tax and finance calculators</h1>
+  <p class="mb-10 max-w-2xl text-lg leading-relaxed text-slate-700">
+    CalcSwiss offers precise, free calculators for salary, taxes and pensions in Switzerland — with a transparent
+    methodology and official sources for all 26 cantons. Built for people relocating to or working in Switzerland.
+  </p>
+
+  <h2 class="mb-4 text-2xl font-bold">Our calculators</h2>
+  <ul class="grid gap-4 sm:grid-cols-2">
+    {
+      tools.map((tool) => (
+        <li class="rounded-lg border border-slate-200 p-5">
+          <h3 class="mb-1 font-semibold">
+            <a href={tool.href} class="text-blue-700 hover:underline">
+              {tool.name}
+            </a>
+          </h3>
+          <p class="text-sm leading-relaxed text-slate-600">{tool.description}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <section class="prose-content mt-12 max-w-2xl">
+    <h2>Why CalcSwiss?</h2>
+    <p>
+      Every figure on this site comes from an official source — the Federal Tax Administration (FTA), the Federal
+      Statistical Office (FSO), the Federal Office of Public Health (FOPH) or the cantonal tax administrations — and is
+      documented with its source and date. Our calculations are for guidance only; only the official assessment is
+      binding. Ad-free, cookie-free, no sign-up. See our <a href="/en/methodology/">methodology</a> for the details.
+    </p>
+  </section>
+</BaseLayout>

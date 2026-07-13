@@ -2,9 +2,11 @@
 
 ## Current state
 
-**M7 built — French trust/legal/methodology pages live (the /fr/ experience is now self-contained). Awaiting review.**
+**M8 built — full English expat hub live (site is now trilingual DE + FR + EN). Awaiting review.**
 
-76 pages: 29 German (3 tools + 26 canton) + 5 German editorial + German trust/legal + **35 French** (/fr/ home + 3 tools + 26 canton + **5 trust/legal**). Build clean, tests 69/69, Lighthouse **100×4** on all sampled pages incl. a French legal page. Deployed on Cloudflare Pages (calcswiss.ch live).
+111 pages: 29 German (3 tools + 26 canton) + 5 German editorial + German trust/legal + **35 French** + **35 English** (each locale: home + 3 tools + 26 canton + 5 trust/legal). Build clean, tests 73/73, Lighthouse **100×4** on all sampled pages incl. English (comparison pages a11y 95, unchanged pattern, still ≥95). Deployed on Cloudflare Pages (calcswiss.ch live).
+
+**English locale (M8):** `/en/` home + salary calculator, cantonal tax comparison, pillar 3a, 26 `/en/tax-calculator/[canton]/` pages, and the 5 trust/legal pages (methodology, sources, about, legal-notice, privacy). Same shared engines (numbers identical across all three locales — verified EN net CHF 75'007, GE 100k single CHF 22'325.79, recompute 200k married CHF 51'162.88, Zug rank 1). English canton + capital names (Geneva, Lucerne; Graubünden, St. Gallen…), FTA/FSO/FOPH/FSIO source terminology. The locale plumbing was generalised from de↔fr pairs to **multi-locale PAGE_GROUPS**, so hreflang is now a reciprocal de-CH/fr-CH/en-CH set (x-default → German) and the language switcher shows **two chips** per page (e.g. a German page offers FR + EN). German + French output verified content-identical (22/22 sampled pages byte-identical after stripping the intended added `hreflang="en-CH"` + EN switcher; the comparison/canton calculators, FAQs and legal text are unchanged).
 
 **French trust/legal (M7):** `/fr/methodologie/`, `/fr/sources/`, `/fr/a-propos/`, `/fr/mentions-legales/`, `/fr/protection-des-donnees/` — faithful French translations of the German set (nLPD privacy: controller, purposes, recipient countries; full methodology incl. the SZ/Sion separate-tarif note). The French footer + header now link to these French pages (no more cross-locale hops to the German legal set); all five paired de↔fr for reciprocal hreflang + switcher. German output verified byte-identical (control pages unchanged; the 5 newly-paired German legal pages gained only `hreflang="fr-CH"` + the FR switcher).
 
@@ -12,7 +14,7 @@
 
 **Remaining work (all optional / owner-driven, none block anything):**
 - **Quellensteuer-Rechner** — deferred since M2, pending tariff files (owner downloads 5 files from estv.admin.ch; instructions ready on request). Quellensteuer *guide* article already live.
-- **FR depth (remaining)** — French Ratgeber/guide articles (the German `/ratgeber/` set is not yet translated; FR nav/footer intentionally omit a guide link until they exist); then `/en/` expat hub. FR trust/legal/methodology pages: **done (M7).**
+- **Guide/Ratgeber depth** — the German `/ratgeber/` set (4 articles) is not yet translated to FR or EN (FR/EN nav/footer intentionally omit a guide link until they exist). `/fr/` and `/en/` are otherwise complete (tools + 26 canton + trust/legal). FR + EN locales: **done (M6/M7/M8).**
 - **Backlog tools** — Franchise-Rechner (needs Sept BAG data).
 - **Owner verification checklist** — see below.
 
@@ -53,6 +55,14 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-13 — Session 10: M8 — full English expat hub (site now trilingual)
+
+- **35 English pages** under `/en/`: home, `/en/salary-calculator/`, `/en/cantonal-tax-comparison/`, `/en/pillar-3a-calculator/`, 26 `/en/tax-calculator/[canton]/` pages, and 5 trust/legal pages (`/en/methodology/`, `/en/sources/`, `/en/about/`, `/en/legal-notice/`, `/en/privacy/`). Aimed at the expat/relocation audience (RESEARCH.md §3.2). Full SEO_SPEC anatomy + §3.2 anti-doorway canton content (26 individually-written English editorials, faithful renderings preserving each canton's verified tax specifics).
+- **Locale infra generalised** from de↔fr pairs to multi-locale `PAGE_GROUPS` (`src/lib/locales.ts`): `Locale = 'de'|'fr'|'en'`, `LOCALES`/`OTHER_LOCALES`, `alternatesFor` now emits a reciprocal de-CH/fr-CH/en-CH set with x-default → German, `counterpartOf` works across three locales. `en.json`, `i18n.ts`, `Breadcrumbs` home map updated. Header + Footer made 3-locale: the language switcher shows **two chips** (a German page offers FR + EN, etc.), German branch markup preserved verbatim.
+- **English labels** in `tax/labels.ts` (EN names/slugs/genitive/capital exonyms — Geneva, Lucerne; `TARIF/COMPARISON/THREEA/CANTON_RENDER_LABELS_EN`) + `SALARY_LABELS_EN`. `capitalOf` is identity for DE, so German stays byte-identical. English islands under `components/en/` share the exact engines.
+- **Internal linking:** EN comparison table → all 26 EN canton pages; EN canton pages → comparison + salary + 3a; tool pages cross-link; home → tools + methodology. No orphans.
+- **Re-check before push:** build clean (0/0/0, **111 pages**), tests **73/73** (+4 EN coverage), link/orphan green (110 pages, ≤3 clicks). **German + French content-identical** — 22/22 sampled DE+FR pages byte-identical after stripping the intended added `hreflang="en-CH"` + EN switcher (calculators, FAQs, legal text unchanged). EN pages **driven in Chromium** (salary net CHF 75'007, Geneva CHF 22'325.79 → 200k married CHF 51'162.88, capital "Geneva", 26 comparison links, trilingual switcher DE→FR,EN and EN→DE,FR reciprocal, no console errors). Lighthouse **100×4** on EN home/methodology/Geneva-canton (EN comparison a11y 95, same pattern as DE steuervergleich, still passes ≥95); all 13 LHCI URLs assert-pass. Committed, stopped for review.
 
 ### 2026-07-13 — Session 9: M7 — French trust/legal/methodology pages
 

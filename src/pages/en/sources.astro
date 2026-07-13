@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND } from '../../lib/site';
+
+const sources = [
+  {
+    name: 'Federal Tax Administration (FTA) — tax calculator and tax data',
+    url: 'https://swisstaxcalculator.estv.admin.ch/',
+    use: 'Schedules, multipliers and deductions of the Confederation, cantons and municipalities',
+  },
+  {
+    name: 'Federal Statistical Office (FSO) — official register of municipalities',
+    url: 'https://www.bfs.admin.ch/bfs/en/home/basics/swiss-official-commune-register.html',
+    use: 'FSO municipality numbers as the location key',
+  },
+  {
+    name: 'Federal Office of Public Health (FOPH) — health-insurance premiums',
+    url: 'https://opendata.swiss/en/dataset/health-insurance-premiums',
+    use: 'Approved compulsory (KVG/LAMal) premiums by insurer, premium region, age group and franchise',
+  },
+  {
+    name: 'Federal Social Insurance Office (FSIO)',
+    url: 'https://www.bsv.admin.ch/bsv/en/home.html',
+    use: 'AHV/IV/EO/ALV contribution rates, occupational-pension key figures and pillar 3a maximum amounts',
+  },
+  {
+    name: 'devbrains — swisstaxcalculator (MIT licence)',
+    url: 'https://github.com/devbrains-com/swisstaxcalculator',
+    use: 'Open-source reference implementation of the tax calculation based on FTA data; validation reference for our calculation logic',
+  },
+];
+---
+
+<BaseLayout
+  title={`Sources and data | ${BRAND}`}
+  description="All of CalcSwiss's data sources at a glance: FTA, FSO, FOPH and FSIO — with their purpose and links to the official publications."
+  path="/en/sources/"
+  locale="en"
+>
+  <Breadcrumbs crumbs={[{ name: 'Sources' }]} locale="en" />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Sources and data</h1>
+    <p>
+      All calculation parameters on calcswiss.ch come from official sources and are versioned with their retrieval
+      date. This page lists the data foundations; the reference date of the parameters is shown directly with each
+      calculator.
+    </p>
+    <ul>
+      {
+        sources.map((source) => (
+          <li>
+            <a href={source.url} rel="noopener">
+              {source.name}
+            </a>
+            <br />
+            <span class="text-sm text-slate-600">{source.use}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <p>
+      The calculations are for guidance only; only the official assessment is binding. The FTA, FSO, FOPH and FSIO are
+      not involved in this website.
+    </p>
+  </article>
+</BaseLayout>

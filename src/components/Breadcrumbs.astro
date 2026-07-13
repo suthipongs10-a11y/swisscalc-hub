@@ -20,7 +20,8 @@ interface Props {
 
 const { crumbs, locale = 'de' } = Astro.props;
 const t = useTranslations(locale);
-const home = locale === 'fr' ? '/fr/' : '/';
+const HOME: Record<Locale, string> = { de: '/', fr: '/fr/', en: '/en/' };
+const home = HOME[locale];
 const all: Crumb[] = [{ name: t('common.breadcrumbHome'), path: home }, ...crumbs];
 
 const jsonLd = {

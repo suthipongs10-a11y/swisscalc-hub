@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND } from '../../lib/site';
+
+// TODO_OWNER: operator identity must be filled in before public launch
+// (nFADP + ESTV letter both require it). See STATUS.md.
+---
+
+<BaseLayout
+  title={`Legal notice | ${BRAND}`}
+  description={`Legal notice of ${BRAND} — information about the operator of calcswiss.ch.`}
+  path="/en/legal-notice/"
+  locale="en"
+>
+  <Breadcrumbs crumbs={[{ name: 'Legal notice' }]} locale="en" />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Legal notice</h1>
+    <h2>Responsible for the content</h2>
+    <p>
+      [OPERATOR NAME]<br />
+      [STREET NO.]<br />
+      [POSTAL CODE, TOWN]<br />
+      [COUNTRY]
+    </p>
+    <p>Contact: [E-MAIL]</p>
+    <h2>Disclaimer</h2>
+    <p>
+      All calculations and content on calcswiss.ch are for non-binding information only and do not constitute tax,
+      legal or investment advice. Only the official assessments and rulings of the competent authorities are
+      authoritative. Despite careful checking, we assume no liability for the accuracy, completeness and currency of
+      the information.
+    </p>
+    <h2>Source note</h2>
+    <p>
+      Calculation parameters are based on data from the Federal Tax Administration (FTA), the Federal Statistical
+      Office (FSO) and the Federal Office of Public Health (FOPH). Details under <a href="/en/sources/">Sources</a>.
+    </p>
+  </article>
+</BaseLayout>

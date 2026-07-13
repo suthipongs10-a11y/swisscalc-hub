@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import cantonRegistry from '../src/data/cantons.json';
 import { CANTON_CONTENT_FR } from '../src/lib/cantonContentFr';
 import { frName, frSlugOf, frGenitive } from '../src/lib/tax/labels';
-import { PAGE_PAIRS } from '../src/lib/locales';
+import { counterpartOf } from '../src/lib/locales';
 
 const ABBRS = cantonRegistry.cantons.map((c) => c.abbr);
 
@@ -25,12 +25,10 @@ describe('French canton coverage (M6)', () => {
     expect(new Set(slugs).size).toBe(ABBRS.length);
   });
 
-  it('PAGE_PAIRS pairs every canton page in both locales', () => {
+  it('every canton page is paired de<->fr', () => {
     for (const abbr of ABBRS) {
       const fr = `/fr/calculateur-impots/${frSlugOf(abbr)}/`;
-      const pair = PAGE_PAIRS.find((p) => p.fr === fr);
-      expect(pair, `pair for ${abbr}`).toBeDefined();
-      expect(pair!.de).toMatch(/^\/steuerrechner\/[a-z-]+\/$/);
+      expect(counterpartOf(fr, 'de'), `de counterpart for ${abbr}`).toMatch(/^\/steuerrechner\/[a-z-]+\/$/);
     }
   });
 

@@ -9,6 +9,26 @@ interface Props {
 const { locale = 'de' } = Astro.props;
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
+
+// Locale-specific legal/trust links for the non-German footer.
+const legal =
+  locale === 'fr'
+    ? {
+        label: 'Informations légales',
+        methodology: '/fr/methodologie/',
+        about: '/fr/a-propos/',
+        imprint: '/fr/mentions-legales/',
+        privacy: '/fr/protection-des-donnees/',
+        sources: '/fr/sources/',
+      }
+    : {
+        label: 'Legal information',
+        methodology: '/en/methodology/',
+        about: '/en/about/',
+        imprint: '/en/legal-notice/',
+        privacy: '/en/privacy/',
+        sources: '/en/sources/',
+      };
 ---
 
 <footer class="mt-16 border-t border-slate-200 bg-slate-50">
@@ -27,13 +47,13 @@ const year = new Date().getFullYear();
           </ul>
         </nav>
       ) : (
-        <nav aria-label="Informations légales">
+        <nav aria-label={legal.label}>
           <ul class="mb-4 flex flex-wrap gap-x-5 gap-y-1">
-            <li><a href="/fr/methodologie/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
-            <li><a href="/fr/a-propos/" class="hover:text-slate-900 hover:underline">{t('nav.about')}</a></li>
-            <li><a href="/fr/mentions-legales/" class="hover:text-slate-900 hover:underline">{t('footer.imprint')}</a></li>
-            <li><a href="/fr/protection-des-donnees/" class="hover:text-slate-900 hover:underline">{t('footer.privacy')}</a></li>
-            <li><a href="/fr/sources/" class="hover:text-slate-900 hover:underline">{t('footer.sources')}</a></li>
+            <li><a href={legal.methodology} class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
+            <li><a href={legal.about} class="hover:text-slate-900 hover:underline">{t('nav.about')}</a></li>
+            <li><a href={legal.imprint} class="hover:text-slate-900 hover:underline">{t('footer.imprint')}</a></li>
+            <li><a href={legal.privacy} class="hover:text-slate-900 hover:underline">{t('footer.privacy')}</a></li>
+            <li><a href={legal.sources} class="hover:text-slate-900 hover:underline">{t('footer.sources')}</a></li>
           </ul>
         </nav>
       )

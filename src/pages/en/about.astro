@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND, SITE_URL, absoluteUrl } from '../../lib/site';
+
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: `About ${BRAND}`,
+  url: absoluteUrl('/en/about/'),
+  inLanguage: 'en-CH',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+---
+
+<BaseLayout
+  title={`About | ${BRAND}`}
+  description="Who is behind CalcSwiss and why these calculators exist: independent, ad-free and with a transparent methodology."
+  path="/en/about/"
+  locale="en"
+  jsonLd={[aboutSchema]}
+>
+  <Breadcrumbs crumbs={[{ name: 'About' }]} locale="en" />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">About</h1>
+    <p>
+      CalcSwiss is an independent project with a simple goal: precise, free finance and tax calculators for
+      Switzerland — no advertising, no data collection, no hidden brokerage interests.
+    </p>
+
+    <h2>Why CalcSwiss exists</h2>
+    <p>
+      Swiss taxes are complicated: 26 cantons, over 2,000 municipalities, each with its own schedules and multipliers.
+      Good calculators exist, but many are either tied to a comparison portal with a brokerage interest or do not
+      disclose how they calculate. We wanted an offering that does both differently: neutral and verifiable.
+    </p>
+
+    <h2>How we work</h2>
+    <ul>
+      <li>
+        <strong>Every figure has an official source.</strong> Our tax parameters come from the data of the Federal Tax
+        Administration (FTA), social-insurance values from the federal government. All sources are listed under
+        <a href="/en/sources/">Sources</a>, with their reference date.
+      </li>
+      <li>
+        <strong>We disclose the methodology.</strong> For each calculator we document the formulas, parameters and
+        limits — read them under <a href="/en/methodology/">Methodology</a>.
+      </li>
+      <li>
+        <strong>We test the calculations.</strong> Every tax formula is safeguarded by automated tests against
+        reference values before it goes live.
+      </li>
+      <li>
+        <strong>We are neutral.</strong> No advertising, no cookies, no lead brokerage. We recommend no products and
+        receive no commissions.
+      </li>
+    </ul>
+
+    <h2>What we are not</h2>
+    <p>
+      CalcSwiss is neither a comparison portal, nor a bank, nor a tax-advisory firm. Our calculators provide a
+      well-founded orientation but do not replace individual advice. Binding is always the official assessment by the
+      competent tax authority. For larger decisions — relocation, retirement, capital withdrawal — consulting a
+      professional is worthwhile.
+    </p>
+
+    <h2>Contact and operator</h2>
+    <p>
+      Information about the operator can be found in the <a href="/en/legal-notice/">legal notice</a>. Spotted an error
+      or have feedback? We are grateful for any pointers — the contact address is also in the legal notice.
+    </p>
+  </article>
+</BaseLayout>

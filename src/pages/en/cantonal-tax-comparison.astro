@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import EnTaxComparison from '../../components/en/EnTaxComparison.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF } from '../../lib/format';
+import { cantonTax } from '../../lib/tax/engine';
+
+const path = '/en/cantonal-tax-comparison/';
+const title = `Cantonal tax comparison Switzerland ${SITE_YEAR} | ${BRAND}`;
+const description = `One income, all 26 cantons: cantonal, municipal and federal tax of the capitals compared. With the official FTA ${SITE_YEAR} schedules.`;
+
+const zh = cantonTax(100_000, 'ZH', 'single');
+const zg = cantonTax(100_000, 'ZG', 'single');
+
+const faqs = [
+  {
+    q: 'Which canton has the lowest income tax?',
+    a: `For a taxable income of ${formatCHF(100000, 0)} (single), Zug is the cheapest, followed by Schwyz and the cantons of Central Switzerland. The ranking depends on income and marital status, however — the calculator above shows your personal ranking.`,
+  },
+  {
+    q: 'What does “taxable income” mean?',
+    a: 'Taxable income is your income after all deductions (professional expenses, insurance premiums, pillar 3a, etc.). It appears on your latest tax assessment. As deductions vary slightly by canton, a comparison on this basis is an approximation.',
+  },
+  {
+    q: 'How is the tax burden made up?',
+    a: 'Of three tiers: cantonal tax (cantonal schedule × cantonal multiplier), municipal tax (the municipality’s multiplier) and direct federal tax (the uniform federal schedule). We use the multipliers of the cantonal capitals, excluding church tax.',
+  },
+  {
+    q: 'Does the comparison also apply to my municipality?',
+    a: 'The comparison uses the capital’s multiplier. Your municipality can be cheaper or more expensive; within a canton, municipalities sometimes differ by more than 30 multiplier points.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Cantonal tax comparison Switzerland',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'en-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="en" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Cantonal tax comparison' }]} locale="en" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Cantonal tax comparison: all 26 cantons {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Enter your taxable income and see immediately what you would pay, in each cantonal capital, in cantonal, municipal
+    and federal tax — as a ranking.
+  </p>
+
+  <EnTaxComparison />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>How is the calculation done?</h2>
+    <p>
+      For each canton we calculate the <strong>simple cantonal tax</strong> using the {SITE_YEAR} cantonal schedule
+      (source: FTA tax data) and multiply it by the canton and capital multipliers. Added to this is the
+      <strong>direct federal tax</strong>. Church tax and personal taxes are not included.
+    </p>
+    <h3>Worked example</h3>
+    <p>Taxable income {formatCHF(100000, 0)}, single, capital Zurich:</p>
+    <ul>
+      <li>Simple cantonal tax (ZH schedule): {formatCHF(zh.baseTax, 0)}</li>
+      <li>Cantonal tax (multiplier 95%): {formatCHF(zh.cantonTax, 0)}</li>
+      <li>Municipal tax, city of Zurich (119%): {formatCHF(zh.cityTax, 0)}</li>
+      <li>Direct federal tax: {formatCHF(zh.federalTax, 0)}</li>
+      <li><strong>Total: {formatCHF(zh.totalTax, 0)} ({(zh.effectiveRate * 100).toFixed(1)}% effective)</strong> — in Zug: {formatCHF(zg.totalTax, 0)}</li>
+    </ul>
+    <h3>Limits of this calculation</h3>
+    <ul>
+      <li>Comparison on the basis of <strong>taxable income</strong> — cantonal differences in deductions are not reflected.</li>
+      <li>Multipliers of the <strong>capitals</strong>; your municipality can differ.</li>
+      <li>Excluding church tax, personal tax and wealth tax.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+  </div>
+
+  <section aria-label="Other calculators" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Other calculators</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/salary-calculator/" class="font-semibold text-blue-700 hover:underline">Swiss salary calculator</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">From gross to net salary.</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/pillar-3a-calculator/" class="font-semibold text-blue-700 hover:underline">Pillar 3a calculator</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Your tax saving from pillar 3a.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources:</strong> schedules and multipliers:
+      <a class="underline" href="https://swisstaxcalculator.estv.admin.ch/" rel="noopener">FTA tax calculator / {SITE_YEAR} data</a>.
+      Methodology: <a class="underline" href="/en/methodology/">methodology</a> ·
+      <a class="underline" href="/en/sources/">all sources</a>.
+    </p>
+    <p>Last updated: 13.07.2026 · {SITE_YEAR} data</p>
+  </div>
+</BaseLayout>

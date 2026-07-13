@@ -2,7 +2,7 @@
 import { useTranslations } from '../lib/i18n';
 import { BRAND } from '../lib/site';
 import { TOOLS } from '../lib/tools';
-import { counterpartOf, type Locale } from '../lib/locales';
+import { counterpartOf, OTHER_LOCALES, type Locale } from '../lib/locales';
 
 interface Props {
   locale?: Locale;
@@ -21,23 +21,33 @@ const shortNames: Record<string, string> = {
   'franchise-rechner': 'Franchise',
 };
 
-// French nav (the three shipped French tools).
+// French / English nav (the three shipped tools per locale).
 const frTools = [
   { href: '/fr/calculateur-salaire-brut-net/', short: 'Salaire net', full: 'Calculateur salaire brut-net' },
   { href: '/fr/comparatif-impots-cantons/', short: 'Comparatif impôts', full: 'Comparatif des impôts cantonaux' },
   { href: '/fr/calculateur-3e-pilier/', short: '3e pilier', full: 'Calculateur 3e pilier' },
 ];
+const enTools = [
+  { href: '/en/salary-calculator/', short: 'Salary', full: 'Salary calculator' },
+  { href: '/en/cantonal-tax-comparison/', short: 'Tax comparison', full: 'Cantonal tax comparison' },
+  { href: '/en/pillar-3a-calculator/', short: 'Pillar 3a', full: 'Pillar 3a calculator' },
+];
+const nonDeTools = locale === 'fr' ? frTools : enTools;
+const methodologyHref = locale === 'fr' ? '/fr/methodologie/' : '/en/methodology/';
+const aboutHref = locale === 'fr' ? '/fr/a-propos/' : '/en/about/';
+const navLabel = locale === 'fr' ? 'Navigation principale' : 'Main navigation';
 
-// Language switcher: only when a counterpart page exists (keeps single-locale
-// pages free of dead toggles and byte-identical to before).
-const otherLocale: Locale = locale === 'de' ? 'fr' : 'de';
-const switchHref = counterpartOf(path, otherLocale);
-const switchLabel = otherLocale.toUpperCase();
+// Language switcher: one chip per other locale that has a counterpart page
+// (keeps single-locale pages free of dead toggles).
+const switchers = OTHER_LOCALES[locale]
+  .map((loc) => ({ loc, href: counterpartOf(path, loc) }))
+  .filter((s): s is { loc: Locale; href: string } => Boolean(s.href));
+const langName: Record<Locale, string> = { de: 'Deutsch', fr: 'Français', en: 'English' };
 ---
 
 <header class="border-b border-slate-200 bg-white">
   <div class="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
-    <a href={locale === 'fr' ? '/fr/' : '/'} class="flex items-center gap-2 text-lg font-bold text-slate-900" aria-label={BRAND}>
+    <a href={locale === 'de' ? '/' : `/${locale}/`} class="flex items-center gap-2 text-lg font-bold text-slate-900" aria-label={BRAND}>
       <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
         <rect width="24" height="24" rx="5" fill="#0f4c81"></rect>
         <rect x="6" y="7" width="12" height="2.5" rx="1.25" fill="#fff"></rect>
@@ -61,33 +71,33 @@ const switchLabel = otherLocale.toUpperCase();
             ))}
             <li><a href="/ratgeber/" class="hover:text-slate-900 hover:underline">{t('nav.guide')}</a></li>
             <li><a href="/methodik/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
-            {switchHref && (
+            {switchers.map((s) => (
               <li>
-                <a href={switchHref} rel="alternate" hreflang={otherLocale} class="rounded border border-slate-300 px-2 py-1 text-xs font-medium hover:bg-slate-100">
-                  {switchLabel}
+                <a href={s.href} rel="alternate" hreflang={s.loc} class="rounded border border-slate-300 px-2 py-1 text-xs font-medium hover:bg-slate-100">
+                  {s.loc.toUpperCase()}
                 </a>
               </li>
-            )}
+            ))}
           </ul>
         </nav>
       ) : (
-        <nav aria-label="Navigation principale" class="hidden md:block">
+        <nav aria-label={navLabel} class="hidden md:block">
           <ul class="flex items-center gap-5 text-sm text-slate-600">
-            {frTools.map((tool) => (
+            {nonDeTools.map((tool) => (
               <li>
                 <a href={tool.href} class="hover:text-slate-900 hover:underline">
                   {tool.short}
                 </a>
               </li>
             ))}
-            <li><a href="/fr/methodologie/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
-            {switchHref && (
+            <li><a href={methodologyHref} class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
+            {switchers.map((s) => (
               <li>
-                <a href={switchHref} rel="alternate" hreflang={otherLocale} class="rounded border border-slate-300 px-2 py-1 text-xs font-medium hover:bg-slate-100">
-                  {switchLabel}
+                <a href={s.href} rel="alternate" hreflang={s.loc} class="rounded border border-slate-300 px-2 py-1 text-xs font-medium hover:bg-slate-100">
+                  {s.loc.toUpperCase()}
                 </a>
               </li>
-            )}
+            ))}
           </ul>
         </nav>
       )
@@ -122,7 +132,7 @@ const switchLabel = otherLocale.toUpperCase();
                     </a>
                   </li>
                 ))
-              : frTools.map((tool) => (
+              : nonDeTools.map((tool) => (
                   <li>
                     <a href={tool.href} class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
                       {tool.full}
@@ -144,23 +154,25 @@ const switchLabel = otherLocale.toUpperCase();
           )
         }
         {
-          locale === 'fr' && (
+          locale !== 'de' && (
             <>
               <div class="my-1 border-t border-slate-100" role="presentation" />
               <ul>
-                <li><a href="/fr/methodologie/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.methodology')}</a></li>
-                <li><a href="/fr/a-propos/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.about')}</a></li>
+                <li><a href={methodologyHref} class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.methodology')}</a></li>
+                <li><a href={aboutHref} class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.about')}</a></li>
               </ul>
             </>
           )
         }
         {
-          switchHref && (
+          switchers.length > 0 && (
             <>
               <div class="my-1 border-t border-slate-100" role="presentation" />
-              <a href={switchHref} rel="alternate" hreflang={otherLocale} class="block rounded-md px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
-                {otherLocale === 'fr' ? 'Français' : 'Deutsch'}
-              </a>
+              {switchers.map((s) => (
+                <a href={s.href} rel="alternate" hreflang={s.loc} class="block rounded-md px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  {langName[s.loc]}
+                </a>
+              ))}
             </>
           )
         }
