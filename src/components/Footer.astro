@@ -15,6 +15,7 @@ const legal =
   locale === 'fr'
     ? {
         label: 'Informations légales',
+        guide: '/fr/guide/',
         methodology: '/fr/methodologie/',
         about: '/fr/a-propos/',
         imprint: '/fr/mentions-legales/',
@@ -23,6 +24,7 @@ const legal =
       }
     : {
         label: 'Legal information',
+        guide: '/en/guide/',
         methodology: '/en/methodology/',
         about: '/en/about/',
         imprint: '/en/legal-notice/',
@@ -49,6 +51,7 @@ const legal =
       ) : (
         <nav aria-label={legal.label}>
           <ul class="mb-4 flex flex-wrap gap-x-5 gap-y-1">
+            <li><a href={legal.guide} class="hover:text-slate-900 hover:underline">{t('nav.guide')}</a></li>
             <li><a href={legal.methodology} class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
             <li><a href={legal.about} class="hover:text-slate-900 hover:underline">{t('nav.about')}</a></li>
             <li><a href={legal.imprint} class="hover:text-slate-900 hover:underline">{t('footer.imprint')}</a></li>

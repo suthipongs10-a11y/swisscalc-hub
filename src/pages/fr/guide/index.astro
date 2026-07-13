@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { BRAND, SITE_URL, absoluteUrl } from '../../../lib/site';
+import { formatSwissDate } from '../../../lib/dates';
+
+const path = '/fr/guide/';
+const articles = (await getCollection('ratgeberFr')).sort((a, b) => a.data.order - b.data.order);
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Guide – impôts et finances en Suisse',
+  url: absoluteUrl(path),
+  inLanguage: 'fr-CH',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  hasPart: articles.map((a) => ({
+    '@type': 'Article',
+    headline: a.data.title,
+    url: absoluteUrl(`/fr/guide/${a.id}/`),
+  })),
+};
+---
+
+<BaseLayout
+  title={`Guide : impôts et finances en Suisse | ${BRAND}`}
+  description="Des guides fondés et sourcés sur les impôts et les finances en Suisse : impôt à la source pour expatriés, retrait échelonné du 3e pilier, changement de canton et pénalité de mariage — expliqués simplement."
+  path={path}
+  locale="fr"
+  jsonLd={[collectionSchema]}
+>
+  <Breadcrumbs crumbs={[{ name: 'Guide' }]} locale="fr" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Guide</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Des articles compréhensibles et sourcés sur les impôts et la prévoyance en Suisse — en lien avec nos calculateurs.
+  </p>
+
+  <ul class="grid gap-5 sm:grid-cols-2">
+    {
+      articles.map((a) => (
+        <li class="rounded-lg border border-slate-200 p-5 transition-colors hover:border-slate-300">
+          <h2 class="mb-2 text-lg font-semibold">
+            <a href={`/fr/guide/${a.id}/`} class="text-slate-900 hover:text-blue-700 hover:underline">
+              {a.data.title}
+            </a>
+          </h2>
+          <p class="mb-3 text-sm leading-relaxed text-slate-600">{a.data.description}</p>
+          <p class="text-xs text-slate-500">Mis à jour : {formatSwissDate(a.data.updated)}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="mt-10 text-sm text-slate-600">
+    Tous les articles servent à l’information générale et ne remplacent pas un conseil fiscal individuel. Comment nous
+    calculons et d’où proviennent nos chiffres : voir la <a class="underline" href="/fr/methodologie/">méthodologie</a>.
+  </p>
+</BaseLayout>

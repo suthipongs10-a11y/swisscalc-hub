@@ -33,6 +33,7 @@ const enTools = [
   { href: '/en/pillar-3a-calculator/', short: 'Pillar 3a', full: 'Pillar 3a calculator' },
 ];
 const nonDeTools = locale === 'fr' ? frTools : enTools;
+const guideHref = locale === 'fr' ? '/fr/guide/' : '/en/guide/';
 const methodologyHref = locale === 'fr' ? '/fr/methodologie/' : '/en/methodology/';
 const aboutHref = locale === 'fr' ? '/fr/a-propos/' : '/en/about/';
 const navLabel = locale === 'fr' ? 'Navigation principale' : 'Main navigation';
@@ -90,6 +91,7 @@ const langName: Record<Locale, string> = { de: 'Deutsch', fr: 'Français', en: '
                 </a>
               </li>
             ))}
+            <li><a href={guideHref} class="hover:text-slate-900 hover:underline">{t('nav.guide')}</a></li>
             <li><a href={methodologyHref} class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
             {switchers.map((s) => (
               <li>
@@ -158,6 +160,7 @@ const langName: Record<Locale, string> = { de: 'Deutsch', fr: 'Français', en: '
             <>
               <div class="my-1 border-t border-slate-100" role="presentation" />
               <ul>
+                <li><a href={guideHref} class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.guide')}</a></li>
                 <li><a href={methodologyHref} class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.methodology')}</a></li>
                 <li><a href={aboutHref} class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.about')}</a></li>
               </ul>

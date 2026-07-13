@@ -2,9 +2,11 @@
 
 ## Current state
 
-**M8 built — full English expat hub live (site is now trilingual DE + FR + EN). Awaiting review.**
+**M9 built — Guide/Ratgeber layer complete in all three languages. Awaiting review.**
 
-111 pages: 29 German (3 tools + 26 canton) + 5 German editorial + German trust/legal + **35 French** + **35 English** (each locale: home + 3 tools + 26 canton + 5 trust/legal). Build clean, tests 73/73, Lighthouse **100×4** on all sampled pages incl. English (comparison pages a11y 95, unchanged pattern, still ≥95). Deployed on Cloudflare Pages (calcswiss.ch live).
+121 pages, fully trilingual DE + FR + EN. Each locale now has: home + 3 calculators + 26 canton pages + 5 trust/legal + **a guide hub with 4 articles**. Build clean, tests 73/73, Lighthouse ≥95×4 on all sampled pages (16 LHCI URLs assert-pass, incl. FR/EN guide pages). Deployed on Cloudflare Pages (calcswiss.ch live).
+
+**Guide layer (M9):** the 4 German Ratgeber articles (withholding tax for expats, staggered pillar 3a, changing canton, marriage & taxes) translated to French (`/fr/guide/…`) and English (`/en/guide/…`) — faithful translations with locale-specific frontmatter (each article's relatedTool + related-articles + in-body links point to that locale's pages). Two new content collections (`ratgeberFr`, `ratgeberEn`) share one schema; locale-aware guide hub + `[slug]` pages. The guide is now in the FR/EN header + footer nav, and all guide pages are paired de↔fr↔en for reciprocal hreflang + switcher (the German Ratgeber pages became trilingual — verified content-identical, only the switcher/hreflang UI added). Internal-link mesh: guide hub → articles → related tool + sibling articles; tools reachable from every article.
 
 **English locale (M8):** `/en/` home + salary calculator, cantonal tax comparison, pillar 3a, 26 `/en/tax-calculator/[canton]/` pages, and the 5 trust/legal pages (methodology, sources, about, legal-notice, privacy). Same shared engines (numbers identical across all three locales — verified EN net CHF 75'007, GE 100k single CHF 22'325.79, recompute 200k married CHF 51'162.88, Zug rank 1). English canton + capital names (Geneva, Lucerne; Graubünden, St. Gallen…), FTA/FSO/FOPH/FSIO source terminology. The locale plumbing was generalised from de↔fr pairs to **multi-locale PAGE_GROUPS**, so hreflang is now a reciprocal de-CH/fr-CH/en-CH set (x-default → German) and the language switcher shows **two chips** per page (e.g. a German page offers FR + EN). German + French output verified content-identical (22/22 sampled pages byte-identical after stripping the intended added `hreflang="en-CH"` + EN switcher; the comparison/canton calculators, FAQs and legal text are unchanged).
 
@@ -14,7 +16,7 @@
 
 **Remaining work (all optional / owner-driven, none block anything):**
 - **Quellensteuer-Rechner** — deferred since M2, pending tariff files (owner downloads 5 files from estv.admin.ch; instructions ready on request). Quellensteuer *guide* article already live.
-- **Guide/Ratgeber depth** — the German `/ratgeber/` set (4 articles) is not yet translated to FR or EN (FR/EN nav/footer intentionally omit a guide link until they exist). `/fr/` and `/en/` are otherwise complete (tools + 26 canton + trust/legal). FR + EN locales: **done (M6/M7/M8).**
+- **Guide/Ratgeber depth: done (M9).** All 3 locales now have the full guide layer (4 articles each). The site is fully trilingual end-to-end.
 - **Backlog tools** — Franchise-Rechner (needs Sept BAG data).
 - **Owner verification checklist** — see below.
 
@@ -55,6 +57,13 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-13 — Session 11: M9 — Guide/Ratgeber layer in FR + EN (fully trilingual)
+
+- **8 translated articles** — the 4 German Ratgeber articles rendered into French (`src/content/ratgeber-fr/`) and English (`src/content/ratgeber-en/`), faithful translations preserving each article's substance. Localized frontmatter: `relatedTool.href` → the locale's tool, `related` → the locale's article ids, and all in-body tool/article links point to locale pages.
+- **Two new content collections** (`ratgeberFr`, `ratgeberEn`) sharing one schema (`content.config.ts` refactored to a reusable `articleSchema`). Locale-aware pages: `/fr/guide/` + `/fr/guide/[slug]/`, `/en/guide/` + `/en/guide/[slug]/` (mirrors of the German Ratgeber pages with translated UI strings).
+- **Wiring:** guide added to the FR/EN header (desktop + mobile) and footer; `PAGE_GROUPS` gained the guide hub + 4 article groups → the German Ratgeber pages became trilingual (reciprocal de-CH/fr-CH/en-CH hreflang + FR/EN switcher). Internal-link mesh: hub → articles → relatedTool + sibling articles.
+- **Re-check before push:** build clean (0/0/0, **121 pages**), tests **73/73**, link/orphan green (120 pages, ≤3 clicks). **No content regression** — 16/16 sampled pages content-identical after stripping the intended additions (German non-guide pages byte-identical; German guide pages gained only the switcher/hreflang UI; FR/EN pages gained only the guide nav/footer link). Guide pages **driven in Chromium** (FR hub lists 4 in order, FR/EN articles carry the correct locale relatedTool + related, DE article switcher → FR + EN guide articles, no console errors). Lighthouse: all 16 LHCI URLs assert-pass ≥95×4 (incl. FR/EN guide pages). Committed, stopped for review.
 
 ### 2026-07-13 — Session 10: M8 — full English expat hub (site now trilingual)
 

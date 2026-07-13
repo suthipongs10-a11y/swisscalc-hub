@@ -1,0 +1,114 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../../lib/site';
+import { formatSwissDate } from '../../../lib/dates';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('ratgeberFr');
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props as { article: CollectionEntry<'ratgeberFr'> };
+const { data } = article;
+const path = `/fr/guide/${article.id}/`;
+const { Content } = await render(article);
+
+const all = await getCollection('ratgeberFr');
+const related = data.related
+  .map((id) => all.find((a) => a.id === id))
+  .filter((a): a is CollectionEntry<'ratgeberFr'> => Boolean(a));
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  description: data.description,
+  url: absoluteUrl(path),
+  inLanguage: 'fr-CH',
+  datePublished: data.published,
+  dateModified: data.updated,
+  author: { '@id': `${SITE_URL}/#organization` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  mainEntityOfPage: absoluteUrl(path),
+};
+const faqSchema =
+  data.faqs.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: data.faqs.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }
+    : null;
+const jsonLd = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
+---
+
+<BaseLayout title={`${data.seoTitle ?? data.title} | ${BRAND}`} description={data.description} path={path} locale="fr" jsonLd={jsonLd}>
+  <Breadcrumbs crumbs={[{ name: 'Guide', path: '/fr/guide/' }, { name: data.title }]} locale="fr" />
+
+  <article>
+    <h1 class="mb-3 text-3xl font-bold tracking-tight sm:text-4xl">{data.title}</h1>
+    <p class="mb-2 text-lg text-slate-700">{data.lead}</p>
+    <p class="mb-8 text-xs text-slate-500">
+      Publié : {formatSwissDate(data.published)} · Mis à jour : {formatSwissDate(data.updated)}
+    </p>
+
+    <div class="mb-8 rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm">
+      <span class="text-slate-700">En lien avec cet article :</span>
+      <a href={data.relatedTool.href} class="font-semibold text-blue-700 hover:underline">{data.relatedTool.label} →</a>
+    </div>
+
+    <div class="prose-content max-w-2xl">
+      <Content />
+    </div>
+
+    {
+      data.faqs.length > 0 && (
+        <div class="prose-content mt-12 max-w-2xl">
+          <h2>Questions fréquentes</h2>
+          {data.faqs.map((f) => (
+            <div class="mb-4">
+              <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+              <p class="text-slate-700">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </article>
+
+  {
+    related.length > 0 && (
+      <section aria-label="Autres articles" class="mt-14">
+        <h2 class="mb-4 text-2xl font-bold">Autres articles</h2>
+        <ul class="grid gap-4 sm:grid-cols-2">
+          {related.map((a) => (
+            <li class="rounded-lg border border-slate-200 p-5">
+              <a href={`/fr/guide/${a.id}/`} class="font-semibold text-blue-700 hover:underline">
+                {a.data.title}
+              </a>
+              <p class="mt-1 text-sm leading-relaxed text-slate-600">{a.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p>
+      Information générale, pas un conseil fiscal. Méthodologie et sources :
+      <a class="underline" href="/fr/methodologie/">méthodologie</a> · <a class="underline" href="/fr/sources/">sources</a>.
+      Données de l’année fiscale {SITE_YEAR}.
+    </p>
+  </div>
+</BaseLayout>

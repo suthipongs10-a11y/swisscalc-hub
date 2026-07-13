@@ -39,6 +39,12 @@ const STATIC_GROUPS: PageGroup[] = [
   { de: '/ueber-uns/', fr: '/fr/a-propos/', en: '/en/about/' },
   { de: '/impressum/', fr: '/fr/mentions-legales/', en: '/en/legal-notice/' },
   { de: '/datenschutz/', fr: '/fr/protection-des-donnees/', en: '/en/privacy/' },
+  // Guide / Ratgeber hub + the 4 articles (M9).
+  { de: '/ratgeber/', fr: '/fr/guide/', en: '/en/guide/' },
+  { de: '/ratgeber/quellensteuer-expats/', fr: '/fr/guide/impot-a-la-source-expatries/', en: '/en/guide/withholding-tax-for-expats/' },
+  { de: '/ratgeber/saeule-3a-gestaffelt-beziehen/', fr: '/fr/guide/retrait-echelonne-3e-pilier/', en: '/en/guide/staggered-pillar-3a-withdrawal/' },
+  { de: '/ratgeber/kantonswechsel-steuern-sparen/', fr: '/fr/guide/changer-de-canton-impots/', en: '/en/guide/changing-canton-to-save-tax/' },
+  { de: '/ratgeber/heiraten-steuern/', fr: '/fr/guide/mariage-et-impots/', en: '/en/guide/marriage-and-taxes/' },
 ];
 
 /** The 26 programmatic canton pages exist in all three locales (M6/M8). */

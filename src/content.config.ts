@@ -8,23 +8,33 @@ import { glob } from 'astro/loaders';
  * them and feeds dateModified into Article schema (no fake freshness — set
  * `updated` only when the content actually changes).
  */
-const ratgeber = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/ratgeber' }),
-  schema: z.object({
-    title: z.string(),
-    /** Concise <title> (with " | CalcSwiss" appended stays <= 65). Falls back to title. */
-    seoTitle: z.string().optional(),
-    description: z.string(),
-    published: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    updated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    lead: z.string(),
-    relatedTool: z.object({ href: z.string(), label: z.string() }),
-    related: z.array(z.string()).default([]),
-    faqs: z
-      .array(z.object({ q: z.string(), a: z.string() }))
-      .default([]),
-    order: z.number().default(0),
-  }),
+const articleSchema = z.object({
+  title: z.string(),
+  /** Concise <title> (with " | CalcSwiss" appended stays <= 65). Falls back to title. */
+  seoTitle: z.string().optional(),
+  description: z.string(),
+  published: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  updated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  lead: z.string(),
+  relatedTool: z.object({ href: z.string(), label: z.string() }),
+  related: z.array(z.string()).default([]),
+  faqs: z
+    .array(z.object({ q: z.string(), a: z.string() }))
+    .default([]),
+  order: z.number().default(0),
 });
 
-export const collections = { ratgeber };
+const ratgeber = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/ratgeber' }),
+  schema: articleSchema,
+});
+const ratgeberFr = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/ratgeber-fr' }),
+  schema: articleSchema,
+});
+const ratgeberEn = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/ratgeber-en' }),
+  schema: articleSchema,
+});
+
+export const collections = { ratgeber, ratgeberFr, ratgeberEn };

@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { BRAND, SITE_URL, absoluteUrl } from '../../../lib/site';
+import { formatSwissDate } from '../../../lib/dates';
+
+const path = '/en/guide/';
+const articles = (await getCollection('ratgeberEn')).sort((a, b) => a.data.order - b.data.order);
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Guide – taxes and finances in Switzerland',
+  url: absoluteUrl(path),
+  inLanguage: 'en-CH',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  hasPart: articles.map((a) => ({
+    '@type': 'Article',
+    headline: a.data.title,
+    url: absoluteUrl(`/en/guide/${a.id}/`),
+  })),
+};
+---
+
+<BaseLayout
+  title={`Guide: taxes and finances in Switzerland | ${BRAND}`}
+  description="Well-founded, sourced guides on Swiss taxes and finances: withholding tax for expats, staggered pillar 3a withdrawal, changing canton and the marriage penalty — explained clearly."
+  path={path}
+  locale="en"
+  jsonLd={[collectionSchema]}
+>
+  <Breadcrumbs crumbs={[{ name: 'Guide' }]} locale="en" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Guide</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Clear, sourced articles on Swiss taxes and pensions — to go with our calculators.
+  </p>
+
+  <ul class="grid gap-5 sm:grid-cols-2">
+    {
+      articles.map((a) => (
+        <li class="rounded-lg border border-slate-200 p-5 transition-colors hover:border-slate-300">
+          <h2 class="mb-2 text-lg font-semibold">
+            <a href={`/en/guide/${a.id}/`} class="text-slate-900 hover:text-blue-700 hover:underline">
+              {a.data.title}
+            </a>
+          </h2>
+          <p class="mb-3 text-sm leading-relaxed text-slate-600">{a.data.description}</p>
+          <p class="text-xs text-slate-500">Updated: {formatSwissDate(a.data.updated)}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="mt-10 text-sm text-slate-600">
+    All articles are for general information and do not replace individual tax advice. How we calculate and where our
+    figures come from: see the <a class="underline" href="/en/methodology/">methodology</a>.
+  </p>
+</BaseLayout>

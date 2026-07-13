@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "url": ["/", "/brutto-netto-rechner/", "/steuervergleich/", "/steuerrechner/zug/", "/ratgeber/quellensteuer-expats/", "/fr/", "/fr/calculateur-salaire-brut-net/", "/fr/calculateur-impots/geneve/", "/fr/methodologie/", "/en/", "/en/cantonal-tax-comparison/", "/en/tax-calculator/geneva/", "/en/methodology/"],
+      "url": ["/", "/brutto-netto-rechner/", "/steuervergleich/", "/steuerrechner/zug/", "/ratgeber/quellensteuer-expats/", "/fr/", "/fr/calculateur-salaire-brut-net/", "/fr/calculateur-impots/geneve/", "/fr/methodologie/", "/en/", "/en/cantonal-tax-comparison/", "/en/tax-calculator/geneva/", "/en/methodology/", "/fr/guide/", "/fr/guide/impot-a-la-source-expatries/", "/en/guide/withholding-tax-for-expats/"],
       "numberOfRuns": 1,
       "settings": { "chromeFlags": "--no-sandbox --headless=new" }
     },
