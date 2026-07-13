@@ -29,9 +29,11 @@ const year = new Date().getFullYear();
       ) : (
         <nav aria-label="Informations légales">
           <ul class="mb-4 flex flex-wrap gap-x-5 gap-y-1">
-            <li><a href="/impressum/" class="hover:text-slate-900 hover:underline">{t('footer.imprint')}</a></li>
-            <li><a href="/datenschutz/" class="hover:text-slate-900 hover:underline">{t('footer.privacy')}</a></li>
-            <li><a href="/quellen/" class="hover:text-slate-900 hover:underline">{t('footer.sources')}</a></li>
+            <li><a href="/fr/methodologie/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
+            <li><a href="/fr/a-propos/" class="hover:text-slate-900 hover:underline">{t('nav.about')}</a></li>
+            <li><a href="/fr/mentions-legales/" class="hover:text-slate-900 hover:underline">{t('footer.imprint')}</a></li>
+            <li><a href="/fr/protection-des-donnees/" class="hover:text-slate-900 hover:underline">{t('footer.privacy')}</a></li>
+            <li><a href="/fr/sources/" class="hover:text-slate-900 hover:underline">{t('footer.sources')}</a></li>
           </ul>
         </nav>
       )

@@ -18,6 +18,11 @@ const STATIC_PAIRS: { de: string; fr: string }[] = [
   { de: '/brutto-netto-rechner/', fr: '/fr/calculateur-salaire-brut-net/' },
   { de: '/steuervergleich/', fr: '/fr/comparatif-impots-cantons/' },
   { de: '/saeule-3a-rechner/', fr: '/fr/calculateur-3e-pilier/' },
+  { de: '/methodik/', fr: '/fr/methodologie/' },
+  { de: '/quellen/', fr: '/fr/sources/' },
+  { de: '/ueber-uns/', fr: '/fr/a-propos/' },
+  { de: '/impressum/', fr: '/fr/mentions-legales/' },
+  { de: '/datenschutz/', fr: '/fr/protection-des-donnees/' },
 ];
 
 /** The 26 programmatic canton pages exist in both locales (M6). */

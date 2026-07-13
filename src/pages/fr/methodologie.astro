@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND } from '../../lib/site';
+---
+
+<BaseLayout
+  title={`Méthodologie : comment nous calculons | ${BRAND}`}
+  description="Comment CalcSwiss calcule : sources officielles (AFC, OFS, OFSP), dates de référence, formules et limites connues — entièrement transparent."
+  path="/fr/methodologie/"
+  locale="fr"
+>
+  <Breadcrumbs crumbs={[{ name: 'Méthodologie' }]} locale="fr" />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Méthodologie</h1>
+    <p>
+      Chaque calculateur de calcswiss.ch expose sa méthode de calcul. Sur cette page, nous documentons pour chaque
+      outil les formules, les paramètres utilisés et leurs sources officielles, avec la date de référence.
+    </p>
+    <h2>Nos principes</h2>
+    <ul>
+      <li>
+        <strong>Chaque chiffre a une source.</strong> Les paramètres de calcul proviennent de publications officielles
+        (AFC, OFS, OFSP, administrations fiscales cantonales) et sont versionnés avec leur date de consultation.
+      </li>
+      <li>
+        <strong>Des formules vérifiées.</strong> Chaque formule fiscale est testée automatiquement contre des exemples
+        de calcul officiels avant sa mise en ligne.
+      </li>
+      <li>
+        <strong>Nous nommons les limites.</strong> Là où un calcul simplifie (p.&nbsp;ex. cotisations de caisse de
+        pension au minimum légal plutôt qu’aux valeurs réglementaires), cela est indiqué auprès du calculateur concerné.
+      </li>
+    </ul>
+    <h2>Documentation par calculateur</h2>
+
+    <h3>Calculateur salaire brut-net</h3>
+    <p>
+      Le <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a> déduit du salaire annuel brut les
+      cotisations à la charge du salarié : AVS/AI/APG (5.3%, sans limite), AC (1.1% jusqu’à CHF 148’200 par an), AANP
+      (selon l’employeur) et LPP (bonification de vieillesse sur le salaire coordonné, 7–18% selon l’âge, moitié à la
+      charge du salarié). Taux et montants-limites au 2026, sources : OFAS, ahv-iv.ch et valeurs-clés LPP. Détails et
+      exemple de calcul directement auprès du calculateur.
+    </p>
+    <p>
+      Non compris : l’impôt sur le revenu (taxation séparée ou impôt à la source) et les cotisations facultatives comme
+      l’indemnité journalière maladie. Les déductions AANP et LPP dépendent de l’employeur et de la caisse de pension ;
+      le calculateur utilise le minimum légal.
+    </p>
+
+    <h3>Comparatif des impôts (26 cantons)</h3>
+    <p>
+      Le <a href="/fr/comparatif-impots-cantons/">comparatif des impôts</a> calcule, pour chaque canton, l’impôt
+      cantonal simple selon le barème cantonal du revenu 2026, puis le multiplie par les coefficients du canton et du
+      chef-lieu ; s’y ajoute l’impôt fédéral direct selon le barème fédéral. La source des données est constituée des
+      données fiscales officielles de l’AFC (swisstaxcalculator.estv.admin.ch). Dans les cantons dotés d’un barème
+      communal propre (Schwytz, Sion), nous utilisons le barème communal officiel. Non compris : impôt ecclésiastique,
+      impôts personnels, impôt sur la fortune. La comparaison se fonde sur le revenu imposable ; les différences
+      cantonales de déductions n’y sont pas reflétées. La logique de calcul est validée contre l’implémentation de
+      référence sous licence MIT devbrains/swisstaxcalculator, qui s’appuie sur les mêmes données de l’AFC.
+    </p>
+
+    <h3>Calculateur 3e pilier</h3>
+    <p>
+      Le <a href="/fr/calculateur-3e-pilier/">calculateur 3e pilier</a> calcule l’impôt sur le revenu (même méthode que
+      le comparatif) une fois sans et une fois avec la déduction 3a ; la différence est l’économie d’impôt. Montants
+      maximaux 2026 selon l’OFAS : CHF 7'258 avec caisse de pension, 20% du revenu d’activité ou au maximum CHF 36'288
+      sans caisse de pension.
+    </p>
+
+    <p>La méthodologie des autres calculateurs apparaîtra ici à leur publication.</p>
+
+    <h2>Actualité des données et rythme de mise à jour</h2>
+    <p>
+      Les paramètres fiscaux et d’assurances sociales changent chaque année. Nous actualisons les données selon le
+      calendrier suivant — chaque chiffre porte en interne une date de consultation que nous conservons lors des
+      modifications :
+    </p>
+    <ul>
+      <li>
+        <strong>Début d’année :</strong> nouvelle année fiscale — barèmes et coefficients de l’AFC, taux de cotisation
+        AVS/AC, montants maximaux du pilier 3a et valeurs-clés LPP sont mis à jour.
+      </li>
+      <li>
+        <strong>Fin septembre :</strong> les primes d’assurance-maladie approuvées de l’Office fédéral de la santé
+        publique (OFSP) paraissent — pertinent pour le calculateur de franchise prévu.
+      </li>
+      <li>
+        <strong>À la publication de nouveaux barèmes d’impôt à la source :</strong> mise à jour des cantons couverts.
+      </li>
+    </ul>
+    <p>
+      Chaque chiffre pertinent pour un outil est stocké dans des fichiers de données versionnés avec
+      <code>source</code> (lien officiel), <code>retrieved</code> (date de consultation) et <code>taxYear</code>. La
+      mention « Dernière mise à jour » affichée sur chaque page de calculateur correspond à cette date de consultation,
+      et non au moment de la dernière génération de la page — nous n’affichons aucune actualité artificielle.
+    </p>
+
+    <h2>Limites connues</h2>
+    <p>Pour que vous puissiez interpréter correctement les résultats, voici les principales simplifications :</p>
+    <ul>
+      <li>
+        <strong>Le revenu imposable comme base.</strong> Nos calculateurs d’impôts partent du revenu imposable (après
+        déductions). Nous ne reproduisons pas les règles de déduction propres à chaque canton — elles seraient
+        nécessaires pour une comparaison exacte au niveau du revenu brut.
+      </li>
+      <li>
+        <strong>Les chefs-lieux comme référence.</strong> Pour les impôts cantonaux, nous utilisons le coefficient du
+        chef-lieu cantonal. Votre commune de domicile peut être moins ou plus chère ; les pages cantonales indiquent
+        l’éventail.
+      </li>
+      <li>
+        <strong>Sans impôt ecclésiastique ni impôt personnel.</strong> Les impôts confessionnels et les impôts
+        personnels fixes ne sont pas inclus.
+      </li>
+      <li>
+        <strong>Le revenu uniquement.</strong> L’impôt sur la fortune ne fait pas partie des calculateurs actuels.
+      </li>
+      <li>
+        <strong>Déductions sociales dépendantes de l’employeur.</strong> Les cotisations AANP et LPP varient selon
+        l’employeur et la caisse de pension ; nous calculons avec le minimum légal.
+      </li>
+    </ul>
+    <p>
+      Tous les calculs sont fournis à titre indicatif. Seule la taxation officielle de l’autorité fiscale compétente
+      fait foi. L’ensemble des sources de données figure sous <a href="/fr/sources/">Sources</a>.
+    </p>
+  </article>
+</BaseLayout>

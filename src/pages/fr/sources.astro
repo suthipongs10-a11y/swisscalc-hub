@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND } from '../../lib/site';
+
+const sources = [
+  {
+    name: 'Administration fédérale des contributions (AFC) — calculateur et données fiscales',
+    url: 'https://swisstaxcalculator.estv.admin.ch/',
+    use: 'Barèmes, coefficients et déductions de la Confédération, des cantons et des communes',
+  },
+  {
+    name: 'Office fédéral de la statistique (OFS) — répertoire officiel des communes',
+    url: 'https://www.bfs.admin.ch/bfs/fr/home/bases-statistiques/repertoire-officiel-communes-suisse.html',
+    use: 'Numéros de commune OFS comme clé de localisation',
+  },
+  {
+    name: 'Office fédéral de la santé publique (OFSP) — primes d’assurance-maladie',
+    url: 'https://opendata.swiss/fr/dataset/health-insurance-premiums',
+    use: 'Primes LAMal approuvées par assureur, région de primes, groupe d’âge et franchise',
+  },
+  {
+    name: 'Office fédéral des assurances sociales (OFAS)',
+    url: 'https://www.bsv.admin.ch/',
+    use: 'Taux de cotisation AVS/AI/APG/AC, valeurs-clés de la prévoyance professionnelle et montants maximaux du pilier 3a',
+  },
+  {
+    name: 'devbrains — swisstaxcalculator (licence MIT)',
+    url: 'https://github.com/devbrains-com/swisstaxcalculator',
+    use: 'Implémentation de référence open source du calcul fiscal fondée sur les données de l’AFC ; référence de validation de notre logique de calcul',
+  },
+];
+---
+
+<BaseLayout
+  title={`Sources et bases de données | ${BRAND}`}
+  description="Toutes les sources de données de CalcSwiss en un coup d’œil : AFC, OFS, OFSP et OFAS — avec leur finalité et les liens vers les publications officielles."
+  path="/fr/sources/"
+  locale="fr"
+>
+  <Breadcrumbs crumbs={[{ name: 'Sources' }]} locale="fr" />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Sources et bases de données</h1>
+    <p>
+      Tous les paramètres de calcul de calcswiss.ch proviennent de sources officielles et sont versionnés avec leur
+      date de consultation. Cette page liste les bases de données ; la date de référence des paramètres figure
+      directement auprès de chaque calculateur.
+    </p>
+    <ul>
+      {
+        sources.map((source) => (
+          <li>
+            <a href={source.url} rel="noopener">
+              {source.name}
+            </a>
+            <br />
+            <span class="text-sm text-slate-600">{source.use}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <p>
+      Les calculs sont fournis à titre indicatif ; seule la taxation officielle fait foi. L’AFC, l’OFS, l’OFSP et
+      l’OFAS ne sont pas associés à ce site.
+    </p>
+  </article>
+</BaseLayout>

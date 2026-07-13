@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND } from '../../lib/site';
+
+// Politique de confidentialité conforme à la nLPD : responsable, finalités,
+// pays destinataires. TODO_OWNER : identité du responsable avant le lancement.
+---
+
+<BaseLayout
+  title={`Protection des données | ${BRAND}`}
+  description={`Politique de confidentialité de ${BRAND} : sans cookies, sans publicité, statistique sans cookies — vos saisies ne quittent pas votre navigateur.`}
+  path="/fr/protection-des-donnees/"
+  locale="fr"
+>
+  <Breadcrumbs crumbs={[{ name: 'Protection des données' }]} locale="fr" />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Protection des données</h1>
+
+    <h2>Responsable du traitement</h2>
+    <p>[NOM DE L’ÉDITEUR], [RUE N°], [NPA LOCALITÉ] — contact : [E-MAIL]</p>
+
+    <h2>L’essentiel en bref</h2>
+    <ul>
+      <li>calcswiss.ch n’utilise <strong>aucun cookie</strong> et n’affiche <strong>aucune publicité</strong>.</li>
+      <li>
+        Vos saisies dans nos calculateurs (salaire, données fiscales, etc.) sont traitées
+        <strong>exclusivement dans votre navigateur</strong> et ne sont jamais transmises à un serveur ni enregistrées.
+      </li>
+      <li>Aucune inscription ni création de compte n’est possible.</li>
+    </ul>
+
+    <h2>Hébergement</h2>
+    <p>
+      Ce site est hébergé chez Cloudflare, Inc. (États-Unis) (Cloudflare Pages). Lors de la consultation du site,
+      Cloudflare traite des données de connexion techniquement nécessaires (p.&nbsp;ex. l’adresse IP) pour la
+      distribution et la protection du site. Pays destinataire : États-Unis. Cloudflare s’engage à respecter les cadres
+      de protection des données reconnus pour le transfert ; détails dans la politique de confidentialité de Cloudflare.
+    </p>
+
+    <h2>Statistique web (sans cookies)</h2>
+    <p>
+      Nous utilisons Cloudflare Web Analytics, une mesure d’audience sans cookies. Aucun cookie n’est déposé, aucun
+      profil personnel n’est constitué et aucun utilisateur n’est suivi d’un site à l’autre. Finalité : une statistique
+      agrégée (pages vues, temps de chargement) afin d’améliorer le site.
+    </p>
+
+    <h2>Vos droits</h2>
+    <p>
+      En vertu de la loi suisse sur la protection des données (LPD), vous avez le droit d’accès, de rectification et
+      d’effacement des données personnelles vous concernant. Comme nous n’enregistrons nous-mêmes aucune donnée
+      personnelle, veuillez adresser les demandes relatives aux données de connexion à l’hébergeur ou à l’adresse de
+      contact indiquée ci-dessus.
+    </p>
+
+    <h2>Version</h2>
+    <p>
+      La présente politique de confidentialité est adaptée en cas de modification du service. Version : juillet 2026.
+    </p>
+  </article>
+</BaseLayout>

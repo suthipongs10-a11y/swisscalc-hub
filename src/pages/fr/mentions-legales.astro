@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { BRAND } from '../../lib/site';
+
+// TODO_OWNER: l'identité de l'éditeur doit être renseignée avant le lancement
+// public (nFADP + lettre ESTV l'exigent). Voir STATUS.md.
+---
+
+<BaseLayout
+  title={`Mentions légales | ${BRAND}`}
+  description={`Mentions légales de ${BRAND} — informations sur l'éditeur de calcswiss.ch.`}
+  path="/fr/mentions-legales/"
+  locale="fr"
+>
+  <Breadcrumbs crumbs={[{ name: 'Mentions légales' }]} locale="fr" />
+  <article class="prose-content max-w-2xl">
+    <h1 class="mb-6 text-3xl font-bold">Mentions légales</h1>
+    <h2>Responsable du contenu</h2>
+    <p>
+      [NOM DE L’ÉDITEUR]<br />
+      [RUE N°]<br />
+      [NPA LOCALITÉ]<br />
+      [PAYS]
+    </p>
+    <p>Contact : [E-MAIL]</p>
+    <h2>Exclusion de responsabilité</h2>
+    <p>
+      Tous les calculs et contenus de calcswiss.ch sont fournis à titre d’information indicative et ne constituent pas
+      un conseil fiscal, juridique ou de placement. Seules les taxations et renseignements officiels des autorités
+      compétentes font foi. Malgré un contrôle attentif, nous n’assumons aucune garantie quant à l’exactitude, à
+      l’exhaustivité et à l’actualité des informations.
+    </p>
+    <h2>Indication des sources</h2>
+    <p>
+      Les paramètres de calcul reposent sur les données de l’Administration fédérale des contributions (AFC), de
+      l’Office fédéral de la statistique (OFS) et de l’Office fédéral de la santé publique (OFSP). Détails sous
+      <a href="/fr/sources/">Sources</a>.
+    </p>
+  </article>
+</BaseLayout>

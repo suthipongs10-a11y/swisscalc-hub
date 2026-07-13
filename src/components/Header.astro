@@ -80,6 +80,7 @@ const switchLabel = otherLocale.toUpperCase();
                 </a>
               </li>
             ))}
+            <li><a href="/fr/methodologie/" class="hover:text-slate-900 hover:underline">{t('nav.methodology')}</a></li>
             {switchHref && (
               <li>
                 <a href={switchHref} rel="alternate" hreflang={otherLocale} class="rounded border border-slate-300 px-2 py-1 text-xs font-medium hover:bg-slate-100">
@@ -138,6 +139,17 @@ const switchLabel = otherLocale.toUpperCase();
                 <li><a href="/ratgeber/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.guide')}</a></li>
                 <li><a href="/methodik/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.methodology')}</a></li>
                 <li><a href="/ueber-uns/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.about')}</a></li>
+              </ul>
+            </>
+          )
+        }
+        {
+          locale === 'fr' && (
+            <>
+              <div class="my-1 border-t border-slate-100" role="presentation" />
+              <ul>
+                <li><a href="/fr/methodologie/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.methodology')}</a></li>
+                <li><a href="/fr/a-propos/" class="block rounded-md px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50">{t('nav.about')}</a></li>
               </ul>
             </>
           )

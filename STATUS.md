@@ -2,15 +2,17 @@
 
 ## Current state
 
-**M6 built — 26 French canton pages live (French programmatic backbone complete). Awaiting review.**
+**M7 built — French trust/legal/methodology pages live (the /fr/ experience is now self-contained). Awaiting review.**
 
-71 pages: 29 German (3 tools + 26 canton) + 5 German editorial + German trust/legal + **30 French** (/fr/ home + 3 tools + **26 canton**). Build clean, tests 69/69, Lighthouse **100×4** on all sampled pages incl. the French canton page. Deployed on Cloudflare Pages (calcswiss.ch live).
+76 pages: 29 German (3 tools + 26 canton) + 5 German editorial + German trust/legal + **35 French** (/fr/ home + 3 tools + 26 canton + **5 trust/legal**). Build clean, tests 69/69, Lighthouse **100×4** on all sampled pages incl. a French legal page. Deployed on Cloudflare Pages (calcswiss.ch live).
+
+**French trust/legal (M7):** `/fr/methodologie/`, `/fr/sources/`, `/fr/a-propos/`, `/fr/mentions-legales/`, `/fr/protection-des-donnees/` — faithful French translations of the German set (nLPD privacy: controller, purposes, recipient countries; full methodology incl. the SZ/Sion separate-tarif note). The French footer + header now link to these French pages (no more cross-locale hops to the German legal set); all five paired de↔fr for reciprocal hreflang + switcher. German output verified byte-identical (control pages unchanged; the 5 newly-paired German legal pages gained only `hreflang="fr-CH"` + the FR switcher).
 
 **French canton pages (M6):** `/fr/calculateur-impots/[canton]/` for all 26 — same anti-doorway discipline as the German set (every intro + one FAQ individually written per canton, a faithful French rendering preserving each canton's verified tax characteristics; quantitative blocks computed from data). Shared engine + renderer (same numbers as German; verified GE 100k single CHF 22'325.79, recompute 200k married CHF 51'162.88). French UI labels, French canton **and capital** names (Genève not Zürich; Coire, Soleure, Bâle, Saint-Gall…), correct French articles in headings (du Valais / des Grisons / d'Argovie). Reciprocal de↔fr hreflang + language switcher now auto-wired on both the German and French canton pages (26 new PAGE_PAIRS). The French comparison table now links through to all 26 French canton pages. German output verified byte-identical (only the intended reciprocal `hreflang="fr-CH"` + FR switcher added; content unchanged; JS-bundle hashes changed from the shared-label refactor).
 
 **Remaining work (all optional / owner-driven, none block anything):**
 - **Quellensteuer-Rechner** — deferred since M2, pending tariff files (owner downloads 5 files from estv.admin.ch; instructions ready on request). Quellensteuer *guide* article already live.
-- **FR depth (remaining)** — French Ratgeber articles, translate legal/methodik/quellen to FR (French footer still links the German legal/Methodik pages — the site's single legal set); then `/en/` expat hub.
+- **FR depth (remaining)** — French Ratgeber/guide articles (the German `/ratgeber/` set is not yet translated; FR nav/footer intentionally omit a guide link until they exist); then `/en/` expat hub. FR trust/legal/methodology pages: **done (M7).**
 - **Backlog tools** — Franchise-Rechner (needs Sept BAG data).
 - **Owner verification checklist** — see below.
 
@@ -51,6 +53,13 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-13 — Session 9: M7 — French trust/legal/methodology pages
+
+- **5 French pages** completing the `/fr/` experience: `/fr/methodologie/` (full methodology, incl. the SZ/Sion separate municipal-tarif note + known limits), `/fr/sources/` (AFC/OFS/OFSP/OFAS + devbrains, French dataset links), `/fr/a-propos/` (AboutPage schema), `/fr/mentions-legales/` (impressum, owner placeholders), `/fr/protection-des-donnees/` (nLPD: responsable, finalités, pays destinataires, cookieless). Faithful translations of the German set with French internal links.
+- **Footer + Header** French branches now link to the French legal/methodology pages (no more cross-locale hops to the German set); German branches untouched. Added Méthodologie to the FR desktop nav + Méthodologie/À propos to the FR mobile menu.
+- **Plumbing:** 5 new `STATIC_PAIRS` (methodik↔methodologie, quellen↔sources, ueber-uns↔a-propos, impressum↔mentions-legales, datenschutz↔protection-des-donnees) → reciprocal hreflang + switcher on both sides.
+- **Verified:** build clean (0/0/0, 76 pages), tests **69/69**, link/orphan check green (75 pages, ≤3 clicks). **German byte-identical** — stashed to M6, rebuilt, diffed: all control pages (canton/tools/home/ratgeber) identical after hash-normalize; the 5 newly-paired German legal pages gained *only* `hreflang="fr-CH"` + the FR switcher (desktop + mobile). All 5 FR pages driven in Chromium (200, French footer, correct H1s), DE↔FR switcher round-trip (methodik↔methodologie), no console errors. Lighthouse **100×4** on `/fr/methodologie/` (all 9 LHCI URLs assert-pass). Committed, stopped for review.
 
 ### 2026-07-13 — Session 8: M6 — 26 French canton pages
 
