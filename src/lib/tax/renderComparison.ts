@@ -34,7 +34,7 @@ export function renderComparisonHtml(
         : labels.nameOf(r.abbr);
       return `<tr class="border-b border-slate-100${i === 0 ? ' bg-emerald-50' : ''}">
         <td class="py-2 pr-2 text-slate-500 tabular-nums">${i + 1}</td>
-        <td class="py-2 pr-2 font-medium text-slate-900">${nameCell} <span class="text-xs text-slate-500">(${r.capital})</span></td>
+        <td class="py-2 pr-2 font-medium text-slate-900">${nameCell} <span class="text-xs text-slate-500">(${labels.capitalOf(r.capital)})</span></td>
         <td class="py-2 px-2 text-right tabular-nums text-slate-900">${formatCHF(r.totalTax, 0)}</td>
         <td class="py-2 px-2 text-right tabular-nums text-slate-500">${formatPercent(r.effectiveRate)}</td>
         <td class="hidden py-2 pl-2 sm:table-cell" aria-hidden="true">

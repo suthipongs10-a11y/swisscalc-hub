@@ -4,19 +4,30 @@
  * and a language switcher automatically.
  */
 import { absoluteUrl } from './site';
+import cantonRegistry from '../data/cantons.json';
+import { cantonSlugOf, frSlugOf } from './tax/labels';
 
 export type Locale = 'de' | 'fr';
 
 export const LOCALE_LANG: Record<Locale, string> = { de: 'de-CH', fr: 'fr-CH' };
 export const LOCALE_OG: Record<Locale, string> = { de: 'de_CH', fr: 'fr_CH' };
 
-/** Paths (trailing slash) of pages that exist in both German and French. */
-export const PAGE_PAIRS: { de: string; fr: string }[] = [
+/** Static (non-canton) paired pages. */
+const STATIC_PAIRS: { de: string; fr: string }[] = [
   { de: '/', fr: '/fr/' },
   { de: '/brutto-netto-rechner/', fr: '/fr/calculateur-salaire-brut-net/' },
   { de: '/steuervergleich/', fr: '/fr/comparatif-impots-cantons/' },
   { de: '/saeule-3a-rechner/', fr: '/fr/calculateur-3e-pilier/' },
 ];
+
+/** The 26 programmatic canton pages exist in both locales (M6). */
+const CANTON_PAIRS: { de: string; fr: string }[] = cantonRegistry.cantons.map((c) => ({
+  de: `/steuerrechner/${cantonSlugOf(c.abbr)}/`,
+  fr: `/fr/calculateur-impots/${frSlugOf(c.abbr)}/`,
+}));
+
+/** Paths (trailing slash) of pages that exist in both German and French. */
+export const PAGE_PAIRS: { de: string; fr: string }[] = [...STATIC_PAIRS, ...CANTON_PAIRS];
 
 export interface Alternate {
   hreflang: string;

@@ -1,0 +1,69 @@
+---
+/**
+ * French per-canton tax calculator island (preset canton, breakdown at the
+ * capital). Shares the engine + renderer with the German island; FR labels.
+ */
+import { renderCantonHtml } from '../../lib/tax/renderCanton';
+import { CANTON_RENDER_LABELS_FR } from '../../lib/tax/labels';
+
+interface Props {
+  abbr: string;
+}
+const { abbr } = Astro.props;
+
+const DEFAULTS = { income: 100000, relationship: 'single' as const };
+const initialHtml = renderCantonHtml(DEFAULTS.income, abbr, DEFAULTS.relationship, CANTON_RENDER_LABELS_FR);
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section aria-label="Calculateur d’impôts" class="grid gap-6 md:grid-cols-2" data-canton-calc data-abbr={abbr}>
+  <form class="space-y-4" data-canton-form novalidate>
+    <div>
+      <label class={labelClass} for="kt-income">Revenu imposable (CHF / an)</label>
+      <input class={inputClass} type="number" id="kt-income" name="income" min="0" step="1000" inputmode="numeric" value={DEFAULTS.income} />
+      <p class="mt-1 text-xs text-slate-500">
+        Revenu imposable = revenu après toutes les déductions (figure sur votre déclaration/taxation).
+      </p>
+    </div>
+    <fieldset>
+      <legend class={labelClass}>État civil</legend>
+      <div class="mt-1 inline-flex rounded-md border border-slate-300 p-0.5">
+        <label class="cursor-pointer">
+          <input type="radio" name="relationship" value="single" class="peer sr-only" checked />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">Célibataire</span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="relationship" value="married" class="peer sr-only" />
+          <span class="block rounded px-4 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">Marié(e)</span>
+        </label>
+      </div>
+    </fieldset>
+  </form>
+
+  <div data-canton-result aria-live="polite" set:html={initialHtml}></div>
+</section>
+
+<script>
+  import { renderCantonHtml } from '../../lib/tax/renderCanton';
+  import { CANTON_RENDER_LABELS_FR } from '../../lib/tax/labels';
+
+  for (const section of document.querySelectorAll<HTMLElement>('[data-canton-calc]')) {
+    const abbr = section.dataset.abbr!;
+    const form = section.querySelector<HTMLFormElement>('[data-canton-form]');
+    const resultEl = section.querySelector<HTMLElement>('[data-canton-result]');
+    if (!form || !resultEl) continue;
+    const recompute = () => {
+      const income = parseFloat((form.elements.namedItem('income') as HTMLInputElement).value);
+      const relationship =
+        (form.elements.namedItem('relationship') as RadioNodeList).value === 'married' ? 'married' : 'single';
+      if (Number.isFinite(income) && income >= 0 && income <= 100_000_000) {
+        resultEl.innerHTML = renderCantonHtml(income, abbr, relationship, CANTON_RENDER_LABELS_FR);
+      }
+    };
+    form.addEventListener('input', recompute);
+    form.addEventListener('change', recompute);
+  }
+</script>

@@ -1,0 +1,210 @@
+---
+/**
+ * Programmatic French canton pages — the French counterpart of
+ * /steuerrechner/[kanton]/. Same SEO_SPEC §3.2 anti-doorway discipline: every
+ * quantitative block is computed from this canton's data, the intro and one FAQ
+ * are individually written per canton (src/lib/cantonContentFr.ts).
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import FrCantonCalculator from '../../../components/fr/FrCantonCalculator.astro';
+import cantonData from '../../../data/cantons.json';
+import statsData from '../../../data/tax/canton-stats-2026.json';
+import cantonalData from '../../../data/tax/cantonal-income-2026.json';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../../lib/site';
+import { formatCHF, formatNumber } from '../../../lib/format';
+import { cantonTax, compareCantons, cantonMultipliers } from '../../../lib/tax/engine';
+import { CANTON_CONTENT } from '../../../lib/cantonContent';
+import { CANTON_CONTENT_FR } from '../../../lib/cantonContentFr';
+import { frName, frSlugOf, frGenitive, frCapital, TARIF_LABELS_FR } from '../../../lib/tax/labels';
+
+export function getStaticPaths() {
+  return cantonData.cantons.map((c) => ({ params: { canton: frSlugOf(c.abbr)! }, props: { canton: c } }));
+}
+
+interface CantonInfo {
+  bfs: number;
+  abbr: string;
+  name: string;
+  slug: string;
+}
+const { canton } = Astro.props as { canton: CantonInfo };
+const { abbr } = canton;
+
+const editorial = CANTON_CONTENT_FR[abbr];
+const meta = CANTON_CONTENT[abbr]; // language-neutral compare + portal
+if (!editorial || !meta) throw new Error(`Missing French editorial content for ${abbr}`);
+
+const name = frName(abbr);
+const genitive = frGenitive(abbr);
+
+const stats = (statsData.cantons as Record<string, { municipalityCount: number; minCity: { name: string; pct: number }; maxCity: { name: string; pct: number } }>)[abbr]!;
+const m = cantonMultipliers(abbr);
+
+const ref = cantonTax(100_000, abbr, 'single');
+const capital = frCapital(ref.capital);
+const ranking = compareCantons(100_000, 'single');
+const rank = ranking.findIndex((r) => r.abbr === abbr) + 1;
+const cheapest = ranking[0]!;
+
+const cantonTarifs = (cantonalData.cantons as Record<string, { tableType: string }[]>)[abbr]!;
+const tarifLabel = TARIF_LABELS_FR[cantonTarifs[0]!.tableType] ?? cantonTarifs[0]!.tableType;
+
+const path = `/fr/calculateur-impots/${frSlugOf(abbr)}/`;
+const longTitle = `Calculateur d’impôts canton ${genitive} ${SITE_YEAR} | ${BRAND}`;
+const title = longTitle.length <= 65 ? longTitle : `Impôts canton ${genitive} ${SITE_YEAR} | ${BRAND}`;
+const description = `Impôts ${SITE_YEAR} dans le canton ${genitive} : impôt cantonal, communal et fédéral à ${capital}. Rang ${rank} sur 26 pour ${formatCHF(100000, 0)} — avec les barèmes officiels de l’AFC.`;
+
+const faqs = [
+  {
+    q: `À combien s’élèvent les impôts dans le canton ${genitive} ?`,
+    a: `Pour un revenu imposable de ${formatCHF(100000, 0)} (célibataire), vous payez à ${capital} environ ${formatCHF(ref.totalTax, 0)} par an (impôt cantonal, communal et fédéral, sans impôt ecclésiastique) — soit un taux effectif de ${(ref.effectiveRate * 100).toFixed(1)}% et le rang ${rank} sur 26 chefs-lieux cantonaux. Pour votre revenu, utilisez le calculateur ci-dessus.`,
+  },
+  {
+    q: `Quelle commune du canton ${genitive} a les impôts les plus bas ?`,
+    a: `Le coefficient communal le plus bas est actuellement celui de ${stats.minCity.name} (${formatNumber(stats.minCity.pct, 0)}%), le plus élevé celui de ${stats.maxCity.name} (${formatNumber(stats.maxCity.pct, 0)}%) — sur un total de ${stats.municipalityCount} communes. Notre calculateur utilise le chef-lieu ${capital} ; dans une autre commune, l’impôt communal se décale selon le coefficient.`,
+  },
+  {
+    q: `Comment se compose l’impôt à ${capital} ?`,
+    a: `Sur l’impôt cantonal simple selon le barème ${abbr} (${tarifLabel}), le canton applique un coefficient de ${formatNumber(m.cantonPct, 0)}%, la commune de ${capital} ${formatNumber(m.cityPct, 0)}%. S’y ajoute l’impôt fédéral direct, selon le barème fédéral uniforme.`,
+  },
+  editorial.faq,
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: `Calculateur d’impôts canton ${name}`,
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'fr-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+
+const compareRows = meta.compare.map((other) => {
+  const r = cantonTax(100_000, other, 'single');
+  return { ...r, name: frName(other), slug: frSlugOf(other), capitalFr: frCapital(r.capital) };
+});
+---
+
+<BaseLayout title={title} description={description} path={path} locale="fr" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs
+    crumbs={[{ name: 'Comparatif des impôts', path: '/fr/comparatif-impots-cantons/' }, { name: `Canton ${name}` }]}
+    locale="fr"
+  />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Calculateur d’impôts canton {genitive} {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Calculez l’impôt cantonal, communal et fédéral pour le canton {genitive} — avec les barèmes officiels {SITE_YEAR} et
+    les coefficients du chef-lieu {capital}.
+  </p>
+
+  <FrCantonCalculator abbr={abbr} />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Impôts dans le canton {genitive}</h2>
+    <p>{editorial.intro}</p>
+
+    <h3>Les chiffres clés {SITE_YEAR}</h3>
+    <table class="w-full text-sm">
+      <tbody>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Système de barème</td>
+          <td class="py-2 pl-2 text-right">{tarifLabel}</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Coefficient cantonal</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(m.cantonPct, 2)}%</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Coefficient {capital} (chef-lieu)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(m.cityPct, 2)}%</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Commune la moins chère</td>
+          <td class="py-2 pl-2 text-right">{stats.minCity.name} ({formatNumber(stats.minCity.pct, 0)}%)</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Commune la plus chère</td>
+          <td class="py-2 pl-2 text-right">{stats.maxCity.name} ({formatNumber(stats.maxCity.pct, 0)}%)</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">Nombre de communes</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{stats.municipalityCount}</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-2">Rang pour {formatCHF(100000, 0)} (célibataire)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{rank} sur 26</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>{name} en comparaison</h3>
+    <p>
+      Pour un revenu imposable de {formatCHF(100000, 0)} (célibataire), le chef-lieu {capital} coûte
+      {' '}{formatCHF(ref.totalTax, 0)} par an.
+      {rank === 1
+        ? ' C’est donc le chef-lieu cantonal le moins cher de Suisse.'
+        : ` Le chef-lieu le moins cher (${frCapital(cheapest.capital)}, ${formatCHF(cheapest.totalTax, 0)}) se situe ${formatCHF(ref.totalTax - cheapest.totalTax, 0)} en dessous.`}
+    </p>
+    <ul>
+      {
+        compareRows.map((r) => (
+          <li>
+            <a href={`/fr/calculateur-impots/${r.slug}/`}>Canton {r.name}</a> : {formatCHF(r.totalTax, 0)} (
+            {(r.effectiveRate * 100).toFixed(1)}% effectif à {r.capitalFr})
+          </li>
+        ))
+      }
+    </ul>
+    <p>
+      Les 26 cantons pour votre revenu : <a href="/fr/comparatif-impots-cantons/">voir le comparatif</a>. Optimiser vos
+      déductions : <a href="/fr/calculateur-3e-pilier/">calculateur 3e pilier</a>. Du salaire brut au net :
+      <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>.
+    </p>
+
+    <h2>Questions fréquentes</h2>
+    {
+      faqs.map((f) => (
+        <div class="mb-4">
+          <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+          <p class="text-slate-700">{f.a}</p>
+        </div>
+      ))
+    }
+
+    <p>
+      Renseignements contraignants et taxation officielle :
+      <a href={meta.portal} rel="noopener">administration fiscale du canton {genitive}</a>.
+    </p>
+  </div>
+
+  <section aria-label="Autres calculateurs" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Autres calculateurs</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/comparatif-impots-cantons/" class="font-semibold text-blue-700 hover:underline">Comparatif des impôts des 26 cantons</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Où payez-vous le moins d’impôt sur le revenu ?</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/calculateur-salaire-brut-net/" class="font-semibold text-blue-700 hover:underline">Calculateur salaire brut-net</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Du salaire brut au salaire net.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources :</strong> barèmes et coefficients {SITE_YEAR} :
+      <a class="underline" href="https://swisstaxcalculator.estv.admin.ch/" rel="noopener">données fiscales de l’AFC</a>.
+    </p>
+    <p>Dernière mise à jour : 12.07.2026 · Données de l’année fiscale {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

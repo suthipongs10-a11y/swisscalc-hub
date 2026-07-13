@@ -2,15 +2,15 @@
 
 ## Current state
 
-**M5 built — French locale foundation live (site is now bilingual DE + FR). Awaiting review.**
+**M6 built — 26 French canton pages live (French programmatic backbone complete). Awaiting review.**
 
-45 pages: 29 German (3 tools + 26 canton) + 5 German editorial + German trust/legal + **4 French** (/fr/ home + 3 tools). Build clean, tests 65/65, Lighthouse **100×4** on all sampled pages incl. all French. Deployed on Cloudflare Pages (calcswiss.ch live, sitemap fixed via `build:pages`).
+71 pages: 29 German (3 tools + 26 canton) + 5 German editorial + German trust/legal + **30 French** (/fr/ home + 3 tools + **26 canton**). Build clean, tests 69/69, Lighthouse **100×4** on all sampled pages incl. the French canton page. Deployed on Cloudflare Pages (calcswiss.ch live).
 
-**French locale (M5):** salary, cross-canton comparison, 3e pilier — sharing the exact German engines (same numbers, verified: net CHF 75'007, Zoug rank 1, 3a ZH CHF 1'887.78) with French UI, French canton names (Genève/Vaud/Valais…), reciprocal de↔fr hreflang, language switcher. German output verified byte-identical (only JS-bundle hashes changed from the shared-renderer refactor). FR canton pages + FR articles + FR legal/methodik are a deliberate follow-up.
+**French canton pages (M6):** `/fr/calculateur-impots/[canton]/` for all 26 — same anti-doorway discipline as the German set (every intro + one FAQ individually written per canton, a faithful French rendering preserving each canton's verified tax characteristics; quantitative blocks computed from data). Shared engine + renderer (same numbers as German; verified GE 100k single CHF 22'325.79, recompute 200k married CHF 51'162.88). French UI labels, French canton **and capital** names (Genève not Zürich; Coire, Soleure, Bâle, Saint-Gall…), correct French articles in headings (du Valais / des Grisons / d'Argovie). Reciprocal de↔fr hreflang + language switcher now auto-wired on both the German and French canton pages (26 new PAGE_PAIRS). The French comparison table now links through to all 26 French canton pages. German output verified byte-identical (only the intended reciprocal `hreflang="fr-CH"` + FR switcher added; content unchanged; JS-bundle hashes changed from the shared-label refactor).
 
 **Remaining work (all optional / owner-driven, none block anything):**
 - **Quellensteuer-Rechner** — deferred since M2, pending tariff files (owner downloads 5 files from estv.admin.ch; instructions ready on request). Quellensteuer *guide* article already live.
-- **FR depth** — French canton pages (26), French Ratgeber, translate legal/methodik to FR; then `/en/` expat hub.
+- **FR depth (remaining)** — French Ratgeber articles, translate legal/methodik/quellen to FR (French footer still links the German legal/Methodik pages — the site's single legal set); then `/en/` expat hub.
 - **Backlog tools** — Franchise-Rechner (needs Sept BAG data).
 - **Owner verification checklist** — see below.
 
@@ -51,6 +51,14 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-13 — Session 8: M6 — 26 French canton pages
+
+- **26 French canton pages** at `/fr/calculateur-impots/[canton]/` (French slugs: geneve, zurich, vaud, valais…) — the French counterpart of `/steuerrechner/[kanton]/`, full SEO_SPEC §3.1 anatomy + §3.2 anti-doorway rules (WebApplication + FAQPage schema, calculator above fold, chiffres-clés table, comparison teaser, 4 FAQs incl. one canton-specific, sources footer).
+- **Content** `src/lib/cantonContentFr.ts`: a faithful French rendering of the 26 German canton editorials — individually written per canton (not noun-swapped templates), preserving each canton's verified tax specifics (flat-rate UR/OW, separate municipal tarif SZ/VS, log-formula BL, interpolated FR, family quotient VD, centimes additionnels GE, etc.). New anti-doorway test guards distinct intro heads + length floors.
+- **Locale-aware renderer:** `renderCanton.ts` now takes a `CantonRenderLabels` object (DE default byte-identical); added `CANTON_RENDER_LABELS_DE/FR`, `TARIF_LABELS_DE/FR`, French slug/genitive maps, and `frCapital()` (French capital exonyms: Zürich→Zurich, Chur→Coire, Solothurn→Soleure, Basel→Bâle, St. Gallen→Saint-Gall…) wired into both the canton and comparison renderers via a `capitalOf` label (DE = identity → German stays byte-identical). French headings use correct articles (du Valais / des Grisons / d'Argovie).
+- **Plumbing:** `PAGE_PAIRS` extended with the 26 canton pairs (generated from the registry) → reciprocal de↔fr hreflang + language switcher auto-appear on both sides. `COMPARISON_LABELS_FR.cantonHref` now points at the French canton pages, so the French comparison table links through to all 26 (no orphans).
+- **Verified:** build clean (0 err / 0 warn, 71 pages), tests **69/69** (4 new), link/orphan check green (70 pages, ≤3 clicks), **German byte-identical** (snapshot diff: only the intended `hreflang="fr-CH"` + FR switcher added; canton result boxes + comparison + 3a content unchanged), FR canton page **driven in Chromium** (SSR CHF 22'325.79 → recompute 200k married CHF 51'162.88, capital="Genève", switcher DE⇄FR reciprocal, 26 comparison links), Lighthouse **100×4** on `/fr/calculateur-impots/geneve/`. Committed, stopped for review.
 
 ### 2026-07-12 — Session 7: M5 — French locale foundation (+ Cloudflare deploy fix)
 
