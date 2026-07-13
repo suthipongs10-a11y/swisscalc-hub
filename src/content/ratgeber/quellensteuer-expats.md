@@ -6,8 +6,8 @@ published: '2026-07-12'
 updated: '2026-07-12'
 lead: 'Wer als ausländische Arbeitskraft ohne Niederlassungsbewilligung C in der Schweiz arbeitet, zahlt die Einkommenssteuer direkt über den Lohn — die Quellensteuer. Dieser Leitfaden erklärt, wie sie berechnet wird, wo die Fallstricke liegen und wann sich eine nachträgliche Korrektur lohnt.'
 relatedTool:
-  href: '/brutto-netto-rechner/'
-  label: 'Brutto-Netto-Rechner'
+  href: '/quellensteuer-rechner/'
+  label: 'Quellensteuer-Rechner'
 related:
   - kantonswechsel-steuern-sparen
   - heiraten-steuern

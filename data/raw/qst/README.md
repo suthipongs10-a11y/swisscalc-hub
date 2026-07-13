@@ -1,93 +1,61 @@
-# Quellensteuer (withholding-tax) tariff files — drop zone
+# Quellensteuer (withholding-tax) tariff files — data source & refresh
 
-This folder holds the **raw, official withholding-tax tariff files** for the
-planned Quellensteuer-Rechner (the flagship SEO tool). It is the one thing that
-is blocked on external data: the tariffs cannot be reached from the build
-sandbox (admin.ch and cantonal domains are blocked by the egress proxy), so the
-**owner downloads them once** and commits them here. After that, the build is
-turnkey again.
+The flagship Quellensteuer-Rechner is built from the official **ESTV
+withholding-tax tariff files for salaries** ("Quellensteuertarife für Löhne").
+Per RESEARCH.md §4.4 we publish **derived calculation parameters with a
+citation**, not a raw mirror — so the raw ESTV files are **git-ignored** (see
+`.gitignore`) and only the derived JSON in `public/data/qst/*.json` +
+`src/data/qst/index.json` is committed.
 
-> ⚠️ Terminology trap: on estv.admin.ch the English card **“Swiss Withholding
-> Tax”** is the *Anticipatory Tax* (Verrechnungssteuer, on dividends/interest) —
-> **not** this. What we need is **Quellensteuer** = tax at source on the
-> **salary** of foreign employees, filed under **Direkte Bundessteuer →
-> Quellensteuer** (switch the site to German — the download pages are not
-> translated to English).
+> ⚠️ Terminology trap: on estv.admin.ch the English card **"Swiss Withholding
+> Tax"** is the *Anticipatory Tax* (Verrechnungssteuer, on dividends/interest) —
+> NOT this. What we need is **Quellensteuer** = tax at source on the **salary**
+> of foreign employees.
 
-## What to put here
+## Source (owner, out-of-band)
 
-Launch scope is 5 cantons (RESEARCH.md / BUILD_PLAN backlog): **ZH, GE, ZG, VD, BS.**
-Use the current tax year folder (`2026/`).
+estv.admin.ch (German) → **Direkte Bundessteuer → Quellensteuer →
+Quellensteuertarife für Löhne → "Quellensteuertarife für den Import in
+Lohnbuchhaltungssysteme"**. Download:
+
+- **`tar<jj>txt.zip`** — all 26 cantons, TXT format (this is what the importer reads).
+- **`qst-tarife-recordformate-loehne-*.pdf`** — the record-format spec (kept in this folder).
+
+The current files (git-ignored except this README + the spec PDF):
 
 ```
 data/raw/qst/
-├── README.md            ← this file
-├── 2026/
-│   ├── zh.txt           ← Kanton Zürich, tariff download
-│   ├── ge.txt           ← Genève
-│   ├── zg.txt           ← Zug
-│   ├── vd.txt           ← Vaud
-│   └── bs.txt           ← Basel-Stadt
-└── spec/                ← (optional but very helpful)
-    └── *.pdf            ← ESTV/Swissdec tariff-format description ("Erläuterungen",
-                            "Richtlinien Quellensteuer", record layout)
+├── README.md                                  (tracked)
+├── qst-tarife-recordformate-loehne-2025-de.pdf (tracked — neutral format spec)
+├── tar2026.zip            (git-ignored — raw ESTV, native format)
+├── tar2026txt.zip         (git-ignored — raw ESTV, TXT: 26× tar26<kt>.txt)
+└── txt/                   (git-ignored — unzipped working copy for the importer)
 ```
 
-- **Preferred format: `.txt`** — the official ESTV/Swissdec fixed-width tariff
-  file (this is what payroll software consumes; machine-readable). If a source
-  hands you a **ZIP**, commit the whole zip (or its extracted `.txt`) — fine.
-- **PDF is a fallback only.** A human-readable PDF table works if no `.txt`
-  exists, but the importer then needs a hand-written parser — slower. Grab the
-  `.txt` if it is offered.
-- Keep the **original filename too** if you like (rename a copy to `zh.txt`
-  etc., or just tell me the mapping in the commit message).
-- File encoding is usually Latin-1/Windows-1252 or UTF-8 — don't re-encode, I
-  handle that in the importer.
+## Refresh procedure (yearly / when a canton republishes)
 
-## Where to download (owner)
+```bash
+# 1. Drop the new tar<jj>txt.zip into data/raw/qst/ (owner, from ESTV)
+unzip -o data/raw/qst/tar<jj>txt.zip -d data/raw/qst/txt
 
-**Easiest, reliable route — cantonal tax offices.** Google each and click the
-official state `.ch` result:
+# 2. Derive the JSON (codes A/B/C/H, 0–5 children, church where levied;
+#    rates merged to 0.05pp for a compact indicative model)
+node scripts/import-qst.mjs --year <YYYY> --retrieved <YYYY-MM-DD>
 
-| Canton | Search |
-|---|---|
-| ZH | `Kanton Zürich Quellensteuer Tarife 2026 herunterladen` |
-| GE | `Genève barème impôt à la source 2026 télécharger` |
-| ZG | `Kanton Zug Quellensteuer Tarife 2026` |
-| VD | `Vaud barème impôt source 2026 télécharger` |
-| BS | `Basel-Stadt Quellensteuer Tarife 2026` |
+# 3. Rebuild + verify; the tool + tests pick up the new public/data/qst/*.json
+npm run build && npm test
+```
 
-**Central route — ESTV (all cantons in one place):** estv.admin.ch → switch to
-**Deutsch** → **Direkte Bundessteuer** → **Quellensteuer** → “Tarife
-herunterladen”. (Not “Verrechnungssteuer / Anticipatory Tax”.)
+`scripts/import-qst.mjs` writes `public/data/qst/<kt>.json` (per canton: `_meta`
+citation + tariff bands) and `src/data/qst/index.json` (canton list, church
+availability, children ranges, tariff-file date). The record layout is decoded
+per the spec PDF (record 06 = progressive tariff; §4.2 tariff codes; §4.3
+monthly income; §4.4 rate & minimum tax).
 
-## Checklist
+## Accuracy note (honest)
 
-- [ ] `2026/zh.txt`
-- [ ] `2026/ge.txt`
-- [ ] `2026/zg.txt`
-- [ ] `2026/vd.txt`
-- [ ] `2026/bs.txt`
-- [ ] `spec/…` tariff-format description (optional)
-- [ ] `git add data/raw/qst && git commit && git push`
-
-## What happens next (build side)
-
-Once the files land here, the next session builds:
-
-1. `scripts/import-qst.mjs` — parses the tariff files → versioned JSON in
-   `src/data/qst/` (each with a `_meta` block: source URL, retrieved date,
-   taxYear), respecting the per-canton calculation model (monthly: ZH/ZG/BS;
-   annual: GE/VD).
-2. `src/lib/qst/engine.ts` — pure function: gross salary + canton + tariff code
-   (A/B/C/H…, ± church tax) + period model → monthly withholding, with unit
-   tests pinned to the official example tables each canton publishes.
-3. Tool pages in all three locales (`/quellensteuer-rechner/`,
-   `/fr/calculateur-impot-source/`, `/en/withholding-tax-calculator/`), wired
-   into PAGE_GROUPS (hreflang) and the existing internal-link mesh (the guide
-   articles on withholding tax already link to the salary tool and will link
-   here too).
-
-Licensing posture is unchanged (CLAUDE.md / RESEARCH.md §4.4): we derive and
-publish **calculation parameters with citations**, attribute ESTV + the canton
-prominently, and do not mirror the raw files publicly beyond this repo.
+The shipped rates are merged to 0.05 percentage points → the tool is
+**indicative**; the binding statement is the employer's payroll under the
+cantonal tariffs. Sonderfälle (cross-border L/M/N/P/Q/R–V, board-member HE/ME,
+correction/replacement codes) are **not** modelled. Owner spot-check: compare a
+few results against a cantonal "lesbarer Tarif" PDF (e.g. zh.ch, ge.ch).

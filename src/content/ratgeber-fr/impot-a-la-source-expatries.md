@@ -6,8 +6,8 @@ published: '2026-07-12'
 updated: '2026-07-13'
 lead: 'Qui travaille en Suisse comme main-d’œuvre étrangère sans permis d’établissement C paie l’impôt sur le revenu directement sur le salaire — l’impôt à la source. Ce guide explique comment il est calculé, où se trouvent les pièges et quand une rectification a posteriori vaut la peine.'
 relatedTool:
-  href: '/fr/calculateur-salaire-brut-net/'
-  label: 'Calculateur salaire brut-net'
+  href: '/fr/calculateur-impot-source/'
+  label: 'Calculateur impôt à la source'
 related:
   - changer-de-canton-impots
   - mariage-et-impots

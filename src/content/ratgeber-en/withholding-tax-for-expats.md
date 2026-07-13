@@ -6,8 +6,8 @@ published: '2026-07-12'
 updated: '2026-07-13'
 lead: 'Anyone working in Switzerland as a foreign employee without a C settlement permit pays income tax directly through their salary — the withholding tax (Quellensteuer). This guide explains how it is calculated, where the pitfalls lie and when a later correction is worthwhile.'
 relatedTool:
-  href: '/en/salary-calculator/'
-  label: 'Salary calculator'
+  href: '/en/withholding-tax-calculator/'
+  label: 'Withholding tax calculator'
 related:
   - changing-canton-to-save-tax
   - marriage-and-taxes

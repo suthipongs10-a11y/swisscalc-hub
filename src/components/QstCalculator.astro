@@ -1,0 +1,199 @@
+---
+/**
+ * Quellensteuer (withholding-tax) calculator island — used by all three
+ * locales via a `locale` prop. The full per-canton tariff tables are large, so
+ * they are LAZY-LOADED as static JSON (/data/qst/<kt>.json, same origin) when a
+ * canton is selected; the default canton (ZH) result is server-rendered so the
+ * page works without JavaScript.
+ */
+import qstIndex from '../data/qst/index.json';
+import zhData from '../../public/data/qst/zh.json';
+import { computeQst, type QstData, type QstGroup } from '../lib/qst/engine';
+import { renderQstHtml, QST_LABELS_DE, QST_LABELS_FR, QST_LABELS_EN } from '../lib/qst/render';
+import { deName, frName, enName } from '../lib/tax/labels';
+import type { Locale } from '../lib/locales';
+
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'de' } = Astro.props;
+
+const nameOf = locale === 'fr' ? frName : locale === 'en' ? enName : deName;
+const qstLabels = locale === 'fr' ? QST_LABELS_FR : locale === 'en' ? QST_LABELS_EN : QST_LABELS_DE;
+
+// Localized UI strings.
+const T = {
+  de: {
+    canton: 'Kanton', situation: 'Situation', children: 'Anzahl Kinder', church: 'Kirchensteuer',
+    monthly: 'Bruttolohn pro Monat (CHF)',
+    A: 'Alleinstehend', B: 'Verheiratet, ein Einkommen', C: 'Verheiratet, zwei Einkommen', H: 'Alleinerziehend',
+    note: 'Die Quellensteuer wird auf dem monatlichen Bruttolohn erhoben. Sozialabzüge (AHV, ALV, NBU, BVG) sind separat — siehe',
+    salaryLink: 'Brutto-Netto-Rechner', salaryHref: '/brutto-netto-rechner/',
+  },
+  fr: {
+    canton: 'Canton', situation: 'Situation', children: 'Nombre d’enfants', church: 'Impôt ecclésiastique',
+    monthly: 'Salaire brut par mois (CHF)',
+    A: 'Célibataire', B: 'Marié, un revenu', C: 'Marié, deux revenus', H: 'Parent seul',
+    note: 'L’impôt à la source est prélevé sur le salaire mensuel brut. Les cotisations sociales (AVS, AC, AANP, LPP) sont séparées — voir le',
+    salaryLink: 'calculateur salaire brut-net', salaryHref: '/fr/calculateur-salaire-brut-net/',
+  },
+  en: {
+    canton: 'Canton', situation: 'Situation', children: 'Number of children', church: 'Church tax',
+    monthly: 'Gross salary per month (CHF)',
+    A: 'Single', B: 'Married, one income', C: 'Married, two incomes', H: 'Single parent',
+    note: 'Withholding tax is levied on the monthly gross salary. Social-security contributions (AHV, ALV, NBU, BVG) are separate — see the',
+    salaryLink: 'salary calculator', salaryHref: '/en/salary-calculator/',
+  },
+}[locale];
+
+const cantons = [...qstIndex.cantons].sort((a, b) => nameOf(a.abbr).localeCompare(nameOf(b.abbr)));
+// Client-side per-canton constraints (church availability + children ranges).
+const metaForClient = Object.fromEntries(
+  qstIndex.cantons.map((c) => [c.abbr, { church: c.church, maxKidsBC: c.maxKidsBC, maxKidsH: c.maxKidsH }]),
+);
+
+const DEFAULTS = { canton: 'ZH', group: 'A' as QstGroup, children: 0, church: false, monthly: 6500 };
+const initialResult = computeQst(
+  { monthlyGross: DEFAULTS.monthly, group: DEFAULTS.group, children: DEFAULTS.children, church: DEFAULTS.church },
+  zhData as unknown as QstData,
+);
+const initialHtml = renderQstHtml(initialResult, qstLabels);
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section
+  aria-label="Quellensteuer"
+  class="grid gap-6 md:grid-cols-2"
+  data-qst
+  data-locale={locale}
+  data-meta={JSON.stringify(metaForClient)}
+>
+  <form class="space-y-4" data-qst-form novalidate>
+    <div>
+      <label class={labelClass} for="qst-canton">{T.canton}</label>
+      <select class={inputClass} id="qst-canton" name="canton">
+        {cantons.map((c) => <option value={c.abbr} selected={c.abbr === DEFAULTS.canton}>{nameOf(c.abbr)}</option>)}
+      </select>
+    </div>
+
+    <div>
+      <label class={labelClass} for="qst-group">{T.situation}</label>
+      <select class={inputClass} id="qst-group" name="group">
+        <option value="A" selected>{T.A}</option>
+        <option value="B">{T.B}</option>
+        <option value="C">{T.C}</option>
+        <option value="H">{T.H}</option>
+      </select>
+    </div>
+
+    <div data-qst-children-wrap hidden>
+      <label class={labelClass} for="qst-children">{T.children}</label>
+      <select class={inputClass} id="qst-children" name="children">
+        {[0, 1, 2, 3, 4, 5].map((n) => <option value={n}>{n}</option>)}
+      </select>
+    </div>
+
+    <div data-qst-church-wrap>
+      <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+        <input type="checkbox" id="qst-church" name="church" class="h-4 w-4 rounded border-slate-300" />
+        {T.church}
+      </label>
+    </div>
+
+    <div>
+      <label class={labelClass} for="qst-monthly">{T.monthly}</label>
+      <input class={inputClass} type="number" id="qst-monthly" name="monthly" min="0" step="100" inputmode="numeric" value={DEFAULTS.monthly} />
+    </div>
+  </form>
+
+  <div>
+    <div data-qst-result aria-live="polite" set:html={initialHtml}></div>
+    <p class="mt-3 text-xs text-slate-500">
+      {T.note} <a href={T.salaryHref} class="underline">{T.salaryLink}</a>.
+    </p>
+  </div>
+</section>
+
+<script>
+  import { computeQst, type QstData, type QstGroup } from '../lib/qst/engine';
+  import { renderQstHtml, QST_LABELS_DE, QST_LABELS_FR, QST_LABELS_EN } from '../lib/qst/render';
+
+  const LABELS = { de: QST_LABELS_DE, fr: QST_LABELS_FR, en: QST_LABELS_EN };
+
+  for (const section of document.querySelectorAll<HTMLElement>('[data-qst]')) {
+    const locale = (section.dataset.locale || 'de') as 'de' | 'fr' | 'en';
+    const labels = LABELS[locale];
+    const meta = JSON.parse(section.dataset.meta || '{}') as Record<
+      string,
+      { church: 'both' | 'N' | 'Y'; maxKidsBC: number; maxKidsH: number }
+    >;
+    const formMaybe = section.querySelector<HTMLFormElement>('[data-qst-form]');
+    const resultMaybe = section.querySelector<HTMLElement>('[data-qst-result]');
+    const childrenWrap = section.querySelector<HTMLElement>('[data-qst-children-wrap]');
+    const childrenSel = section.querySelector<HTMLSelectElement>('#qst-children');
+    const churchWrap = section.querySelector<HTMLElement>('[data-qst-church-wrap]');
+    const churchBox = section.querySelector<HTMLInputElement>('#qst-church');
+    if (!formMaybe || !resultMaybe) continue;
+    const form = formMaybe;
+    const resultEl = resultMaybe;
+
+    const cache = new Map<string, QstData>();
+    async function load(canton: string): Promise<QstData | null> {
+      if (cache.has(canton)) return cache.get(canton)!;
+      try {
+        const res = await fetch(`/data/qst/${canton.toLowerCase()}.json`);
+        if (!res.ok) return null;
+        const data = (await res.json()) as QstData;
+        cache.set(canton, data);
+        return data;
+      } catch {
+        return null;
+      }
+    }
+
+    function syncControls(group: QstGroup, canton: string) {
+      // Children only for B/C (0..maxKidsBC) and H (1..maxKidsH); hidden for A.
+      const m = meta[canton];
+      if (group === 'A') {
+        if (childrenWrap) childrenWrap.hidden = true;
+      } else if (childrenWrap && childrenSel) {
+        childrenWrap.hidden = false;
+        const min = group === 'H' ? 1 : 0;
+        const max = group === 'H' ? m?.maxKidsH ?? 5 : m?.maxKidsBC ?? 5;
+        const cur = parseInt(childrenSel.value, 10) || 0;
+        for (const opt of Array.from(childrenSel.options)) {
+          const n = parseInt(opt.value, 10);
+          opt.hidden = n < min || n > max;
+        }
+        if (cur < min) childrenSel.value = String(min);
+        if (cur > max) childrenSel.value = String(max);
+      }
+      // Church only where the canton publishes both variants.
+      if (churchWrap && churchBox) {
+        const mode = m?.church ?? 'both';
+        churchWrap.hidden = mode !== 'both';
+      }
+    }
+
+    async function recompute() {
+      const canton = (form.elements.namedItem('canton') as HTMLSelectElement).value;
+      const group = (form.elements.namedItem('group') as HTMLSelectElement).value as QstGroup;
+      syncControls(group, canton);
+      const children = group === 'A' ? 0 : parseInt((childrenSel?.value as string) || '0', 10);
+      const church = !!churchBox?.checked;
+      const monthly = parseFloat((form.elements.namedItem('monthly') as HTMLInputElement).value);
+      const data = await load(canton);
+      if (!data || !Number.isFinite(monthly) || monthly < 0) return;
+      resultEl.innerHTML = renderQstHtml(computeQst({ monthlyGross: monthly, group, children, church }, data), labels);
+    }
+
+    // Prime the default canton so the first interaction is instant, and set control state.
+    load('ZH');
+    syncControls('A', (form.elements.namedItem('canton') as HTMLSelectElement).value);
+    form.addEventListener('input', recompute);
+    form.addEventListener('change', recompute);
+  }
+</script>

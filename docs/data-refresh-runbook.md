@@ -32,7 +32,7 @@ New `taxYear`. Do these together and bump `SITE_YEAR` in `src/lib/site.ts` (driv
 
 ## Event-driven
 
-- **Quellensteuer tariffs:** when a covered canton (ZH/GE/ZG/VD/BS first) publishes new tariff files, refresh the QST data. Source: `estv.admin.ch` → Quellensteuer → Tarife herunterladen, and the cantonal tax offices.
+- **Quellensteuer tariffs (all 26 cantons):** the ESTV publishes the tariff files (`tar<jj>txt.zip`) once a year, usually early December. Owner drops the zip into `data/raw/qst/` (git-ignored), then: `unzip … -d data/raw/qst/txt && node scripts/import-qst.mjs --year <YYYY> --retrieved <date>` → regenerates `public/data/qst/*.json` + `src/data/qst/index.json`. Full procedure + source path: `data/raw/qst/README.md`.
 - **EMBAG open-data status (~Jan 2027):** the ESTV licensing restriction may lapse; re-check whether the data can move to a cleaner open-data footing (see RESEARCH.md §4.4).
 
 ## Municipality count sanity

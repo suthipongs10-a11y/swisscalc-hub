@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import QstCalculator from '../../components/QstCalculator.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import qstIndex from '../../data/qst/index.json';
+
+const path = '/fr/calculateur-impot-source/';
+const title = `Calculateur impôt à la source ${SITE_YEAR} | ${BRAND}`;
+const description = `Calculez l’impôt à la source ${SITE_YEAR} pour les 26 cantons : par canton, barème (A/B/C/H), enfants et impôt ecclésiastique — avec les barèmes officiels de l’AFC.`;
+const cantonCount = qstIndex.cantons.length;
+
+const faqs = [
+  {
+    q: 'Qui paie l’impôt à la source en Suisse ?',
+    a: 'Les travailleurs étrangers sans permis d’établissement C (typiquement permis B, L ou G). Les titulaires du permis C ou les personnes mariées à un ressortissant suisse sont taxés ordinairement et ne paient pas d’impôt à la source.',
+  },
+  {
+    q: 'Que signifient les barèmes A, B, C et H ?',
+    a: 'A = célibataire, B = marié avec un seul revenu, C = marié avec deux revenus, H = personne seule avec enfants dans son propre ménage. S’y ajoutent le nombre d’enfants et l’appartenance à une confession (Y = avec impôt ecclésiastique, N = sans).',
+  },
+  {
+    q: 'L’impôt à la source est-il calculé mensuellement ?',
+    a: `Oui — les barèmes officiels se fondent sur le salaire mensuel brut. Ce calculateur utilise les barèmes cantonaux de l’AFC ${SITE_YEAR} pour les ${cantonCount} cantons. En cas de salaire irrégulier ou de 13e salaire, le décompte annuel effectif peut légèrement différer selon le modèle cantonal (mensuel ou annuel).`,
+  },
+  {
+    q: 'Puis-je récupérer un impôt à la source payé en trop ?',
+    a: 'Oui. Jusqu’au 31 mars de l’année suivante, vous pouvez demander une taxation ordinaire ultérieure ou une rectification du barème pour faire valoir des déductions (3e pilier, formation, garde d’enfants). Dès CHF 120 000 de salaire annuel brut, vous êtes de toute façon taxé ordinairement a posteriori dans la plupart des cantons.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Calculateur impôt à la source',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'fr-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="fr" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Calculateur impôt à la source' }]} locale="fr" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Calculateur impôt à la source {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Calculez l’impôt à la source pour les {cantonCount} cantons — par canton, barème, nombre d’enfants et impôt
+    ecclésiastique, avec les barèmes officiels de l’AFC {SITE_YEAR}.
+  </p>
+
+  <QstCalculator locale="fr" />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Comment l’impôt à la source est-il calculé ?</h2>
+    <p>
+      L’impôt à la source est prélevé directement sur le salaire mensuel brut. Sont déterminants le canton de domicile,
+      le barème (votre situation familiale) et le salaire brut. Chaque canton publie ses propres barèmes, qui incluent
+      déjà l’impôt cantonal, communal et fédéral ainsi que des déductions forfaitaires. Ce calculateur évalue les
+      barèmes officiels de l’AFC {SITE_YEAR}.
+    </p>
+    <h3>Limites de ce calcul</h3>
+    <ul>
+      <li>Sont pris en compte les barèmes <strong>A, B, C et H</strong> avec 0 à 5 enfants et l’impôt ecclésiastique (là où le canton le prélève à la source). Les cas particuliers (frontaliers, administrateurs, revenus acquis en compensation) ne sont pas reproduits.</li>
+      <li>Les barèmes se fondent sur le <strong>salaire mensuel</strong>. Le 13e salaire, les bonus et le modèle cantonal (mensuel ou annuel) peuvent influencer le décompte annuel effectif.</li>
+      <li>Les taux sont regroupés à 0,05 point pour un calcul indicatif — le décompte contraignant est établi par votre employeur selon les barèmes cantonaux.</li>
+    </ul>
+
+    <h2>Questions fréquentes</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Guide détaillé pour les expatriés : <a href="/fr/guide/impot-a-la-source-expatries/">l’impôt à la source en Suisse</a>.
+    </p>
+  </div>
+
+  <section aria-label="Autres calculateurs" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Autres calculateurs</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/calculateur-salaire-brut-net/" class="font-semibold text-blue-700 hover:underline">Calculateur salaire brut-net</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Cotisations sociales sur le salaire brut.</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/comparatif-impots-cantons/" class="font-semibold text-blue-700 hover:underline">Comparatif des impôts des 26 cantons</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Où payez-vous le moins d’impôt ?</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources :</strong> barèmes d’impôt à la source {SITE_YEAR} des cantons :
+      <a class="underline" href="https://www.estv.admin.ch/estv/fr/accueil/impot-federal-direct/impot-source.html" rel="noopener">AFC / administrations fiscales cantonales</a>.
+      Le contenu des barèmes relève des cantons. Méthodologie : <a class="underline" href="/fr/methodologie/">méthodologie</a>.
+    </p>
+    <p>Dernière mise à jour : 13.07.2026 · Données {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

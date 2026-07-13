@@ -1,0 +1,373 @@
+{
+  "_meta": {
+    "source": "https://www.estv.admin.ch/estv/de/home/direkte-bundessteuer/quellensteuer.html",
+    "retrieved": "2026-07-13",
+    "taxYear": 2026
+  },
+  "cantons": [
+    {
+      "abbr": "AG",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20260304"
+    },
+    {
+      "abbr": "AI",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251209"
+    },
+    {
+      "abbr": "AR",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251202"
+    },
+    {
+      "abbr": "BE",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251127"
+    },
+    {
+      "abbr": "BL",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251120"
+    },
+    {
+      "abbr": "BS",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251204"
+    },
+    {
+      "abbr": "FR",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251118"
+    },
+    {
+      "abbr": "GE",
+      "church": "N",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251025"
+    },
+    {
+      "abbr": "GL",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251204"
+    },
+    {
+      "abbr": "GR",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251210"
+    },
+    {
+      "abbr": "JU",
+      "church": "Y",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251117"
+    },
+    {
+      "abbr": "LU",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251126"
+    },
+    {
+      "abbr": "NE",
+      "church": "N",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251212"
+    },
+    {
+      "abbr": "NW",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251209"
+    },
+    {
+      "abbr": "OW",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251205"
+    },
+    {
+      "abbr": "SG",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251210"
+    },
+    {
+      "abbr": "SH",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251205"
+    },
+    {
+      "abbr": "SO",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251127"
+    },
+    {
+      "abbr": "SZ",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251219"
+    },
+    {
+      "abbr": "TG",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251205"
+    },
+    {
+      "abbr": "TI",
+      "church": "N",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251126"
+    },
+    {
+      "abbr": "UR",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251120"
+    },
+    {
+      "abbr": "VD",
+      "church": "N",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251016"
+    },
+    {
+      "abbr": "VS",
+      "church": "N",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251125"
+    },
+    {
+      "abbr": "ZG",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251202"
+    },
+    {
+      "abbr": "ZH",
+      "church": "both",
+      "groups": [
+        "A",
+        "B",
+        "C",
+        "H"
+      ],
+      "maxKidsBC": 5,
+      "maxKidsH": 5,
+      "validFrom": "2026-01-01",
+      "tariffFileDate": "20251208"
+    }
+  ]
+}

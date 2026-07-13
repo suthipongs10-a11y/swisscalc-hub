@@ -34,6 +34,7 @@ const STATIC_GROUPS: PageGroup[] = [
   { de: '/brutto-netto-rechner/', fr: '/fr/calculateur-salaire-brut-net/', en: '/en/salary-calculator/' },
   { de: '/steuervergleich/', fr: '/fr/comparatif-impots-cantons/', en: '/en/cantonal-tax-comparison/' },
   { de: '/saeule-3a-rechner/', fr: '/fr/calculateur-3e-pilier/', en: '/en/pillar-3a-calculator/' },
+  { de: '/quellensteuer-rechner/', fr: '/fr/calculateur-impot-source/', en: '/en/withholding-tax-calculator/' },
   { de: '/methodik/', fr: '/fr/methodologie/', en: '/en/methodology/' },
   { de: '/quellen/', fr: '/fr/sources/', en: '/en/sources/' },
   { de: '/ueber-uns/', fr: '/fr/a-propos/', en: '/en/about/' },

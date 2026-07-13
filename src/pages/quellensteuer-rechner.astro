@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import QstCalculator from '../components/QstCalculator.astro';
+import RatgeberLinks from '../components/RatgeberLinks.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
+import qstIndex from '../data/qst/index.json';
+
+const path = '/quellensteuer-rechner/';
+const title = `Quellensteuer-Rechner ${SITE_YEAR} – alle Kantone | ${BRAND}`;
+const description = `Quellensteuer für alle 26 Kantone ${SITE_YEAR} berechnen: nach Kanton, Tarifcode (A/B/C/H), Kindern und Kirchensteuer — mit den offiziellen ESTV-Tarifen.`;
+const cantonCount = qstIndex.cantons.length;
+
+const faqs = [
+  {
+    q: 'Wer zahlt in der Schweiz Quellensteuer?',
+    a: 'Ausländische Arbeitnehmende ohne Niederlassungsbewilligung C (typischerweise Ausweis B, L oder G). Wer den Ausweis C besitzt oder mit einer Schweizerin oder einem Schweizer verheiratet ist, wird ordentlich veranlagt und zahlt keine Quellensteuer.',
+  },
+  {
+    q: 'Was bedeuten die Tarifcodes A, B, C und H?',
+    a: 'A = alleinstehend, B = verheiratet mit einem Einkommen (Alleinverdiener), C = verheiratet mit zwei Einkommen (Doppelverdiener), H = alleinstehend mit Kindern im eigenen Haushalt. Dazu kommen die Anzahl Kinder und die Kirchensteuerzugehörigkeit (Y = mit, N = ohne).',
+  },
+  {
+    q: 'Wird die Quellensteuer monatlich berechnet?',
+    a: `Ja — die offiziellen Tarife bemessen sich am monatlichen Bruttolohn. Dieser Rechner verwendet die kantonalen ESTV-Tarife ${SITE_YEAR} für alle ${cantonCount} Kantone. Bei unregelmässigen Löhnen oder einem 13. Monatslohn kann die effektive Jahresrechnung je nach kantonalem Berechnungsmodell (Monats- oder Jahresmodell) leicht abweichen.`,
+  },
+  {
+    q: 'Kann ich zu viel bezahlte Quellensteuer zurückfordern?',
+    a: 'Ja. Bis am 31. März des Folgejahres können Sie eine nachträgliche ordentliche Veranlagung oder eine Tarifkorrektur verlangen, um Abzüge wie Säule 3a, Weiterbildung oder Kinderbetreuung geltend zu machen. Ab CHF 120’000 Bruttojahreslohn werden Sie in den meisten Kantonen ohnehin nachträglich ordentlich veranlagt.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Quellensteuer-Rechner',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'de-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Quellensteuer-Rechner' }]} />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Quellensteuer-Rechner {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Berechnen Sie die Quellensteuer für alle {cantonCount} Kantone — nach Kanton, Tarifcode, Anzahl Kindern und
+    Kirchensteuer, mit den offiziellen ESTV-Tarifen {SITE_YEAR}.
+  </p>
+
+  <QstCalculator locale="de" />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Wie wird die Quellensteuer berechnet?</h2>
+    <p>
+      Die Quellensteuer wird direkt vom monatlichen Bruttolohn abgezogen. Massgebend sind der Wohnkanton, der Tarifcode
+      (Ihre familiäre Situation) und der Bruttolohn. Jeder Kanton publiziert eigene Tariftabellen, die Kantons-,
+      Gemeinde- und Bundessteuer sowie pauschale Abzüge bereits enthalten. Dieser Rechner wertet die offiziellen
+      ESTV-Tarifdateien {SITE_YEAR} aus.
+    </p>
+    <h3>Grenzen dieser Berechnung</h3>
+    <ul>
+      <li>Berücksichtigt sind die Tarifcodes <strong>A, B, C und H</strong> mit 0–5 Kindern und Kirchensteuer (soweit der Kanton sie an der Quelle erhebt). Sonderfälle (Grenzgänger-Tarife, Verwaltungsräte, Ersatzeinkünfte) sind nicht abgebildet.</li>
+      <li>Die Tarife bemessen sich am <strong>Monatslohn</strong>. Der 13. Monatslohn, Boni und das kantonale Monats- vs. Jahresmodell können die effektive Jahresrechnung beeinflussen.</li>
+      <li>Die Steuersätze sind für eine indikative Berechnung auf 0,05 Prozentpunkte zusammengefasst — die verbindliche Abrechnung erstellt Ihr Arbeitgeber nach den kantonalen Tarifen.</li>
+    </ul>
+
+    <h2>Häufige Fragen</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+  </div>
+
+  <RatgeberLinks ids={['quellensteuer-expats']} />
+
+  <RelatedTools current="quellensteuer-rechner" />
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Quellen:</strong> Quellensteuertarife {SITE_YEAR} der Kantone:
+      <a class="underline" href="https://www.estv.admin.ch/estv/de/home/direkte-bundessteuer/quellensteuer.html" rel="noopener">ESTV / kantonale Steuerverwaltungen</a>.
+      Für den Inhalt der Tarife sind die Kantone zuständig. Methodik und Grenzen:
+      <a class="underline" href="/methodik/">Methodik</a>.
+    </p>
+    <p>Zuletzt aktualisiert: 13.07.2026 · Datenstand Steuerjahr {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

@@ -20,8 +20,8 @@ export const TOOLS: Tool[] = [
   {
     id: 'quellensteuer-rechner',
     name: 'Quellensteuer-Rechner',
-    description: 'Quellensteuer für ausländische Arbeitnehmende — nach Kanton, Tarifcode und Gemeinde.',
-    href: null,
+    description: 'Quellensteuer für ausländische Arbeitnehmende — nach Kanton, Tarifcode und Kindern.',
+    href: '/quellensteuer-rechner/',
   },
   {
     id: 'steuervergleich',

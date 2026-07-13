@@ -2,9 +2,11 @@
 
 ## Current state
 
-**M9 built — Guide/Ratgeber layer complete in all three languages. Awaiting review.**
+**M10 built — Quellensteuer-Rechner (flagship) live in all 3 languages, all 26 cantons. Awaiting review.**
 
-121 pages, fully trilingual DE + FR + EN. Each locale now has: home + 3 calculators + 26 canton pages + 5 trust/legal + **a guide hub with 4 articles**. Build clean, tests 73/73, Lighthouse ≥95×4 on all sampled pages (16 LHCI URLs assert-pass, incl. FR/EN guide pages). Deployed on Cloudflare Pages (calcswiss.ch live).
+124 pages, trilingual DE + FR + EN. Each locale now has: home + **4 calculators** (salary, **withholding tax**, cantonal comparison, pillar 3a) + 26 canton pages + 5 trust/legal + a guide hub with 4 articles. Build clean, tests 81/81, Lighthouse **100×4** on all 3 QST pages (16 LHCI URLs assert-pass). Deployed on Cloudflare Pages (calcswiss.ch live).
+
+**Quellensteuer-Rechner (M10):** `/quellensteuer-rechner/`, `/fr/calculateur-impot-source/`, `/en/withholding-tax-calculator/` — the flagship SEO tool, unblocked once the owner supplied the official ESTV tariff files. Covers **all 26 cantons**, tariff codes A/B/C/H, 0–5 children, church tax (where the canton levies it at source — correctly detected: GE/NE/TI/VD/VS = no church tariff, JU = church only, rest = both). `scripts/import-qst.mjs` decodes the official ESTV fixed-width tariff files (record format per the spec PDF) into derived per-canton JSON with rates merged to 0.05pp (compact, indicative model — §4.4 posture: derived params + citation, raw files git-ignored, not mirrored). The large tables are **lazy-loaded per canton** (`/data/qst/<kt>.json`, same-origin static, fetched only on canton select — not an external API); the default canton (ZH) is server-rendered so the page works without JS. Verified in Chromium: SSR ZH single 6500/mo = CHF 469.95 (7.2%), lazy fetch on canton change, church UI hides for N-only cantons, children UI appears for married/single-parent, no console errors. Engine unit + data-integrity tests pinned (81/81).
 
 **Guide layer (M9):** the 4 German Ratgeber articles (withholding tax for expats, staggered pillar 3a, changing canton, marriage & taxes) translated to French (`/fr/guide/…`) and English (`/en/guide/…`) — faithful translations with locale-specific frontmatter (each article's relatedTool + related-articles + in-body links point to that locale's pages). Two new content collections (`ratgeberFr`, `ratgeberEn`) share one schema; locale-aware guide hub + `[slug]` pages. The guide is now in the FR/EN header + footer nav, and all guide pages are paired de↔fr↔en for reciprocal hreflang + switcher (the German Ratgeber pages became trilingual — verified content-identical, only the switcher/hreflang UI added). Internal-link mesh: guide hub → articles → related tool + sibling articles; tools reachable from every article.
 
@@ -15,19 +17,17 @@
 **French canton pages (M6):** `/fr/calculateur-impots/[canton]/` for all 26 — same anti-doorway discipline as the German set (every intro + one FAQ individually written per canton, a faithful French rendering preserving each canton's verified tax characteristics; quantitative blocks computed from data). Shared engine + renderer (same numbers as German; verified GE 100k single CHF 22'325.79, recompute 200k married CHF 51'162.88). French UI labels, French canton **and capital** names (Genève not Zürich; Coire, Soleure, Bâle, Saint-Gall…), correct French articles in headings (du Valais / des Grisons / d'Argovie). Reciprocal de↔fr hreflang + language switcher now auto-wired on both the German and French canton pages (26 new PAGE_PAIRS). The French comparison table now links through to all 26 French canton pages. German output verified byte-identical (only the intended reciprocal `hreflang="fr-CH"` + FR switcher added; content unchanged; JS-bundle hashes changed from the shared-label refactor).
 
 **Remaining work (all optional / owner-driven, none block anything):**
-- **Quellensteuer-Rechner** — deferred since M2, pending tariff files (owner downloads 5 files from estv.admin.ch; instructions ready on request). Quellensteuer *guide* article already live.
-- **Guide/Ratgeber depth: done (M9).** All 3 locales now have the full guide layer (4 articles each). The site is fully trilingual end-to-end.
+- **Quellensteuer-Rechner: DONE (M10).** Owner supplied the official ESTV tariff files; the flagship calculator now covers all 26 cantons in all 3 languages.
+- **Guide/Ratgeber depth: done (M9).** All 3 locales have the full guide layer (4 articles each).
 - **Backlog tools** — Franchise-Rechner (needs Sept BAG data).
+- **Per-canton QST landing pages** (`quellensteuer-zürich` etc., 26×3) — possible follow-up for the "quellensteuer [kanton]" long-tail.
 - **Owner verification checklist** — see below.
 
-Live tools: `/brutto-netto-rechner/`, `/steuervergleich/` (all 26 cantons), `/saeule-3a-rechner/`. Build ✓, tests 65/65 ✓, Lighthouse **100×4** on all sampled pages, both new calculators **driven live in Chromium** (values match the pinned engine references exactly, no console errors).
+Live tools (each in DE/FR/EN): brutto-netto, **Quellensteuer**, Steuervergleich (26 cantons), Säule 3a. Build ✓, tests 81/81 ✓, Lighthouse **100×4**, all calculators **driven live in Chromium** (no console errors).
 
-### ⚠️ M2 scope deviation: Quellensteuer-Rechner deferred (owner decision needed)
+### ✅ M2 scope deviation resolved (M10): Quellensteuer-Rechner shipped
 
-The official QST tariff files (ESTV/cantonal downloads) are unreachable from this sandbox — admin.ch and all cantonal domains are blocked by the egress proxy, and no verifiable mirror exists. Building the flagship QST calculator with unverifiable rates would violate the data contract (CLAUDE.md hard constraint 2), so it was **not** built. Options:
-- **(a)** Owner downloads the 5 canton tariff files (ZH/GE/ZG/VD/BS, format "Tarife 2026" from estv.admin.ch → Quellensteuer → Tarife herunterladen) and commits them to `/data/raw/qst/` — the next session builds importer + engine + page on real data.
-- **(b)** Run the QST build step from an environment with admin.ch access (e.g. local Claude Code).
-Everything else (tax engine, canton registry, page patterns) is ready for it.
+The QST tariff files were unreachable from the sandbox (admin.ch blocked by the egress proxy). Resolved via **option (a)**: the owner downloaded the official ESTV tariff archive (`tar2026txt.zip`, all 26 cantons) + the record-format spec and committed them to `data/raw/qst/`. `scripts/import-qst.mjs` derived the per-canton JSON; the raw files are now git-ignored (§4.4 posture). See `data/raw/qst/README.md` for the refresh procedure.
 
 ### Tax-engine verification caveat (important, honest)
 
@@ -41,7 +41,7 @@ Engine outputs are pinned to an independent recomputation from the official ESTV
 4. Send ESTV consent letter (`docs/estv-consent-request.md`); log date below.
 5. GSC + Bing verification, sitemap, IndexNow; request-indexing for the 3 tool pages.
 6. Keyword Planner validation → RESEARCH.md addendum.
-7. QST tariff files (see deviation above).
+7. QST spot-check: compare a few Quellensteuer results against a cantonal "lesbarer Tarif" PDF (e.g. zh.ch / ge.ch) — the shipped rates are merged to 0.05pp (indicative). Tariff files supplied ✓ (M10).
 8. ESTV spot-check (see caveat above).
 
 Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milestone) → `SEO_SPEC.md` → this file. `RESEARCH.md` is the evidence base.
@@ -57,6 +57,15 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-13 — Session 12: M10 — Quellensteuer-Rechner (flagship, all 26 cantons, 3 languages)
+
+- **Owner supplied the data**: uploaded the official ESTV tariff archive (`tar2026txt.zip` — all 26 cantons, TXT) + the record-format spec PDF to `data/raw/qst/` (pulled via the GitHub MCP after the local git proxy lagged). Decoded the fixed-width format from the spec (record 06 = progressive tariff; QSt-code = group+children+church; monthly income; rate + minimum tax).
+- **`scripts/import-qst.mjs`**: parses all 26 files → `public/data/qst/<kt>.json` (tariff codes A/B/C/H, 0–5 children, church where levied; rates RLE-merged to 0.05pp → 5.2 MB total, ~50 KB/canton compressed) + `src/data/qst/index.json` (church availability, children ranges, tariff-file dates). Church mode auto-detected and correct (GE/NE/TI/VD/VS = N, JU = Y, rest = both). Raw ESTV files **git-ignored** (§4.4: derived params + citation, no verbatim mirror); README documents the yearly refresh.
+- **Engine** `src/lib/qst/engine.ts` (band lookup + code builder + church resolver) + renderer with DE/FR/EN labels. **8 tests** (code building, band/min-tax lookup, church resolution, shipped-data integrity pinned to ZH A0N 6500 = 469.95, monotonicity) → suite 81/81.
+- **Pages** in 3 languages (`/quellensteuer-rechner/`, `/fr/calculateur-impot-source/`, `/en/withholding-tax-calculator/`) with a shared parameterised island. The large tariff tables are **lazy-loaded per canton** (same-origin static JSON, fetched only on canton select — not an external API); the default canton (ZH) is SSR so the page works without JS. Church/children controls adapt to the selected canton.
+- **Wiring:** TOOLS registry href flipped (tool now live → appears in the German nav + homepage); added to FR/EN nav + homepages; PAGE_GROUPS (reciprocal de/fr/en hreflang + switcher); the 3 withholding-tax guide articles' relatedTool now points at the QST calculator; methodology sections added in all 3 languages.
+- **Re-checked before push:** build clean (0/0/0, 124 pages), tests 81/81, link/orphan green (123 pages). Calculator **driven in Chromium** (SSR ZH single 6500/mo = CHF 469.95 @ 7.2%; lazy fetch confirmed — only ZH + selected canton fetched; church box hides for GE (N-only); children UI appears for married/single-parent; church toggle changes the result; no console errors). Lighthouse **100×4** on all 3 QST pages (16 LHCI URLs assert-pass). Committed, stopped for review.
 
 ### 2026-07-13 — Session 11: M9 — Guide/Ratgeber layer in FR + EN (fully trilingual)
 

@@ -3,3 +3,10 @@ dist/
 .astro/
 .lighthouseci/
 npm-debug.log*
+
+# Raw Quellensteuer tariff files (ESTV) — not mirrored publicly (RESEARCH.md §4.4).
+# The importer derives public/data/qst/*.json (calculation parameters + citation)
+# from these; the raw files are provided by the owner out-of-band. Keep README + spec.
+data/raw/qst/*.zip
+data/raw/qst/txt/
+data/raw/qst/2026/
