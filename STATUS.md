@@ -61,6 +61,13 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-07-13 — Session 14: Internal-linking audit (all locales)
+
+- **New audit tool** `scripts/audit-links.mjs` (read-only, complements `check-links.mjs`): checks (1) cross-locale in-content leakage — a FR/EN page linking into another locale outside the language switcher, which would leak link equity across languages; (2) hreflang reciprocity — every `<link rel="alternate">` points back; (3) fragile pages (≤1 in-content inbound link, excluding nav/footer); (4) per-locale reachability from each locale home (in-content only); (5) key money-page inbound counts.
+- **Findings:** cross-locale leak **none**; hreflang **all reciprocal**; per-locale reachability **67/67 de, 67/67 fr, 67/67 en**; money pages **67 inbound each**. One soft finding: the 78 QST canton pages had only **1** in-content inbound link (the QST index grid).
+- **Fix (real topical improvement, not padding):** added a reciprocal cross-link from each income-tax canton page to its **same-canton** QST page — the income-tax pages already received an inbound QST link, so this closes the loop (`/steuerrechner/[kanton]/` ↔ `/quellensteuer-rechner/[kanton]/`, and the FR/EN equivalents). After the fix every page has **≥2** in-content inbound links.
+- **Re-checked before push:** build clean (**202 pages**), audit **clean** (fragile-pages finding resolved, no cross-locale leaks, hreflang reciprocal), link/orphan green (201 pages, ≤3 clicks), tests **85/85**. Committed, stopped for review.
+
 ### 2026-07-13 — Session 13: M11 — 78 per-canton Quellensteuer SEO pages (26 × 3)
 
 - **Per-canton QST pages** in all 3 languages targeting the "quellensteuer [kanton]" long-tail. Each presets the canton, server-renders the default result (canton tariff read from disk at build), and lazy-fetches for recompute; the church/children controls adapt to the canton (e.g. Jura is church-only → the church box is hidden and the A0Y tariff is used automatically).
