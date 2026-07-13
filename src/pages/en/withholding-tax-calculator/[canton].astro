@@ -1,0 +1,115 @@
+---
+import { readFileSync } from 'node:fs';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import QstCantonCalculator from '../../../components/QstCantonCalculator.astro';
+import cantonData from '../../../data/cantons.json';
+import qstIndex from '../../../data/qst/index.json';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../../lib/site';
+import { formatCHF, formatPercent } from '../../../lib/format';
+import { enName, enSlugOf } from '../../../lib/tax/labels';
+import { CANTON_QST_CONTENT_EN } from '../../../lib/cantonQstContentEn';
+import { isAnnualModel } from '../../../lib/qst/cantons';
+import { qstForCode, buildCode, resolveChurch, type QstData, type ChurchMode } from '../../../lib/qst/engine';
+
+export function getStaticPaths() {
+  return cantonData.cantons.map((c) => ({ params: { canton: enSlugOf(c.abbr)! }, props: { canton: c } }));
+}
+interface CantonInfo { bfs: number; abbr: string; name: string; slug: string }
+const { canton } = Astro.props as { canton: CantonInfo };
+const { abbr } = canton;
+
+const editorial = CANTON_QST_CONTENT_EN[abbr];
+if (!editorial) throw new Error(`Missing EN QST editorial for ${abbr}`);
+const name = enName(abbr);
+const meta = qstIndex.cantons.find((c) => c.abbr === abbr)!;
+const data = JSON.parse(readFileSync(`public/data/qst/${abbr.toLowerCase()}.json`, 'utf8')) as QstData;
+
+const model = isAnnualModel(abbr) ? 'annual model' : 'monthly model';
+const churchText =
+  meta.church === 'both' ? 'with and without church tax' : meta.church === 'Y' ? 'only with church tax' : 'without church tax (not levied at source in the canton)';
+
+const code = buildCode('A', 0, resolveChurch(meta.church as ChurchMode, false));
+const examples = [6000, 8000, 10000].map((m) => ({ m, r: qstForCode(m, data, code) }));
+
+const path = `/en/withholding-tax-calculator/${enSlugOf(abbr)}/`;
+const title = `Withholding tax ${name} ${SITE_YEAR} | ${BRAND}`;
+const description = `Calculate withholding tax in the canton of ${name} ${SITE_YEAR}: by tariff code (A/B/C/H), children and church tax. ${model}, official FTA tariffs. Example: ${formatCHF(examples[1].r.monthlyTax, 0)}/month at ${formatCHF(8000, 0)} (single).`;
+
+const faqs = [
+  {
+    q: `Under which model is withholding tax calculated in the canton of ${name}?`,
+    a: `The canton of ${name} calculates under the ${model}. The tariffs include cantonal, municipal and federal tax and are published ${churchText}. The gross salary is decisive; for your salary, use the calculator above.`,
+  },
+  {
+    q: `How high is withholding tax in ${name} at ${formatCHF(8000, 0)} per month?`,
+    a: `A single person without children pays in ${name}, at ${formatCHF(8000, 0)} gross monthly salary, about ${formatCHF(examples[1].r.monthlyTax, 0)} withholding tax (${formatPercent(examples[1].r.ratePct / 100)} effective). With children, married or with church tax the rate shifts — the calculator above shows your case.`,
+  },
+  editorial.faq,
+];
+
+const webApp = {
+  '@context': 'https://schema.org', '@type': 'WebApplication', name: `Withholding tax calculator canton of ${name}`,
+  url: absoluteUrl(path), applicationCategory: 'FinanceApplication', operatingSystem: 'Web', inLanguage: 'en-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' }, publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="en" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Withholding tax calculator', path: '/en/withholding-tax-calculator/' }, { name: `Canton of ${name}` }]} locale="en" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Withholding tax canton of {name} {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Calculate withholding tax in the canton of {name} — by tariff code, number of children and church tax, with the
+    official FTA tariffs {SITE_YEAR}.
+  </p>
+
+  <QstCantonCalculator abbr={abbr} locale="en" />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Withholding tax in the canton of {name}</h2>
+    <p>{editorial.intro}</p>
+
+    <h3>Key facts {SITE_YEAR}</h3>
+    <table class="w-full text-sm">
+      <tbody>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">Calculation model</td><td class="py-2 pl-2 text-right">{model}</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">Church tax</td><td class="py-2 pl-2 text-right">{churchText}</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">Tariff codes</td><td class="py-2 pl-2 text-right">A, B, C, H</td></tr>
+        {examples.map((e) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2">Example: {formatCHF(e.m, 0)}/month (single)</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(e.r.monthlyTax, 0)} ({formatPercent(e.r.ratePct / 100)})</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2>Frequently asked questions</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Ordinary income tax in the canton of {name}: <a href={`/en/tax-calculator/${enSlugOf(abbr)}/`}>tax calculator {name}</a>.
+      Social-security contributions on the salary: <a href="/en/salary-calculator/">salary calculator</a>. All cantons:
+      <a href="/en/withholding-tax-calculator/">withholding tax calculator</a>.
+    </p>
+  </div>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources:</strong> {SITE_YEAR} withholding-tax tariffs:
+      <a class="underline" href="https://www.estv.admin.ch/estv/en/home/direct-federal-tax/withholding-tax.html" rel="noopener">FTA / tax administration of the canton of {name}</a>.
+      The tariff content is the canton's responsibility. Methodology: <a class="underline" href="/en/methodology/">methodology</a>.
+    </p>
+    <p>Last updated: 13.07.2026 · {SITE_YEAR} data</p>
+  </div>
+</BaseLayout>

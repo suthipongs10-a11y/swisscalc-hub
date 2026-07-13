@@ -1,0 +1,144 @@
+---
+/**
+ * Per-canton Quellensteuer island (canton preset) for the /…/[canton]/ pages.
+ * The canton's tariff JSON is read from disk at build time for the SSR default
+ * (so the page works without JS) and lazy-fetched by the client for recompute.
+ */
+import { readFileSync } from 'node:fs';
+import qstIndex from '../data/qst/index.json';
+import { computeQst, type QstData, type QstGroup } from '../lib/qst/engine';
+import { renderQstHtml, QST_LABELS_DE, QST_LABELS_FR, QST_LABELS_EN } from '../lib/qst/render';
+import type { Locale } from '../lib/locales';
+
+interface Props {
+  abbr: string;
+  locale?: Locale;
+}
+const { abbr, locale = 'de' } = Astro.props;
+
+const qstLabels = locale === 'fr' ? QST_LABELS_FR : locale === 'en' ? QST_LABELS_EN : QST_LABELS_DE;
+const cantonMeta = qstIndex.cantons.find((c) => c.abbr === abbr)!;
+const data = JSON.parse(readFileSync(`public/data/qst/${abbr.toLowerCase()}.json`, 'utf8')) as QstData;
+
+const T = {
+  de: { situation: 'Situation', children: 'Anzahl Kinder', church: 'Kirchensteuer', monthly: 'Bruttolohn pro Monat (CHF)',
+        A: 'Alleinstehend', B: 'Verheiratet, ein Einkommen', C: 'Verheiratet, zwei Einkommen', H: 'Alleinerziehend' },
+  fr: { situation: 'Situation', children: 'Nombre d’enfants', church: 'Impôt ecclésiastique', monthly: 'Salaire brut par mois (CHF)',
+        A: 'Célibataire', B: 'Marié, un revenu', C: 'Marié, deux revenus', H: 'Parent seul' },
+  en: { situation: 'Situation', children: 'Number of children', church: 'Church tax', monthly: 'Gross salary per month (CHF)',
+        A: 'Single', B: 'Married, one income', C: 'Married, two incomes', H: 'Single parent' },
+}[locale];
+
+const DEFAULTS = { group: 'A' as QstGroup, children: 0, church: false, monthly: 6500 };
+const initialHtml = renderQstHtml(
+  computeQst({ monthlyGross: DEFAULTS.monthly, group: DEFAULTS.group, children: DEFAULTS.children, church: DEFAULTS.church }, data),
+  qstLabels,
+);
+const clientMeta = { church: cantonMeta.church, maxKidsBC: cantonMeta.maxKidsBC, maxKidsH: cantonMeta.maxKidsH };
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section aria-label="Quellensteuer" class="grid gap-6 md:grid-cols-2" data-qst-canton data-abbr={abbr} data-locale={locale} data-meta={JSON.stringify(clientMeta)}>
+  <form class="space-y-4" data-qst-form novalidate>
+    <div>
+      <label class={labelClass} for="qc-group">{T.situation}</label>
+      <select class={inputClass} id="qc-group" name="group">
+        <option value="A" selected>{T.A}</option>
+        <option value="B">{T.B}</option>
+        <option value="C">{T.C}</option>
+        <option value="H">{T.H}</option>
+      </select>
+    </div>
+
+    <div data-qc-children-wrap hidden>
+      <label class={labelClass} for="qc-children">{T.children}</label>
+      <select class={inputClass} id="qc-children" name="children">
+        {[0, 1, 2, 3, 4, 5].map((n) => <option value={n}>{n}</option>)}
+      </select>
+    </div>
+
+    <div data-qc-church-wrap hidden={cantonMeta.church !== 'both'}>
+      <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+        <input type="checkbox" id="qc-church" name="church" class="h-4 w-4 rounded border-slate-300" />
+        {T.church}
+      </label>
+    </div>
+
+    <div>
+      <label class={labelClass} for="qc-monthly">{T.monthly}</label>
+      <input class={inputClass} type="number" id="qc-monthly" name="monthly" min="0" step="100" inputmode="numeric" value={DEFAULTS.monthly} />
+    </div>
+  </form>
+
+  <div data-qst-result aria-live="polite" set:html={initialHtml}></div>
+</section>
+
+<script>
+  import { computeQst, type QstData, type QstGroup } from '../lib/qst/engine';
+  import { renderQstHtml, QST_LABELS_DE, QST_LABELS_FR, QST_LABELS_EN } from '../lib/qst/render';
+
+  const LABELS = { de: QST_LABELS_DE, fr: QST_LABELS_FR, en: QST_LABELS_EN };
+
+  for (const section of document.querySelectorAll<HTMLElement>('[data-qst-canton]')) {
+    const abbr = section.dataset.abbr!;
+    const locale = (section.dataset.locale || 'de') as 'de' | 'fr' | 'en';
+    const labels = LABELS[locale];
+    const meta = JSON.parse(section.dataset.meta || '{}') as { church: 'both' | 'N' | 'Y'; maxKidsBC: number; maxKidsH: number };
+    const formMaybe = section.querySelector<HTMLFormElement>('[data-qst-form]');
+    const resultMaybe = section.querySelector<HTMLElement>('[data-qst-result]');
+    const childrenWrap = section.querySelector<HTMLElement>('[data-qc-children-wrap]');
+    const childrenSel = section.querySelector<HTMLSelectElement>('#qc-children');
+    const churchBox = section.querySelector<HTMLInputElement>('#qc-church');
+    if (!formMaybe || !resultMaybe) continue;
+    const form = formMaybe;
+    const resultEl = resultMaybe;
+
+    let data: QstData | null = null;
+    async function ensureData(): Promise<QstData | null> {
+      if (data) return data;
+      try {
+        const res = await fetch(`/data/qst/${abbr.toLowerCase()}.json`);
+        if (res.ok) data = (await res.json()) as QstData;
+      } catch {
+        /* keep null */
+      }
+      return data;
+    }
+
+    function syncChildren(group: QstGroup) {
+      if (group === 'A') {
+        if (childrenWrap) childrenWrap.hidden = true;
+        return;
+      }
+      if (!childrenWrap || !childrenSel) return;
+      childrenWrap.hidden = false;
+      const min = group === 'H' ? 1 : 0;
+      const max = group === 'H' ? meta.maxKidsH : meta.maxKidsBC;
+      const cur = parseInt(childrenSel.value, 10) || 0;
+      for (const opt of Array.from(childrenSel.options)) {
+        const n = parseInt(opt.value, 10);
+        opt.hidden = n < min || n > max;
+      }
+      if (cur < min) childrenSel.value = String(min);
+      if (cur > max) childrenSel.value = String(max);
+    }
+
+    async function recompute() {
+      const group = (form.elements.namedItem('group') as HTMLSelectElement).value as QstGroup;
+      syncChildren(group);
+      const children = group === 'A' ? 0 : parseInt((childrenSel?.value as string) || '0', 10);
+      const church = !!churchBox?.checked;
+      const monthly = parseFloat((form.elements.namedItem('monthly') as HTMLInputElement).value);
+      const d = await ensureData();
+      if (!d || !Number.isFinite(monthly) || monthly < 0) return;
+      resultEl.innerHTML = renderQstHtml(computeQst({ monthlyGross: monthly, group, children, church }, d), labels);
+    }
+
+    ensureData();
+    form.addEventListener('input', recompute);
+    form.addEventListener('change', recompute);
+  }
+</script>

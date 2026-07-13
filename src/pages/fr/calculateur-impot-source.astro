@@ -4,6 +4,10 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import QstCalculator from '../../components/QstCalculator.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
 import qstIndex from '../../data/qst/index.json';
+import cantonData from '../../data/cantons.json';
+import { frName, frSlugOf } from '../../lib/tax/labels';
+
+const cantonsByName = [...cantonData.cantons].sort((a, b) => frName(a.abbr).localeCompare(frName(b.abbr)));
 
 const path = '/fr/calculateur-impot-source/';
 const title = `Calculateur impôt à la source ${SITE_YEAR} | ${BRAND}`;
@@ -85,6 +89,17 @@ const faqSchema = {
       Guide détaillé pour les expatriés : <a href="/fr/guide/impot-a-la-source-expatries/">l’impôt à la source en Suisse</a>.
     </p>
   </div>
+
+  <section aria-label="Impôt à la source par canton" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Impôt à la source par canton</h2>
+    <ul class="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-3">
+      {cantonsByName.map((c) => (
+        <li>
+          <a href={`/fr/calculateur-impot-source/${frSlugOf(c.abbr)}/`} class="text-blue-700 hover:underline">{frName(c.abbr)}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
 
   <section aria-label="Autres calculateurs" class="mt-14">
     <h2 class="mb-4 text-2xl font-bold">Autres calculateurs</h2>

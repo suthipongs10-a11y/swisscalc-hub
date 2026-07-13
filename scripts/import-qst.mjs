@@ -48,14 +48,19 @@ function parseCanton(path) {
   let fileDate = '';
   let validFrom = '';
   const byCode = new Map(); // code -> [{from,min,pct}]
+  const allGroups = new Set(); // first char of every tariff code (incl. cross-border)
+  const special = new Set(); // record-11 predefined-category codes (HE/ME/NO/SF)
   for (const line of lines) {
     const art = line.slice(0, 2);
     if (art === '00') {
       canton = line.slice(2, 4).trim();
       fileDate = line.slice(19, 27).trim();
+    } else if (art === '11') {
+      special.add(line.slice(6, 16).trim().slice(0, 2));
     } else if (art === '06') {
       const code = line.slice(6, 16).trim();
       const group = code[0];
+      allGroups.add(group);
       if (!CONSUMER_GROUPS.has(group)) continue;
       const kids = parseInt(code[1], 10);
       if (Number.isFinite(kids) && kids > MAX_KIDS) continue;
@@ -85,11 +90,11 @@ function parseCanton(path) {
     }
     codes[code] = rle;
   }
-  return { canton, fileDate, validFrom, codes };
+  return { canton, fileDate, validFrom, codes, allGroups, special };
 }
 
-/** Detect church availability + children ranges from the code set. */
-function analyse(codes) {
+/** Detect church availability, children ranges and cross-border tariffs. */
+function analyse(codes, allGroups, special) {
   const keys = Object.keys(codes);
   const hasN = keys.some((c) => c.endsWith('N'));
   const hasY = keys.some((c) => c.endsWith('Y'));
@@ -100,11 +105,15 @@ function analyse(codes) {
       .map((c) => parseInt(c[1], 10))
       .filter((n) => Number.isFinite(n));
   const maxKids = (group) => (kidsOf(group).length ? Math.max(...kidsOf(group)) : 0);
+  const anyGroup = (letters) => letters.split('').some((g) => allGroups.has(g));
   return {
     church,
     groups: ['A', 'B', 'C', 'H'].filter((g) => keys.some((c) => c[0] === g)),
     maxKidsBC: Math.max(maxKids('B'), maxKids('C')),
     maxKidsH: maxKids('H'),
+    crossBorderDE: anyGroup('LMNPQ'), // Grenzgänger Deutschland
+    crossBorderIT: anyGroup('RSTUV'), // Grenzgänger Italien (nur GR/TI/VS)
+    franceAgreement: special.has('SF'), // Sondervereinbarung Frankreich
   };
 }
 
@@ -121,7 +130,7 @@ for (const file of files.sort()) {
   const parsed = parseCanton(join(FROM_DIR, file));
   const abbr = parsed.canton;
   if (!abbr) continue;
-  const meta = analyse(parsed.codes);
+  const meta = analyse(parsed.codes, parsed.allGroups, parsed.special);
   const validFromIso = parsed.validFrom
     ? `${parsed.validFrom.slice(0, 4)}-${parsed.validFrom.slice(4, 6)}-${parsed.validFrom.slice(6, 8)}`
     : `${YEAR}-01-01`;
@@ -146,6 +155,9 @@ for (const file of files.sort()) {
     groups: meta.groups,
     maxKidsBC: meta.maxKidsBC,
     maxKidsH: meta.maxKidsH,
+    crossBorderDE: meta.crossBorderDE,
+    crossBorderIT: meta.crossBorderIT,
+    franceAgreement: meta.franceAgreement,
     validFrom: validFromIso,
     tariffFileDate: parsed.fileDate,
   });

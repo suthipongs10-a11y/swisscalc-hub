@@ -48,15 +48,22 @@ const STATIC_GROUPS: PageGroup[] = [
   { de: '/ratgeber/heiraten-steuern/', fr: '/fr/guide/mariage-et-impots/', en: '/en/guide/marriage-and-taxes/' },
 ];
 
-/** The 26 programmatic canton pages exist in all three locales (M6/M8). */
+/** The 26 programmatic income-tax canton pages exist in all three locales (M6/M8). */
 const CANTON_GROUPS: PageGroup[] = cantonRegistry.cantons.map((c) => ({
   de: `/steuerrechner/${cantonSlugOf(c.abbr)}/`,
   fr: `/fr/calculateur-impots/${frSlugOf(c.abbr)}/`,
   en: `/en/tax-calculator/${enSlugOf(c.abbr)}/`,
 }));
 
+/** The 26 per-canton Quellensteuer pages, in all three locales (M11). */
+const QST_CANTON_GROUPS: PageGroup[] = cantonRegistry.cantons.map((c) => ({
+  de: `/quellensteuer-rechner/${cantonSlugOf(c.abbr)}/`,
+  fr: `/fr/calculateur-impot-source/${frSlugOf(c.abbr)}/`,
+  en: `/en/withholding-tax-calculator/${enSlugOf(c.abbr)}/`,
+}));
+
 /** All translated page groups. */
-export const PAGE_GROUPS: PageGroup[] = [...STATIC_GROUPS, ...CANTON_GROUPS];
+export const PAGE_GROUPS: PageGroup[] = [...STATIC_GROUPS, ...CANTON_GROUPS, ...QST_CANTON_GROUPS];
 
 export interface Alternate {
   hreflang: string;

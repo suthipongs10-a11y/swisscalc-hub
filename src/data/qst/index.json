@@ -16,6 +16,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20260304"
     },
@@ -30,6 +33,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251209"
     },
@@ -44,6 +50,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251202"
     },
@@ -58,6 +67,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": true,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251127"
     },
@@ -72,6 +84,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": true,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251120"
     },
@@ -86,6 +101,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": true,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251204"
     },
@@ -100,6 +118,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251118"
     },
@@ -114,6 +135,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251025"
     },
@@ -128,6 +152,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251204"
     },
@@ -142,6 +169,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": true,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251210"
     },
@@ -156,6 +186,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": true,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251117"
     },
@@ -170,6 +203,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251126"
     },
@@ -184,6 +220,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": true,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251212"
     },
@@ -198,6 +237,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251209"
     },
@@ -212,6 +254,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251205"
     },
@@ -226,6 +271,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251210"
     },
@@ -240,6 +288,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251205"
     },
@@ -254,6 +305,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": true,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251127"
     },
@@ -268,6 +322,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251219"
     },
@@ -282,6 +339,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251205"
     },
@@ -296,6 +356,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": true,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251126"
     },
@@ -310,6 +373,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251120"
     },
@@ -324,6 +390,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": true,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251016"
     },
@@ -338,6 +407,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": true,
+      "franceAgreement": true,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251125"
     },
@@ -352,6 +424,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251202"
     },
@@ -366,6 +441,9 @@
       ],
       "maxKidsBC": 5,
       "maxKidsH": 5,
+      "crossBorderDE": true,
+      "crossBorderIT": false,
+      "franceAgreement": false,
       "validFrom": "2026-01-01",
       "tariffFileDate": "20251208"
     }

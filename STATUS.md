@@ -2,9 +2,11 @@
 
 ## Current state
 
-**M10 built — Quellensteuer-Rechner (flagship) live in all 3 languages, all 26 cantons. Awaiting review.**
+**M11 built — 78 per-canton Quellensteuer SEO pages (26 × 3 languages). Awaiting review.**
 
-124 pages, trilingual DE + FR + EN. Each locale now has: home + **4 calculators** (salary, **withholding tax**, cantonal comparison, pillar 3a) + 26 canton pages + 5 trust/legal + a guide hub with 4 articles. Build clean, tests 81/81, Lighthouse **100×4** on all 3 QST pages (16 LHCI URLs assert-pass). Deployed on Cloudflare Pages (calcswiss.ch live).
+**202 pages**, trilingual DE + FR + EN. The QST flagship now has per-canton landing pages targeting the "quellensteuer [kanton]" / "impôt à la source [canton]" long-tail: `/quellensteuer-rechner/[kanton]/`, `/fr/calculateur-impot-source/[canton]/`, `/en/withholding-tax-calculator/[canton]/` for all 26 cantons. Build clean, tests 85/85, Lighthouse **100×4** on sampled QST canton pages. Deployed on Cloudflare Pages (calcswiss.ch live).
+
+**QST canton pages (M11):** each page presets the canton (SSR default read from the tariff data on disk, lazy-fetch for recompute), shows an individually-written intro + FAQ (SEO_SPEC §3.2 anti-doorway — anchored on that canton's real withholding profile: monthly vs annual model, whether church tax is levied at source, Italian cross-border / France-agreement tariffs), a computed key-figures block (model, church mode, example monthly QST at 6k/8k/10k for a single person), and cross-links to the **same canton's income-tax page** + salary tool + QST index. The 3 QST index pages gained a 26-canton grid. `import-qst.mjs` extended to detect cross-border/France-agreement flags per canton; annual-model list (FR/GE/TI/VD/VS) in a lib constant. All 78 pages paired de↔fr↔en (hreflang + switcher).
 
 **Quellensteuer-Rechner (M10):** `/quellensteuer-rechner/`, `/fr/calculateur-impot-source/`, `/en/withholding-tax-calculator/` — the flagship SEO tool, unblocked once the owner supplied the official ESTV tariff files. Covers **all 26 cantons**, tariff codes A/B/C/H, 0–5 children, church tax (where the canton levies it at source — correctly detected: GE/NE/TI/VD/VS = no church tariff, JU = church only, rest = both). `scripts/import-qst.mjs` decodes the official ESTV fixed-width tariff files (record format per the spec PDF) into derived per-canton JSON with rates merged to 0.05pp (compact, indicative model — §4.4 posture: derived params + citation, raw files git-ignored, not mirrored). The large tables are **lazy-loaded per canton** (`/data/qst/<kt>.json`, same-origin static, fetched only on canton select — not an external API); the default canton (ZH) is server-rendered so the page works without JS. Verified in Chromium: SSR ZH single 6500/mo = CHF 469.95 (7.2%), lazy fetch on canton change, church UI hides for N-only cantons, children UI appears for married/single-parent, no console errors. Engine unit + data-integrity tests pinned (81/81).
 
@@ -20,7 +22,8 @@
 - **Quellensteuer-Rechner: DONE (M10).** Owner supplied the official ESTV tariff files; the flagship calculator now covers all 26 cantons in all 3 languages.
 - **Guide/Ratgeber depth: done (M9).** All 3 locales have the full guide layer (4 articles each).
 - **Backlog tools** — Franchise-Rechner (needs Sept BAG data).
-- **Per-canton QST landing pages** (`quellensteuer-zürich` etc., 26×3) — possible follow-up for the "quellensteuer [kanton]" long-tail.
+- **Per-canton QST landing pages: DONE (M11).** 78 pages (26 × 3 languages) for the "quellensteuer [kanton]" long-tail.
+- **Municipality-level pages** (~2,110 BFS IDs) — possible after canton pages prove out in GSC.
 - **Owner verification checklist** — see below.
 
 Live tools (each in DE/FR/EN): brutto-netto, **Quellensteuer**, Steuervergleich (26 cantons), Säule 3a. Build ✓, tests 81/81 ✓, Lighthouse **100×4**, all calculators **driven live in Chromium** (no console errors).
@@ -57,6 +60,14 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-13 — Session 13: M11 — 78 per-canton Quellensteuer SEO pages (26 × 3)
+
+- **Per-canton QST pages** in all 3 languages targeting the "quellensteuer [kanton]" long-tail. Each presets the canton, server-renders the default result (canton tariff read from disk at build), and lazy-fetches for recompute; the church/children controls adapt to the canton (e.g. Jura is church-only → the church box is hidden and the A0Y tariff is used automatically).
+- **Anti-doorway content** (SEO_SPEC §3.2): 26 individually-written German QST intros + FAQs anchored on each canton's *real* withholding profile — monthly vs annual model (annual: FR/GE/TI/VD/VS), whether church tax is levied at source (no: GE/NE/TI/VD/VS; only: JU), Italian cross-border tariffs (GR/TI/VS) and the France special agreement (BE/BL/BS/JU/NE/SO/VD/VS) — plus faithful FR + EN renderings. Computed per-canton key-figures (model, church, example monthly QST at 6k/8k/10k single).
+- **Internal linking:** the 3 QST index pages gained a 26-canton grid; each QST canton page cross-links to the **same canton's income-tax page** (`/steuerrechner/[kanton]/` etc.), the salary tool and the QST index — tying the two canton page-sets together.
+- **Importer** extended to detect per-canton cross-border (L/M/N = DE, R–V = IT) and France-agreement (SF) flags for the editorial facts; `QST_ANNUAL_MODEL` constant for the model.
+- **Re-checked before push:** build clean (0/0/0, **202 pages**), tests **85/85** (+4 QST-canton coverage), link/orphan green (201 pages). Driven in Chromium (ZH canton SSR single 6500 = CHF 469.95; recompute; married+children UI; Jura church box hidden with A0Y; FR Genève page = "modèle annuel"; QST→income-tax cross-link present; no console errors). Lighthouse **100×4** on sampled QST canton pages. Committed, stopped for review.
 
 ### 2026-07-13 — Session 12: M10 — Quellensteuer-Rechner (flagship, all 26 cantons, 3 languages)
 

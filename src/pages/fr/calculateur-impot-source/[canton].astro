@@ -1,0 +1,115 @@
+---
+import { readFileSync } from 'node:fs';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import QstCantonCalculator from '../../../components/QstCantonCalculator.astro';
+import cantonData from '../../../data/cantons.json';
+import qstIndex from '../../../data/qst/index.json';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../../lib/site';
+import { formatCHF, formatPercent } from '../../../lib/format';
+import { frName, frSlugOf } from '../../../lib/tax/labels';
+import { CANTON_QST_CONTENT_FR } from '../../../lib/cantonQstContentFr';
+import { isAnnualModel } from '../../../lib/qst/cantons';
+import { qstForCode, buildCode, resolveChurch, type QstData, type ChurchMode } from '../../../lib/qst/engine';
+
+export function getStaticPaths() {
+  return cantonData.cantons.map((c) => ({ params: { canton: frSlugOf(c.abbr)! }, props: { canton: c } }));
+}
+interface CantonInfo { bfs: number; abbr: string; name: string; slug: string }
+const { canton } = Astro.props as { canton: CantonInfo };
+const { abbr } = canton;
+
+const editorial = CANTON_QST_CONTENT_FR[abbr];
+if (!editorial) throw new Error(`Missing FR QST editorial for ${abbr}`);
+const name = frName(abbr);
+const meta = qstIndex.cantons.find((c) => c.abbr === abbr)!;
+const data = JSON.parse(readFileSync(`public/data/qst/${abbr.toLowerCase()}.json`, 'utf8')) as QstData;
+
+const model = isAnnualModel(abbr) ? 'modèle annuel' : 'modèle mensuel';
+const churchText =
+  meta.church === 'both' ? 'avec et sans impôt ecclésiastique' : meta.church === 'Y' ? 'uniquement avec impôt ecclésiastique' : 'sans impôt ecclésiastique (non prélevé à la source dans le canton)';
+
+const code = buildCode('A', 0, resolveChurch(meta.church as ChurchMode, false));
+const examples = [6000, 8000, 10000].map((m) => ({ m, r: qstForCode(m, data, code) }));
+
+const path = `/fr/calculateur-impot-source/${frSlugOf(abbr)}/`;
+const title = `Impôt à la source ${name} ${SITE_YEAR} | ${BRAND}`;
+const description = `Calculez l’impôt à la source dans le canton de ${name} ${SITE_YEAR} : par barème (A/B/C/H), enfants et impôt ecclésiastique. ${model}, barèmes officiels de l’AFC. Exemple : ${formatCHF(examples[1].r.monthlyTax, 0)}/mois à ${formatCHF(8000, 0)} (célibataire).`;
+
+const faqs = [
+  {
+    q: `Selon quel modèle l’impôt à la source est-il calculé dans le canton de ${name} ?`,
+    a: `Le canton de ${name} calcule selon le ${model}. Les barèmes incluent l’impôt cantonal, communal et fédéral et sont publiés ${churchText}. Le salaire brut est déterminant ; pour votre salaire, utilisez le calculateur ci-dessus.`,
+  },
+  {
+    q: `Quel est le montant de l’impôt à la source à ${name} pour ${formatCHF(8000, 0)} par mois ?`,
+    a: `Une personne célibataire sans enfant paie à ${name}, pour ${formatCHF(8000, 0)} de salaire brut mensuel, environ ${formatCHF(examples[1].r.monthlyTax, 0)} d’impôt à la source (${formatPercent(examples[1].r.ratePct / 100)} effectif). Avec des enfants, marié ou avec impôt ecclésiastique, le taux change — le calculateur ci-dessus affiche votre cas.`,
+  },
+  editorial.faq,
+];
+
+const webApp = {
+  '@context': 'https://schema.org', '@type': 'WebApplication', name: `Calculateur impôt à la source canton de ${name}`,
+  url: absoluteUrl(path), applicationCategory: 'FinanceApplication', operatingSystem: 'Web', inLanguage: 'fr-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' }, publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="fr" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Impôt à la source', path: '/fr/calculateur-impot-source/' }, { name: `Canton de ${name}` }]} locale="fr" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Impôt à la source canton de {name} {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Calculez l’impôt à la source dans le canton de {name} — par barème, nombre d’enfants et impôt ecclésiastique, avec
+    les barèmes officiels de l’AFC {SITE_YEAR}.
+  </p>
+
+  <QstCantonCalculator abbr={abbr} locale="fr" />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>L’impôt à la source dans le canton de {name}</h2>
+    <p>{editorial.intro}</p>
+
+    <h3>Les faits essentiels {SITE_YEAR}</h3>
+    <table class="w-full text-sm">
+      <tbody>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">Modèle de calcul</td><td class="py-2 pl-2 text-right">{model}</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">Impôt ecclésiastique</td><td class="py-2 pl-2 text-right">{churchText}</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">Barèmes</td><td class="py-2 pl-2 text-right">A, B, C, H</td></tr>
+        {examples.map((e) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2">Exemple : {formatCHF(e.m, 0)}/mois (célibataire)</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(e.r.monthlyTax, 0)} ({formatPercent(e.r.ratePct / 100)})</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2>Questions fréquentes</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Impôt sur le revenu ordinaire dans le canton de {name} : <a href={`/fr/calculateur-impots/${frSlugOf(abbr)}/`}>calculateur d’impôts {name}</a>.
+      Cotisations sociales sur le salaire : <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>. Tous les cantons :
+      <a href="/fr/calculateur-impot-source/">calculateur impôt à la source</a>.
+    </p>
+  </div>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources :</strong> barèmes d’impôt à la source {SITE_YEAR} :
+      <a class="underline" href="https://www.estv.admin.ch/estv/fr/accueil/impot-federal-direct/impot-source.html" rel="noopener">AFC / administration fiscale du canton de {name}</a>.
+      Le contenu des barèmes relève du canton. Méthodologie : <a class="underline" href="/fr/methodologie/">méthodologie</a>.
+    </p>
+    <p>Dernière mise à jour : 13.07.2026 · Données {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

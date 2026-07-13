@@ -1,0 +1,122 @@
+---
+/**
+ * Programmatic per-canton Quellensteuer pages (SEO_SPEC §3.2): individually
+ * written intro + FAQ per canton (src/lib/cantonQstContent.ts), quantitative
+ * blocks computed from that canton's tariff data.
+ */
+import { readFileSync } from 'node:fs';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import QstCantonCalculator from '../../components/QstCantonCalculator.astro';
+import cantonData from '../../data/cantons.json';
+import qstIndex from '../../data/qst/index.json';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF, formatPercent } from '../../lib/format';
+import { deName, cantonSlugOf } from '../../lib/tax/labels';
+import { CANTON_QST_CONTENT } from '../../lib/cantonQstContent';
+import { isAnnualModel } from '../../lib/qst/cantons';
+import { qstForCode, buildCode, resolveChurch, type QstData, type ChurchMode } from '../../lib/qst/engine';
+
+export function getStaticPaths() {
+  return cantonData.cantons.map((c) => ({ params: { kanton: c.slug }, props: { canton: c } }));
+}
+interface CantonInfo { bfs: number; abbr: string; name: string; slug: string }
+const { canton } = Astro.props as { canton: CantonInfo };
+const { abbr } = canton;
+
+const editorial = CANTON_QST_CONTENT[abbr];
+if (!editorial) throw new Error(`Missing QST editorial for ${abbr}`);
+const name = deName(abbr);
+const meta = qstIndex.cantons.find((c) => c.abbr === abbr)!;
+const data = JSON.parse(readFileSync(`public/data/qst/${abbr.toLowerCase()}.json`, 'utf8')) as QstData;
+
+const model = isAnnualModel(abbr) ? 'Jahresmodell' : 'Monatsmodell';
+const churchText =
+  meta.church === 'both' ? 'mit und ohne Kirchensteuer' : meta.church === 'Y' ? 'nur mit Kirchensteuer' : 'ohne Kirchensteuer (im Kanton nicht an der Quelle erhoben)';
+
+// Example: single person, no children, income levels — from this canton's tariff.
+const code = buildCode('A', 0, resolveChurch(meta.church as ChurchMode, false));
+const examples = [6000, 8000, 10000].map((m) => ({ m, r: qstForCode(m, data, code) }));
+
+const path = `/quellensteuer-rechner/${canton.slug}/`;
+const title = `Quellensteuer ${name} ${SITE_YEAR} berechnen | ${BRAND}`;
+const description = `Quellensteuer im Kanton ${name} ${SITE_YEAR} berechnen: nach Tarifcode (A/B/C/H), Kindern und Kirchensteuer. ${model}, offizielle ESTV-Tarife. Beispiel: ${formatCHF(examples[1].r.monthlyTax, 0)}/Monat bei ${formatCHF(8000, 0)} (alleinstehend).`;
+
+const faqs = [
+  {
+    q: `Nach welchem Modell wird die Quellensteuer im Kanton ${name} berechnet?`,
+    a: `Der Kanton ${name} rechnet nach dem ${model}. Die Tarife enthalten Kantons-, Gemeinde- und Bundessteuer und werden ${churchText} geführt. Massgebend ist der Bruttolohn; für Ihren Lohn nutzen Sie den Rechner oben.`,
+  },
+  {
+    q: `Wie hoch ist die Quellensteuer in ${name} bei ${formatCHF(8000, 0)} pro Monat?`,
+    a: `Eine alleinstehende Person ohne Kinder zahlt in ${name} bei ${formatCHF(8000, 0)} Bruttolohn pro Monat rund ${formatCHF(examples[1].r.monthlyTax, 0)} Quellensteuer (${formatPercent(examples[1].r.ratePct / 100)} effektiv). Mit Kindern, verheiratet oder mit Kirchensteuer verschiebt sich der Satz — der Rechner oben zeigt Ihren Fall.`,
+  },
+  editorial.faq,
+];
+
+const webApp = {
+  '@context': 'https://schema.org', '@type': 'WebApplication', name: `Quellensteuer-Rechner Kanton ${name}`,
+  url: absoluteUrl(path), applicationCategory: 'FinanceApplication', operatingSystem: 'Web', inLanguage: 'de-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' }, publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const incomeTaxSlug = cantonSlugOf(abbr);
+---
+
+<BaseLayout title={title} description={description} path={path} jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Quellensteuer-Rechner', path: '/quellensteuer-rechner/' }, { name: `Kanton ${name}` }]} />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Quellensteuer Kanton {name} {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Berechnen Sie die Quellensteuer im Kanton {name} — nach Tarifcode, Anzahl Kindern und Kirchensteuer, mit den
+    offiziellen ESTV-Tarifen {SITE_YEAR}.
+  </p>
+
+  <QstCantonCalculator abbr={abbr} locale="de" />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Quellensteuer im Kanton {name}</h2>
+    <p>{editorial.intro}</p>
+
+    <h3>Die wichtigsten Fakten {SITE_YEAR}</h3>
+    <table class="w-full text-sm">
+      <tbody>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">Berechnungsmodell</td><td class="py-2 pl-2 text-right">{model}</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">Kirchensteuer</td><td class="py-2 pl-2 text-right">{churchText}</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-2 pr-2">Tarifcodes</td><td class="py-2 pl-2 text-right">A, B, C, H</td></tr>
+        {examples.map((e) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2">Beispiel: {formatCHF(e.m, 0)}/Monat (alleinstehend)</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(e.r.monthlyTax, 0)} ({formatPercent(e.r.ratePct / 100)})</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2>Häufige Fragen</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Ordentliche Einkommenssteuer im Kanton {name}: <a href={`/steuerrechner/${incomeTaxSlug}/`}>Steuerrechner {name}</a>.
+      Sozialabzüge auf dem Lohn: <a href="/brutto-netto-rechner/">Brutto-Netto-Rechner</a>. Alle Kantone:
+      <a href="/quellensteuer-rechner/">Quellensteuer-Rechner</a>.
+    </p>
+  </div>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Quellen:</strong> Quellensteuertarife {SITE_YEAR}:
+      <a class="underline" href="https://www.estv.admin.ch/estv/de/home/direkte-bundessteuer/quellensteuer.html" rel="noopener">ESTV / Steuerverwaltung Kanton {name}</a>.
+      Für den Inhalt der Tarife ist der Kanton zuständig. Methodik: <a class="underline" href="/methodik/">Methodik</a>.
+    </p>
+    <p>Zuletzt aktualisiert: 13.07.2026 · Datenstand Steuerjahr {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

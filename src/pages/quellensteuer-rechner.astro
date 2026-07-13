@@ -6,6 +6,10 @@ import RatgeberLinks from '../components/RatgeberLinks.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
 import qstIndex from '../data/qst/index.json';
+import cantonData from '../data/cantons.json';
+import { deName, cantonSlugOf } from '../lib/tax/labels';
+
+const cantonsByName = [...cantonData.cantons].sort((a, b) => deName(a.abbr).localeCompare(deName(b.abbr)));
 
 const path = '/quellensteuer-rechner/';
 const title = `Quellensteuer-Rechner ${SITE_YEAR} – alle Kantone | ${BRAND}`;
@@ -83,6 +87,17 @@ const faqSchema = {
       </div>
     ))}
   </div>
+
+  <section aria-label="Quellensteuer nach Kanton" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Quellensteuer nach Kanton</h2>
+    <ul class="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-3">
+      {cantonsByName.map((c) => (
+        <li>
+          <a href={`/quellensteuer-rechner/${cantonSlugOf(c.abbr)}/`} class="text-blue-700 hover:underline">{deName(c.abbr)}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
 
   <RatgeberLinks ids={['quellensteuer-expats']} />
 

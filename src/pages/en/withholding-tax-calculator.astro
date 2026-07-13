@@ -4,6 +4,10 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import QstCalculator from '../../components/QstCalculator.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
 import qstIndex from '../../data/qst/index.json';
+import cantonData from '../../data/cantons.json';
+import { enName, enSlugOf } from '../../lib/tax/labels';
+
+const cantonsByName = [...cantonData.cantons].sort((a, b) => enName(a.abbr).localeCompare(enName(b.abbr)));
 
 const path = '/en/withholding-tax-calculator/';
 const title = `Withholding tax calculator ${SITE_YEAR} | ${BRAND}`;
@@ -85,6 +89,17 @@ const faqSchema = {
       Detailed guide for expats: <a href="/en/guide/withholding-tax-for-expats/">withholding tax in Switzerland</a>.
     </p>
   </div>
+
+  <section aria-label="Withholding tax by canton" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Withholding tax by canton</h2>
+    <ul class="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-3">
+      {cantonsByName.map((c) => (
+        <li>
+          <a href={`/en/withholding-tax-calculator/${enSlugOf(c.abbr)}/`} class="text-blue-700 hover:underline">{enName(c.abbr)}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
 
   <section aria-label="Other calculators" class="mt-14">
     <h2 class="mb-4 text-2xl font-bold">Other calculators</h2>
