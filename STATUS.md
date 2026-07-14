@@ -40,14 +40,16 @@ Engine outputs are pinned to an independent recomputation from the official ESTV
 
 **Owner-side before public launch** (carried from M0/M1):
 
-1. Connect Cloudflare Pages (build `npm run build`, output `dist`), attach calcswiss.ch + www.
-2. Enable Cloudflare Web Analytics.
-3. Fill Impressum identity in `impressum.astro` + `datenschutz.astro`.
-4. Send ESTV consent letter (`docs/estv-consent-request.md`); log date below.
-5. GSC + Bing verification, sitemap, IndexNow; request-indexing for the 3 tool pages.
-6. Keyword Planner validation → RESEARCH.md addendum.
-7. QST spot-check: compare a few Quellensteuer results against a cantonal "lesbarer Tarif" PDF (e.g. zh.ch / ge.ch) — the shipped rates are merged to 0.05pp (indicative). Tariff files supplied ✓ (M10).
-8. ESTV spot-check (see caveat above).
+1. **Done** — Cloudflare Pages connected, calcswiss.ch live.
+2. **Done** — GSC verified.
+3. **Done** — Impressum/Datenschutz identity filled in all 3 locales (controller: Thanakorn Praisee, Thailand; contact kontakt@calcswiss.ch) — see `impressum.astro`/`datenschutz.astro` + FR/EN equivalents.
+4. Enable Cloudflare Web Analytics (if not already on).
+5. Send ESTV consent letter (`docs/estv-consent-request.md`, now filled in and ready to send) from kontakt@calcswiss.ch; log date sent below.
+6. Bing Webmaster Tools: import from GSC (bing.com/webmasters → "Import from Google Search Console"), submit sitemap, enable IndexNow (Cloudflare dashboard → Caching → Configuration).
+7. `ads.txt` added at `public/ads.txt` (Google AdSense publisher ID) and confirmed live at calcswiss.ch/ads.txt; AdSense site-review requested (site status "getting ready" as of 14.07.2026). **Do not enable any ad units until a certified TCF CMP is integrated** — that is its own milestone (site is currently ad-free/cookie-free by design, CLAUDE.md).
+8. Keyword Planner validation → RESEARCH.md addendum.
+9. QST spot-check: compare a few Quellensteuer results against a cantonal "lesbarer Tarif" PDF (e.g. zh.ch / ge.ch) — the shipped rates are merged to 0.05pp (indicative). Tariff files supplied ✓ (M10).
+10. ESTV spot-check (see caveat above).
 
 Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milestone) → `SEO_SPEC.md` → this file. `RESEARCH.md` is the evidence base.
 
