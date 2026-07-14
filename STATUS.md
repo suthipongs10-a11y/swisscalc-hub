@@ -44,7 +44,7 @@ Engine outputs are pinned to an independent recomputation from the official ESTV
 2. **Done** — GSC verified.
 3. **Done** — Impressum/Datenschutz identity filled in all 3 locales (controller: Thanakorn Praisee, Thailand; contact kontakt@calcswiss.ch) — see `impressum.astro`/`datenschutz.astro` + FR/EN equivalents.
 4. Enable Cloudflare Web Analytics (if not already on).
-5. Send ESTV consent letter (`docs/estv-consent-request.md`, now filled in and ready to send) from kontakt@calcswiss.ch; log date sent below.
+5. **Done** — ESTV consent letter sent 14.07.2026 (to info@estv.admin.ch, from kontakt@calcswiss.ch; see `docs/estv-consent-request.md` for the text sent). Awaiting reply; per the letter's own fallback, if no reply arrives by ~11.08.2026, proceed under the existing derived-parameters + attribution posture (already in effect) and note that outcome here.
 6. Bing Webmaster Tools: import from GSC (bing.com/webmasters → "Import from Google Search Console"), submit sitemap, enable IndexNow (Cloudflare dashboard → Caching → Configuration).
 7. `ads.txt` added at `public/ads.txt` (Google AdSense publisher ID) and confirmed live at calcswiss.ch/ads.txt; AdSense site-review requested (site status "getting ready" as of 14.07.2026). **Do not enable any ad units until a certified TCF CMP is integrated** — that is its own milestone (site is currently ad-free/cookie-free by design, CLAUDE.md).
 8. Keyword Planner validation → RESEARCH.md addendum.

@@ -1,7 +1,6 @@
-# ESTV data-use consent request (ready to send)
+# ESTV data-use consent request (sent)
 
-**Status:** FINAL — calcswiss.ch is live with an Impressum, so the request can go out. Before sending, replace the three bracketed fields with the exact controller identity shown in the site's Impressum.
-**Fill in before sending:** `[NAME]`, `[ADRESSE]` (Strasse + PLZ Ort), `[E-MAIL]` — must match the Impressum on calcswiss.ch. Also set `[ORT]` and `[DATUM]` in the letterhead.
+**Status:** SENT — 14.07.2026, by e-mail from kontakt@calcswiss.ch to info@estv.admin.ch. Controller identity: Thanakorn Praisee (see the site's Impressum for the full address). Awaiting reply; if none arrives by ~11.08.2026 (4 weeks), proceed under the existing derived-parameters + attribution posture already in effect (see "After sending" below).
 
 **Send to** (postal, most credible for a formal consent request):
 
