@@ -53,6 +53,11 @@ const STATIC_GROUPS: PageGroup[] = [
   { de: '/ratgeber/quellensteuer-oder-veranlagung/', fr: '/fr/guide/imposition-source-ou-ordinaire/', en: '/en/guide/withholding-or-ordinary-assessment/' },
   { de: '/ratgeber/13-monatslohn/', fr: '/fr/guide/13e-salaire/', en: '/en/guide/13th-month-salary/' },
   { de: '/ratgeber/grenzgaenger-steuern/', fr: '/fr/guide/frontaliers-impots/', en: '/en/guide/cross-border-commuter-taxes/' },
+  // M13 guide articles.
+  { de: '/ratgeber/saeule-3a-vs-3b/', fr: '/fr/guide/pilier-3a-vs-3b/', en: '/en/guide/pillar-3a-vs-3b/' },
+  { de: '/ratgeber/krankenkasse-praemien-senken/', fr: '/fr/guide/caisse-maladie-reduire-primes/', en: '/en/guide/reduce-health-insurance-premiums/' },
+  { de: '/ratgeber/steuererklaerung-fristen-abzuege/', fr: '/fr/guide/declaration-impots-delais-deductions/', en: '/en/guide/swiss-tax-return-deadlines-deductions/' },
+  { de: '/ratgeber/pensionskasse-bvg-erklaert/', fr: '/fr/guide/caisse-de-pension-lpp/', en: '/en/guide/pension-fund-bvg-explained/' },
 ];
 
 /** The 26 programmatic income-tax canton pages exist in all three locales (M6/M8). */

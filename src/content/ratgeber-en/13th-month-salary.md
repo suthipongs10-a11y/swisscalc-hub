@@ -9,6 +9,7 @@ relatedTool:
   href: '/en/salary-calculator/'
   label: 'Salary calculator'
 related:
+  - pension-fund-bvg-explained
   - withholding-or-ordinary-assessment
   - withholding-tax-for-expats
 order: 6

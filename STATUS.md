@@ -2,7 +2,9 @@
 
 ## Current state
 
-**Latest (Session 16, M12): two new tools + guide depth — 217 pages.** Quellensteuer-Vergleich (all 26 cantons ranked from one salary; unique in the market), Stundenlohn-Rechner (high-volume keyword, OR-derived vacation supplements), and 3 new guide articles ×3 languages (NOV/ordinary assessment, 13th month salary, cross-border commuters). Tests 98/98. Awaiting review.
+**Latest (Session 17, M13): guide depth during AdSense review — 229 pages, 11 articles per language.** Four new articles ×3 locales (3a vs 3b, health-insurance premiums, tax-return deadlines & deductions, pension fund/BVG), all numbers repo-sourced. Awaiting review.
+
+**Session 16 (M12): two new tools.** Quellensteuer-Vergleich (all 26 cantons ranked from one salary; unique in the market), Stundenlohn-Rechner (high-volume keyword, OR-derived vacation supplements), and 3 new guide articles ×3 languages (NOV/ordinary assessment, 13th month salary, cross-border commuters). Tests 98/98. Awaiting review.
 
 **Session 15: hero illustrations on every page** — a decorative inline-SVG hero band (`HeroArt.astro`), 10 on-topic variants, path-driven from `BaseLayout`; canton pages print their abbreviation.
 
@@ -66,6 +68,17 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-16 — Session 17: M13 — 4 neue Guide-Artikel ×3 Sprachen (guide depth während AdSense-Review)
+
+- **Rationale:** AdSense-Review läuft ("getting ready") — editorial depth ist das sicherste Qualitätssignal für Review UND Search; programmatic scale (Gemeindeseiten) bleibt bewusst zurückgestellt, bis GSC-Daten vorliegen.
+- **4 Artikel** (order 8–11), je DE + FR + EN (12 Dateien, guide nun **11 Artikel/Sprache**):
+  1. *Säule 3a vs. 3b* — Abzug/Bindung/Vermögenssteuer/Auszahlung im Vergleich; 3a-Maxima aus `saeule-3a-2026.json` (sourced); Verweis auf GE/FR-3b-Ausnahmen.
+  2. *Krankenkassenprämien senken* — 5 Hebel (Franchise 300–2500, Modelle, Kassenwechsel bis Ende November via priminfo/BAG, NBU/UVG-Doppeldeckung ab 8 Wochenstunden, IPV); positioniert den geplanten Franchise-Rechner (Sept-Daten).
+  3. *Steuererklärung: Fristen & Abzüge* — 31. März + Verlängerung, Eskalation bis Ermessensveranlagung, Abzüge-Checkliste (3a sourced, Spenden 20% DBG), 30-Tage-Einsprachefrist.
+  4. *Pensionskasse & BVG* — Eintrittsschwelle/Koordinationsabzug/koordinierter Lohn/Altersgutschriften **alle aus `social-contributions-2026.json`** (sourced, BSV/Fedlex); Beispielrechnung 80k/Alter 40; Einkäufe inkl. 3-Jahres-Sperrfrist.
+- **Mesh:** PAGE_GROUPS +4 (volle hreflang-Reziprozität), relatedTool je Locale auf das passende Live-Tool, reziproke `related`-Updates (3a-gestaffelt ↔ 3a-vs-3b; 13. Monatslohn ↔ BVG) in allen 3 Sprachen; In-Body-Links auf Tools + Schwesterartikel locale-korrekt.
+- **Re-checked before push:** build clean (**229 Seiten**), Tests 98/98, Links green (228 Seiten, ≤3 Klicks), Audit clean (keine cross-locale leaks, hreflang reziprok, keine fragile pages, 76/76 je Locale erreichbar), Hubs listen 11/11/11, kein ß. Lighthouse: 4 neue Artikel-URLs — 3× sofort 100/100/100/100; 1× perf 0.94 (TBT-Ausreisser) → 3-Run-Median-Rerun: **3× perf 1.0, TBT 0 ms** (Sandbox-CPU-Noise, kein echtes Problem). Committed, stopped for review.
 
 ### 2026-07-15 — Session 16: M12 — Quellensteuer-Vergleich, Stundenlohn-Rechner, 3 neue Guide-Artikel
 

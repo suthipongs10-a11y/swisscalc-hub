@@ -9,6 +9,7 @@ relatedTool:
   href: '/saeule-3a-rechner/'
   label: 'Säule-3a-Rechner'
 related:
+  - saeule-3a-vs-3b
   - kantonswechsel-steuern-sparen
   - heiraten-steuern
 order: 2

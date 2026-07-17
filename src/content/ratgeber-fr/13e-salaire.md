@@ -9,6 +9,7 @@ relatedTool:
   href: '/fr/calculateur-salaire-brut-net/'
   label: 'Calculateur salaire brut-net'
 related:
+  - caisse-de-pension-lpp
   - imposition-source-ou-ordinaire
   - impot-a-la-source-expatries
 order: 6

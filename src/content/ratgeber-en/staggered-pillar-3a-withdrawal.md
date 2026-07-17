@@ -9,6 +9,7 @@ relatedTool:
   href: '/en/pillar-3a-calculator/'
   label: 'Pillar 3a calculator'
 related:
+  - pillar-3a-vs-3b
   - changing-canton-to-save-tax
   - marriage-and-taxes
 order: 2

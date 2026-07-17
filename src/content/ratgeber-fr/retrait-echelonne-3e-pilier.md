@@ -9,6 +9,7 @@ relatedTool:
   href: '/fr/calculateur-3e-pilier/'
   label: 'Calculateur 3e pilier'
 related:
+  - pilier-3a-vs-3b
   - changer-de-canton-impots
   - mariage-et-impots
 order: 2

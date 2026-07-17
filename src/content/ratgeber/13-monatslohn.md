@@ -9,6 +9,7 @@ relatedTool:
   href: '/brutto-netto-rechner/'
   label: 'Brutto-Netto-Rechner'
 related:
+  - pensionskasse-bvg-erklaert
   - quellensteuer-oder-veranlagung
   - quellensteuer-expats
 order: 6
