@@ -20,6 +20,9 @@ const shortNames: Record<string, string> = {
   'saeule-3a-rechner': 'Säule 3a',
   'franchise-rechner': 'Franchise',
 };
+// The desktop bar stays lean: only the pillar tools (those with a short name).
+// The mobile menu and the homepage grid list every live tool.
+const navTools = liveTools.filter((tool) => shortNames[tool.id]);
 
 // French / English nav (the three shipped tools per locale).
 const frTools = [
@@ -65,7 +68,7 @@ const langName: Record<Locale, string> = { de: 'Deutsch', fr: 'Français', en: '
       locale === 'de' ? (
         <nav aria-label="Hauptnavigation" class="hidden md:block">
           <ul class="flex items-center gap-5 text-sm text-slate-600">
-            {liveTools.map((tool) => (
+            {navTools.map((tool) => (
               <li>
                 <a href={tool.href} class="hover:text-slate-900 hover:underline">
                   {shortNames[tool.id] ?? tool.name}

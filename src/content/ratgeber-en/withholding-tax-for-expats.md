@@ -9,6 +9,8 @@ relatedTool:
   href: '/en/withholding-tax-calculator/'
   label: 'Withholding tax calculator'
 related:
+  - withholding-or-ordinary-assessment
+  - cross-border-commuter-taxes
   - changing-canton-to-save-tax
   - marriage-and-taxes
 order: 1

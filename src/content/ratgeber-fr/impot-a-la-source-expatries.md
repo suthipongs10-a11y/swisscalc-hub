@@ -9,6 +9,8 @@ relatedTool:
   href: '/fr/calculateur-impot-source/'
   label: 'Calculateur impôt à la source'
 related:
+  - imposition-source-ou-ordinaire
+  - frontaliers-impots
   - changer-de-canton-impots
   - mariage-et-impots
 order: 1

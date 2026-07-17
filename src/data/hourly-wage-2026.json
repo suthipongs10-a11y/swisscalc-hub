@@ -1,0 +1,14 @@
+{
+  "_meta": {
+    "source": "https://www.ch.ch/de/arbeit/lohn/ferienlohn/",
+    "legalBasis": "OR Art. 329a (Ferienanspruch: mind. 4 Wochen; bis zum vollendeten 20. Altersjahr 5 Wochen) und OR Art. 329d (Ferienlohn)",
+    "retrieved": "2026-07-15",
+    "validFor": 2026,
+    "description": "Standard Swiss payroll constants for hourly-wage conversion. The vacation-supplement percentages are the arithmetic consequence of the statutory vacation entitlement: pct = weeks / (52 - weeks), rounded to 2 dp as used universally in Swiss payroll practice.",
+    "note": "8.33% = 4/48, 10.64% = 5/47, 13.04% = 6/46. 13th-month supplement 8.33% = 1/12. These constants are timeless arithmetic over the OR entitlement, not year-specific rates. The standard full-time week varies by industry/GAV (40-42.5h); 42h is the common default. Cross-checked against SECO payroll guidance wording on 2026-07-15."
+  },
+  "weeksPerYear": 52,
+  "vacationSupplements": { "4": 8.33, "5": 10.64, "6": 13.04 },
+  "thirteenthPct": 8.33,
+  "defaultHoursPerWeek": 42
+}

@@ -23,10 +23,16 @@ const DIRECT: Record<string, HeroVariant> = {
   'brutto-netto-rechner': 'salary',
   'calculateur-salaire-brut-net': 'salary',
   'salary-calculator': 'salary',
+  'stundenlohn-rechner': 'salary',
+  'calculateur-salaire-horaire': 'salary',
+  'hourly-wage-calculator': 'salary',
   // cantonal comparison
   steuervergleich: 'comparison',
   'comparatif-impots-cantons': 'comparison',
   'cantonal-tax-comparison': 'comparison',
+  'quellensteuer-vergleich': 'comparison',
+  'comparatif-impot-source': 'comparison',
+  'withholding-tax-comparison': 'comparison',
   // pillar 3a
   'saeule-3a-rechner': 'pillar3a',
   'calculateur-3e-pilier': 'pillar3a',

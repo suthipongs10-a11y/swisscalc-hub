@@ -1,0 +1,153 @@
+---
+/**
+ * Cross-canton Quellensteuer comparison island. The default situation (single,
+ * no church, CHF 6500) is computed at build from the per-situation file on
+ * disk, so the full 26-canton table is server-rendered and works without JS.
+ * The client fetches /data/qstv/<key>.json only when the family situation
+ * changes; salary/church edits recompute from the cached file.
+ */
+import { readFileSync } from 'node:fs';
+import cantonData from '../data/cantons.json';
+import { compareQst, situationKey, type QstvFile } from '../lib/qst/compare';
+import {
+  renderCompareHtml,
+  COMPARE_LABELS_DE,
+  COMPARE_LABELS_FR,
+  COMPARE_LABELS_EN,
+  type CompareCantonMeta,
+} from '../lib/qst/compareRender';
+import { QST_ANNUAL_MODEL } from '../lib/qst/cantons';
+import { cantonSlugOf, frSlugOf, frName, enSlugOf, enName } from '../lib/tax/labels';
+import type { Locale } from '../lib/locales';
+
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'de' } = Astro.props;
+const labels = locale === 'fr' ? COMPARE_LABELS_FR : locale === 'en' ? COMPARE_LABELS_EN : COMPARE_LABELS_DE;
+
+const cantonMeta: CompareCantonMeta[] = cantonData.cantons.map((c) => ({
+  abbr: c.abbr,
+  name: locale === 'fr' ? frName(c.abbr) : locale === 'en' ? enName(c.abbr) : c.name,
+  href:
+    locale === 'fr'
+      ? `/fr/calculateur-impot-source/${frSlugOf(c.abbr)}/`
+      : locale === 'en'
+        ? `/en/withholding-tax-calculator/${enSlugOf(c.abbr)}/`
+        : `/quellensteuer-rechner/${cantonSlugOf(c.abbr)}/`,
+  annual: QST_ANNUAL_MODEL.has(c.abbr),
+}));
+
+const T = {
+  de: { situation: 'Situation', children: 'Anzahl Kinder', church: 'Kirchensteuer', monthly: 'Bruttolohn pro Monat (CHF)',
+        A: 'Alleinstehend', B: 'Verheiratet, ein Einkommen', C: 'Verheiratet, zwei Einkommen', H: 'Alleinerziehend',
+        churchHint: 'Wirkt nur in Kantonen, die die Kirchensteuer an der Quelle erheben.' },
+  fr: { situation: 'Situation', children: 'Nombre d’enfants', church: 'Impôt ecclésiastique', monthly: 'Salaire brut par mois (CHF)',
+        A: 'Célibataire', B: 'Marié, un revenu', C: 'Marié, deux revenus', H: 'Parent seul',
+        churchHint: 'N’agit que dans les cantons qui prélèvent l’impôt ecclésiastique à la source.' },
+  en: { situation: 'Situation', children: 'Number of children', church: 'Church tax', monthly: 'Gross salary per month (CHF)',
+        A: 'Single', B: 'Married, one income', C: 'Married, two incomes', H: 'Single parent',
+        churchHint: 'Only affects cantons that levy church tax at source.' },
+}[locale];
+
+const DEFAULTS = { monthly: 6500, key: situationKey('A', 0), church: false };
+const defaultFile = JSON.parse(readFileSync(`public/data/qstv/${DEFAULTS.key.toLowerCase()}.json`, 'utf8')) as QstvFile;
+const initialHtml = renderCompareHtml(compareQst(DEFAULTS.monthly, DEFAULTS.church, defaultFile), cantonMeta, labels);
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section
+  aria-label="Quellensteuer-Vergleich"
+  data-qstv
+  data-locale={locale}
+  data-cantons={JSON.stringify(cantonMeta)}
+>
+  <form class="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-qstv-form novalidate>
+    <div>
+      <label class={labelClass} for="qv-monthly">{T.monthly}</label>
+      <input class={inputClass} type="number" id="qv-monthly" name="monthly" min="0" step="100" inputmode="numeric" value={DEFAULTS.monthly} />
+    </div>
+
+    <div>
+      <label class={labelClass} for="qv-group">{T.situation}</label>
+      <select class={inputClass} id="qv-group" name="group">
+        <option value="A" selected>{T.A}</option>
+        <option value="B">{T.B}</option>
+        <option value="C">{T.C}</option>
+        <option value="H">{T.H}</option>
+      </select>
+    </div>
+
+    <div data-qv-children-wrap hidden>
+      <label class={labelClass} for="qv-children">{T.children}</label>
+      <select class={inputClass} id="qv-children" name="children">
+        {[0, 1, 2, 3, 4, 5].map((n) => <option value={n}>{n}</option>)}
+      </select>
+    </div>
+
+    <div class="self-end">
+      <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+        <input type="checkbox" name="church" class="h-4 w-4 rounded border-slate-300" />
+        {T.church}
+      </label>
+      <p class="mt-1 text-xs text-slate-500">{T.churchHint}</p>
+    </div>
+  </form>
+
+  <div data-qstv-result aria-live="polite" set:html={initialHtml}></div>
+</section>
+
+<script>
+  import { compareQst, situationKey, type QstvFile } from '../lib/qst/compare';
+  import type { QstGroup } from '../lib/qst/engine';
+  import {
+    renderCompareHtml,
+    COMPARE_LABELS_DE,
+    COMPARE_LABELS_FR,
+    COMPARE_LABELS_EN,
+    type CompareCantonMeta,
+  } from '../lib/qst/compareRender';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-qstv]')) {
+    const form = root.querySelector<HTMLFormElement>('[data-qstv-form]');
+    const resultEl = root.querySelector<HTMLElement>('[data-qstv-result]');
+    if (!form || !resultEl) continue;
+
+    const locale = root.dataset.locale ?? 'de';
+    const labels = locale === 'fr' ? COMPARE_LABELS_FR : locale === 'en' ? COMPARE_LABELS_EN : COMPARE_LABELS_DE;
+    const cantonMeta = JSON.parse(root.dataset.cantons ?? '[]') as CompareCantonMeta[];
+    const childrenWrap = root.querySelector<HTMLElement>('[data-qv-children-wrap]');
+    // Cache the promise (not the result) so racing input+change events for the
+    // same situation trigger a single fetch.
+    const files = new Map<string, Promise<QstvFile | null>>();
+
+    const loadFile = (key: string): Promise<QstvFile | null> => {
+      let pending = files.get(key);
+      if (!pending) {
+        pending = fetch(`/data/qstv/${key.toLowerCase()}.json`)
+          .then((res) => (res.ok ? (res.json() as Promise<QstvFile>) : null))
+          .catch(() => null);
+        files.set(key, pending);
+      }
+      return pending;
+    };
+
+    const recompute = async () => {
+      const group = ((form.elements.namedItem('group') as HTMLSelectElement).value || 'A') as QstGroup;
+      if (childrenWrap) childrenWrap.hidden = group === 'A';
+      const children = parseInt((form.elements.namedItem('children') as HTMLSelectElement).value, 10) || 0;
+      const monthlyEl = form.elements.namedItem('monthly') as HTMLInputElement;
+      const monthly = parseFloat(monthlyEl.value);
+      const church = (form.elements.namedItem('church') as HTMLInputElement).checked;
+      const file = await loadFile(situationKey(group, children));
+      if (!file || !Number.isFinite(monthly)) return; // keep last valid table
+      resultEl.innerHTML = renderCompareHtml(compareQst(monthly, church, file), cantonMeta, labels);
+    };
+
+    form.addEventListener('input', () => void recompute());
+    form.addEventListener('change', () => void recompute());
+  }
+</script>

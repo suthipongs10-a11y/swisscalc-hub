@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import QstCompare from '../../components/QstCompare.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+
+const path = '/fr/comparatif-impot-source/';
+const title = `Comparatif de l’impôt à la source ${SITE_YEAR} | ${BRAND}`;
+const description = `L’impôt à la source des 26 cantons comparé ${SITE_YEAR} : un salaire brut, tous les cantons — du moins cher au plus cher, avec les barèmes officiels de l’AFC.`;
+
+const faqs = [
+  {
+    q: 'Pourquoi l’impôt à la source varie-t-il autant selon le canton ?',
+    a: 'Les barèmes de l’impôt à la source intègrent l’impôt cantonal, communal et fédéral du canton concerné. Comme les taux cantonaux varient fortement, l’impôt à la source pour un même salaire diffère considérablement — le comparatif montre l’étendue en un coup d’oeil.',
+  },
+  {
+    q: 'Puis-je réduire mon impôt à la source en déménageant ?',
+    a: 'Oui — c’est en principe le canton de domicile qui est déterminant (pour les frontaliers, le canton de travail). Un déménagement dans un canton moins cher réduit l’impôt à la source en conséquence. Tenez toutefois compte des loyers et des primes d’assurance-maladie, qui peuvent absorber l’avantage fiscal.',
+  },
+  {
+    q: 'Que signifie l’astérisque (modèle annuel) dans le tableau ?',
+    a: 'Fribourg, Genève, le Tessin, Vaud et le Valais appliquent le modèle annuel : le salaire est annualisé et lissé pour déterminer le taux. Avec un salaire mensuel régulier, le résultat est comparable au modèle mensuel ; avec des bonus ou salaires irréguliers, le décompte annuel effectif peut différer.',
+  },
+  {
+    q: 'Le comparatif vaut-il aussi pour les frontaliers ?',
+    a: 'Seulement en partie. Pour les frontaliers d’Allemagne, un taux réduit de 4.5% au maximum s’applique (CDI) ; huit cantons ont un accord particulier avec la France, et des barèmes spécifiques existent pour l’Italie. Le comparatif montre les barèmes ordinaires A/B/C/H pour les personnes domiciliées en Suisse.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Comparatif de l’impôt à la source',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'fr-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="fr" hero="comparison" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs
+    crumbs={[{ name: 'Impôt à la source', path: '/fr/calculateur-impot-source/' }, { name: 'Comparatif des cantons' }]}
+    locale="fr"
+  />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Comparatif de l’impôt à la source {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Un salaire brut, les 26 cantons : voyez en un coup d’oeil où l’impôt à la source est le plus bas et où il est le
+    plus élevé — avec les barèmes officiels de l’AFC {SITE_YEAR}.
+  </p>
+
+  <QstCompare locale="fr" />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Comment fonctionne le comparatif ?</h2>
+    <p>
+      Pour chaque canton, le même salaire mensuel brut est calculé avec le barème officiel {SITE_YEAR} du canton — selon
+      le barème correspondant à votre situation (A/B/C/H, nombre d’enfants, impôt ecclésiastique). Le tableau classe
+      les cantons du moins cher au plus cher. Un clic sur le canton ouvre sa page d’impôt à la source avec les détails
+      et son propre calculateur.
+    </p>
+    <h3>Limites de ce calcul</h3>
+    <ul>
+      <li>À Genève, Neuchâtel, au Tessin, dans le canton de Vaud et en Valais, l’impôt ecclésiastique n’est <strong>pas prélevé à la source</strong> ; dans le Jura, il est toujours inclus. L’option n’agit donc que dans les autres cantons.</li>
+      <li>Cinq cantons appliquent le <strong>modèle annuel</strong> (astérisque dans le tableau) — avec des salaires irréguliers, le décompte annuel effectif peut différer de la valeur mensuelle.</li>
+      <li>Les cas particuliers (barèmes frontaliers DE/FR/IT, activité accessoire, revenus acquis en compensation) ne sont pas couverts ; les taux sont agrégés à 0,05 point (calcul indicatif).</li>
+    </ul>
+
+    <h2>Questions fréquentes</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Les détails par canton : <a href="/fr/calculateur-impot-source/">calculateur d’impôt à la source</a>. Imposé
+      ordinairement ? <a href="/fr/comparatif-impots-cantons/">comparatif des impôts des 26 cantons</a>. Du brut au
+      net : <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>.
+    </p>
+  </div>
+
+  <section aria-label="Autres calculateurs" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Autres calculateurs</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/calculateur-impot-source/" class="font-semibold text-blue-700 hover:underline">Calculateur d’impôt à la source</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Par canton, barème et situation familiale.</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/comparatif-impots-cantons/" class="font-semibold text-blue-700 hover:underline">Comparatif des impôts des 26 cantons</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Pour les personnes imposées ordinairement.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources :</strong> barèmes de l’impôt à la source {SITE_YEAR} des cantons :
+      <a class="underline" href="https://www.estv.admin.ch/estv/fr/accueil/impot-federal-direct/impot-a-la-source.html" rel="noopener">AFC / administrations fiscales cantonales</a>.
+      Le contenu des barèmes relève des cantons. Méthodologie et limites :
+      <a class="underline" href="/fr/methodologie/">méthodologie</a>.
+    </p>
+    <p>Dernière mise à jour : 15.07.2026 · année fiscale {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

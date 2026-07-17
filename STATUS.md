@@ -2,7 +2,9 @@
 
 ## Current state
 
-**Latest (Session 15): hero illustrations on every page** — a decorative inline-SVG hero band (`HeroArt.astro`), 10 on-topic variants, path-driven from `BaseLayout`; canton pages print their abbreviation. No new pages, no new numbers, link graph unchanged; build/tests/Lighthouse green. Awaiting review.
+**Latest (Session 16, M12): two new tools + guide depth — 217 pages.** Quellensteuer-Vergleich (all 26 cantons ranked from one salary; unique in the market), Stundenlohn-Rechner (high-volume keyword, OR-derived vacation supplements), and 3 new guide articles ×3 languages (NOV/ordinary assessment, 13th month salary, cross-border commuters). Tests 98/98. Awaiting review.
+
+**Session 15: hero illustrations on every page** — a decorative inline-SVG hero band (`HeroArt.astro`), 10 on-topic variants, path-driven from `BaseLayout`; canton pages print their abbreviation.
 
 **M11 built — 78 per-canton Quellensteuer SEO pages (26 × 3 languages).**
 
@@ -64,6 +66,14 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-15 — Session 16: M12 — Quellensteuer-Vergleich, Stundenlohn-Rechner, 3 neue Guide-Artikel
+
+- **Quellensteuer-Vergleich** (`/quellensteuer-vergleich/`, `/fr/comparatif-impot-source/`, `/en/withholding-tax-comparison/`): one gross salary → ranked table of all 26 cantons (monthly QST, effective rate, annual QST; cheapest/most-expensive badges; annual-model cantons starred; every row links to that canton's QST page — 26 more contextual inbound links per locale for the M11 pages). Data layer: `scripts/build-qst-compare.mjs` regroups the per-canton tariffs into 18 per-situation files (`public/data/qstv/a0…h5.json`, ~230 KB each, all 26 cantons per file) so **one fetch covers a situation change** and salary/church edits recompute locally; the default table (single, 6500) is fully server-rendered. Engine `src/lib/qst/compare.ts` reuses the exact band lookup of the per-canton calculator (`qstFromBands` refactor) — the driven ZH row (CHF 469.95) matches the pinned M10 value exactly. Church resolution per canton (GE→N, JU→Y) as before.
+- **Stundenlohn-Rechner** (`/stundenlohn-rechner/`, `/fr/calculateur-salaire-horaire/`, `/en/hourly-wage-calculator/`): monthly↔hourly conversion per Swiss payroll practice — base rate = monthly × 12 ÷ (52 × weekly hours), vacation supplements 8.33/10.64/13.04% (OR Art. 329a/d, arithmetically derived: weeks/(52−weeks); sourced data file `hourly-wage-2026.json`), optional 13th month (8.33% on the vacation-inclusive rate). Pure client-side island, SSR default, direction toggle swaps the input label.
+- **3 new guide articles ×3 languages** (guide now 7 articles/locale): *Quellensteuer oder ordentliche Veranlagung* (120k obligatory NOV, irrevocable voluntary NOV, 31-March deadline, municipality-vs-cantonal-average effect), *13. Monatslohn* (no statutory right, pro-rata, full contributions, monthly- vs annual-model QST effect), *Grenzgänger* (DE 4.5% + 60-day rule, FR two regimes incl. the 8 agreement cantons matching our tariff-data flags, IT old/new since 17.07.2023 with the 80% rule, AT ordinary; telework tolerances). Related-article mesh updated (expat article now links all QST articles).
+- **Wiring:** PAGE_GROUPS +5 groups (2 tools, 3 articles) → full hreflang/switcher; TOOLS registry +2 (DE homepage grid + RelatedTools); FR/EN homepages +2 cards; desktop header nav kept lean (4 pillar tools — new tools listed in the mobile menu + homepage); reciprocal in-content links: brutto-netto↔stundenlohn and QST-index↔QST-Vergleich in all three locales; LHCI +5 URLs; QST refresh runbook gains the regroup step.
+- **Re-checked before push:** build clean (**217 pages**), tests **98/98** (+7 hourly incl. OR-derivation check, +6 compare incl. family≤single invariant across all 26 cantons), link/orphan green (216 pages), audit clean (no cross-locale leaks, hreflang reciprocal, **no fragile pages**, 72/72 per locale reachable). **Driven in Chromium:** Stundenlohn SSR 6500/42h → 35.71 base / 38.69 incl. vacation, recompute + direction switch OK; QST-Vergleich SSR 26 rows (Zug cheapest 219.70, ZH 469.95 = pinned value), situation change fetches one qstv file (promise-cached — no duplicate fetch), church toggle OK, FR/EN pages OK, no console errors. Lighthouse ≥95×4 asserted on 23 URLs. No ß. Committed, stopped for review.
 
 ### 2026-07-13 — Session 15: Hero illustrations on every page (inline SVG)
 

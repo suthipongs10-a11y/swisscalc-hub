@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import HourlyCalculator from '../../components/HourlyCalculator.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+
+const path = '/fr/calculateur-salaire-horaire/';
+const title = `Calculateur de salaire horaire suisse | ${BRAND}`;
+const description = `Convertir salaire horaire et salaire mensuel : avec l’indemnité de vacances (8.33/10.64/13.04%), le 13e salaire et vos heures hebdomadaires — selon la pratique suisse.`;
+
+const faqs = [
+  {
+    q: 'Comment convertir un salaire mensuel en salaire horaire ?',
+    a: 'La formule usuelle : salaire horaire = salaire mensuel × 12 ÷ (52 × heures hebdomadaires). Pour CHF 6’500 et 42 heures par semaine, cela donne CHF 35.71. En passant à un contrat au salaire horaire, s’y ajoute l’indemnité de vacances — et, si le contrat le prévoit, le supplément pour le 13e salaire.',
+  },
+  {
+    q: 'À combien s’élève l’indemnité de vacances dans le salaire horaire ?',
+    a: 'Pour 4 semaines de vacances 8.33%, pour 5 semaines 10.64%, pour 6 semaines 13.04% du salaire de base. Ces pourcentages découlent directement du droit légal aux vacances (CO art. 329a) : 4 semaines de vacances se répartissent sur 48 semaines travaillées, soit 4/48 = 8.33%. L’indemnité doit figurer séparément sur la fiche de salaire.',
+  },
+  {
+    q: 'Ai-je droit à un 13e salaire avec un salaire horaire ?',
+    a: 'Seulement si le contrat de travail ou la CCT le prévoit — il n’existe pas de droit légal. S’il est versé, il correspond à un supplément de 8.33% (1/12), calculé aussi sur l’indemnité de vacances.',
+  },
+  {
+    q: 'Combien d’heures compte un mois de travail ?',
+    a: 'Une année compte 52 semaines, un mois donc en moyenne 52 ÷ 12 = 4.33 semaines. À 42 heures hebdomadaires, cela fait 182 heures par mois. La durée usuelle du travail se situe entre 40 et 42.5 heures selon la branche et la CCT.',
+  },
+  {
+    q: 'Le salaire calculé est-il brut ou net ?',
+    a: 'Toutes les valeurs sont brutes, avant les déductions sociales (AVS/AI/APG, AC, AANP, LPP). Calculez ensuite votre salaire net avec notre calculateur brut-net.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Calculateur de salaire horaire suisse',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'fr-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="fr" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Calculateur de salaire horaire' }]} locale="fr" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Calculateur de salaire horaire</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Convertir le salaire mensuel en salaire horaire — ou l’inverse. Avec l’indemnité de vacances, le 13e salaire et
+    votre durée hebdomadaire de travail, selon la pratique salariale suisse.
+  </p>
+
+  <HourlyCalculator locale="fr" />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Comment est-ce calculé ?</h2>
+    <p>
+      Le point de départ est la formule standard de la pratique salariale suisse : un salaire mensuel couvre en moyenne
+      52 ÷ 12 = 4.33 semaines. Le salaire horaire de base est donc
+      <strong>salaire mensuel × 12 ÷ (52 × heures hebdomadaires)</strong>. Dans le salaire mensuel, les vacances sont
+      déjà payées ; dans le salaire horaire, elles sont compensées par un supplément :
+    </p>
+    <ul>
+      <li><strong>8.33%</strong> pour 4 semaines de vacances (4 ÷ 48 semaines travaillées)</li>
+      <li><strong>10.64%</strong> pour 5 semaines de vacances (5 ÷ 47)</li>
+      <li><strong>13.04%</strong> pour 6 semaines de vacances (6 ÷ 46)</li>
+    </ul>
+    <p>
+      Un 13e salaire contractuel correspond à un supplément additionnel de <strong>8.33%</strong> (1/12), calculé sur le
+      salaire vacances comprises. Les indemnités pour jours fériés varient selon le canton et la CCT et ne sont pas
+      incluses. Toutes les valeurs sont brutes — les déductions sociales sont détaillées dans le
+      <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>.
+    </p>
+
+    <h2>Questions fréquentes</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Du salaire brut au net : <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>. Les impôts
+      en comparaison : <a href="/fr/comparatif-impots-cantons/">comparatif des 26 cantons</a>. Imposé à la source ?
+      <a href="/fr/calculateur-impot-source/">calculateur d’impôt à la source</a>.
+    </p>
+  </div>
+
+  <section aria-label="Autres calculateurs" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Autres calculateurs</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/calculateur-salaire-brut-net/" class="font-semibold text-blue-700 hover:underline">Calculateur salaire brut-net</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Du salaire brut au salaire net, déductions détaillées.</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/fr/calculateur-impot-source/" class="font-semibold text-blue-700 hover:underline">Calculateur d’impôt à la source</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">Pour les 26 cantons, selon le barème et la situation familiale.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources :</strong> droit aux vacances et salaire afférent : CO art. 329a/329d (
+      <a class="underline" href="https://www.ch.ch/fr/travail/salaire/salaire-pendant-les-vacances/" rel="noopener">ch.ch</a>).
+      Les taux 8.33/10.64/13.04% en découlent arithmétiquement. Méthodologie :
+      <a class="underline" href="/fr/methodologie/">méthodologie</a> · <a class="underline" href="/fr/sources/">sources</a>.
+    </p>
+    <p>Dernière mise à jour : 15.07.2026 · valable pour {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

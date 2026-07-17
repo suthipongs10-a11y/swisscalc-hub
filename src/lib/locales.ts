@@ -35,6 +35,9 @@ const STATIC_GROUPS: PageGroup[] = [
   { de: '/steuervergleich/', fr: '/fr/comparatif-impots-cantons/', en: '/en/cantonal-tax-comparison/' },
   { de: '/saeule-3a-rechner/', fr: '/fr/calculateur-3e-pilier/', en: '/en/pillar-3a-calculator/' },
   { de: '/quellensteuer-rechner/', fr: '/fr/calculateur-impot-source/', en: '/en/withholding-tax-calculator/' },
+  // M12 tools.
+  { de: '/stundenlohn-rechner/', fr: '/fr/calculateur-salaire-horaire/', en: '/en/hourly-wage-calculator/' },
+  { de: '/quellensteuer-vergleich/', fr: '/fr/comparatif-impot-source/', en: '/en/withholding-tax-comparison/' },
   { de: '/methodik/', fr: '/fr/methodologie/', en: '/en/methodology/' },
   { de: '/quellen/', fr: '/fr/sources/', en: '/en/sources/' },
   { de: '/ueber-uns/', fr: '/fr/a-propos/', en: '/en/about/' },
@@ -46,6 +49,10 @@ const STATIC_GROUPS: PageGroup[] = [
   { de: '/ratgeber/saeule-3a-gestaffelt-beziehen/', fr: '/fr/guide/retrait-echelonne-3e-pilier/', en: '/en/guide/staggered-pillar-3a-withdrawal/' },
   { de: '/ratgeber/kantonswechsel-steuern-sparen/', fr: '/fr/guide/changer-de-canton-impots/', en: '/en/guide/changing-canton-to-save-tax/' },
   { de: '/ratgeber/heiraten-steuern/', fr: '/fr/guide/mariage-et-impots/', en: '/en/guide/marriage-and-taxes/' },
+  // M12 guide articles.
+  { de: '/ratgeber/quellensteuer-oder-veranlagung/', fr: '/fr/guide/imposition-source-ou-ordinaire/', en: '/en/guide/withholding-or-ordinary-assessment/' },
+  { de: '/ratgeber/13-monatslohn/', fr: '/fr/guide/13e-salaire/', en: '/en/guide/13th-month-salary/' },
+  { de: '/ratgeber/grenzgaenger-steuern/', fr: '/fr/guide/frontaliers-impots/', en: '/en/guide/cross-border-commuter-taxes/' },
 ];
 
 /** The 26 programmatic income-tax canton pages exist in all three locales (M6/M8). */

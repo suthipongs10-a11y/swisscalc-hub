@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import HourlyCalculator from '../../components/HourlyCalculator.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+
+const path = '/en/hourly-wage-calculator/';
+const title = `Swiss hourly wage calculator | ${BRAND}`;
+const description = `Convert hourly and monthly pay in Switzerland: with vacation compensation (8.33/10.64/13.04%), 13th month salary and your weekly hours — per Swiss payroll practice.`;
+
+const faqs = [
+  {
+    q: 'How do I convert a monthly salary into an hourly wage?',
+    a: 'The standard formula: hourly wage = monthly salary × 12 ÷ (52 × weekly hours). For CHF 6,500 and a 42-hour week that gives CHF 35.71. On an hourly contract, vacation compensation is added on top — plus the 13th-month supplement where the contract provides one.',
+  },
+  {
+    q: 'How high is the vacation compensation in an hourly wage?',
+    a: 'With 4 weeks of vacation 8.33%, with 5 weeks 10.64%, with 6 weeks 13.04% of the base rate. The percentages follow directly from the statutory vacation entitlement (Code of Obligations Art. 329a): 4 vacation weeks spread over 48 working weeks = 4/48 = 8.33%. The compensation must be shown separately on the payslip.',
+  },
+  {
+    q: 'Am I entitled to a 13th month salary on hourly pay?',
+    a: 'Only if your employment contract or collective agreement provides for it — there is no statutory entitlement. Where it is paid, it corresponds to a supplement of 8.33% (1/12), calculated on the vacation-inclusive pay.',
+  },
+  {
+    q: 'How many hours does a working month have?',
+    a: 'A year has 52 weeks, so a month averages 52 ÷ 12 = 4.33 weeks. At 42 weekly hours that is 182 hours per month. The usual full-time week in Switzerland is 40 to 42.5 hours depending on the industry and collective agreement.',
+  },
+  {
+    q: 'Is the calculated wage gross or net?',
+    a: 'All values are gross, before social contributions (AHV/IV/EO, ALV, NBU, BVG pension fund). Calculate your net salary with our salary calculator.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Swiss hourly wage calculator',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'en-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} locale="en" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Hourly wage calculator' }]} locale="en" />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Swiss hourly wage calculator</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Convert a monthly salary into an hourly wage — or the other way round. With vacation compensation, 13th month
+    salary and your weekly working hours, per Swiss payroll practice.
+  </p>
+
+  <HourlyCalculator locale="en" />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>How is it calculated?</h2>
+    <p>
+      The starting point is the standard Swiss payroll formula: a monthly salary covers on average 52 ÷ 12 = 4.33
+      weeks. The base hourly rate is therefore <strong>monthly salary × 12 ÷ (52 × weekly hours)</strong>. In a monthly
+      salary, vacation is already paid; on an hourly contract it is compensated with a supplement instead:
+    </p>
+    <ul>
+      <li><strong>8.33%</strong> for 4 weeks of vacation (4 ÷ 48 working weeks)</li>
+      <li><strong>10.64%</strong> for 5 weeks of vacation (5 ÷ 47)</li>
+      <li><strong>13.04%</strong> for 6 weeks of vacation (6 ÷ 46)</li>
+    </ul>
+    <p>
+      A contractual 13th month salary adds a further <strong>8.33%</strong> (1/12), calculated on the
+      vacation-inclusive pay. Public-holiday compensation varies by canton and collective agreement and is not
+      included. All values are gross — see the <a href="/en/salary-calculator/">salary calculator</a> for the social
+      contributions.
+    </p>
+
+    <h2>Frequently asked questions</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      From gross to net: <a href="/en/salary-calculator/">salary calculator</a>. Taxes across cantons:
+      <a href="/en/cantonal-tax-comparison/">cantonal tax comparison</a>. Taxed at source?
+      <a href="/en/withholding-tax-calculator/">withholding tax calculator</a>.
+    </p>
+  </div>
+
+  <section aria-label="Other calculators" class="mt-14">
+    <h2 class="mb-4 text-2xl font-bold">Other calculators</h2>
+    <ul class="grid gap-4 sm:grid-cols-2">
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/salary-calculator/" class="font-semibold text-blue-700 hover:underline">Swiss salary calculator</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">From gross to net salary, deductions itemised.</p>
+      </li>
+      <li class="rounded-lg border border-slate-200 p-5">
+        <a href="/en/withholding-tax-calculator/" class="font-semibold text-blue-700 hover:underline">Withholding tax calculator</a>
+        <p class="mt-1 text-sm leading-relaxed text-slate-600">All 26 cantons, by tariff code and family situation.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Sources:</strong> vacation entitlement and vacation pay: Code of Obligations Art. 329a/329d (
+      <a class="underline" href="https://www.ch.ch/en/work/salary/salary-during-holidays/" rel="noopener">ch.ch</a>).
+      The 8.33/10.64/13.04% supplements follow arithmetically. Method:
+      <a class="underline" href="/en/methodology/">methodology</a> · <a class="underline" href="/en/sources/">sources</a>.
+    </p>
+    <p>Last updated: 15.07.2026 · valid for {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

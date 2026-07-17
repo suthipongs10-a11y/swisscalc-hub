@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import QstCompare from '../components/QstCompare.astro';
+import RatgeberLinks from '../components/RatgeberLinks.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
+
+const path = '/quellensteuer-vergleich/';
+const title = `Quellensteuer-Vergleich ${SITE_YEAR} – alle 26 Kantone | ${BRAND}`;
+const description = `Quellensteuer im Kantonsvergleich ${SITE_YEAR}: ein Bruttolohn, alle 26 Kantone — sortiert vom günstigsten zum teuersten, mit den offiziellen ESTV-Tarifen.`;
+
+const faqs = [
+  {
+    q: 'Warum ist die Quellensteuer je nach Kanton so unterschiedlich?',
+    a: 'Die Quellensteuertarife enthalten die Kantons-, Gemeinde- und Bundessteuer des jeweiligen Kantons. Da die kantonalen Steuersätze stark variieren, unterscheidet sich auch die Quellensteuer für denselben Lohn erheblich — der Vergleich zeigt die Spannweite auf einen Blick.',
+  },
+  {
+    q: 'Kann ich durch einen Umzug Quellensteuer sparen?',
+    a: 'Ja — massgebend ist grundsätzlich der Wohnkanton (bei Grenzgängern der Arbeitskanton). Ein Umzug in einen günstigeren Kanton senkt die Quellensteuer entsprechend. Beachten Sie aber Wohnkosten und Krankenkassenprämien, die den Steuervorteil aufzehren können.',
+  },
+  {
+    q: 'Was bedeutet das Sternchen (Jahresmodell) in der Tabelle?',
+    a: 'Freiburg, Genf, Tessin, Waadt und Wallis rechnen nach dem Jahresmodell: Für den Satz wird der Lohn aufs Jahr hochgerechnet und geglättet. Bei einem gleichmässigen Monatslohn ist das Ergebnis mit dem Monatsmodell vergleichbar; bei Boni oder unregelmässigen Löhnen kann die effektive Jahresrechnung abweichen.',
+  },
+  {
+    q: 'Gilt der Vergleich auch für Grenzgänger?',
+    a: 'Nur eingeschränkt. Für Grenzgänger aus Deutschland gilt ein reduzierter Satz von maximal 4.5% (DBA), für Frankreich haben acht Kantone eine Sonderregelung, und für Italien gelten eigene Grenzgänger-Tarife. Der Vergleich zeigt die ordentlichen Tarife A/B/C/H für Personen mit Wohnsitz in der Schweiz.',
+  },
+];
+
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Quellensteuer-Vergleich',
+  url: absoluteUrl(path),
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'de-CH',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} path={path} hero="comparison" jsonLd={[webApp, faqSchema]}>
+  <Breadcrumbs crumbs={[{ name: 'Quellensteuer-Rechner', path: '/quellensteuer-rechner/' }, { name: 'Kantonsvergleich' }]} />
+
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Quellensteuer-Vergleich {SITE_YEAR}</h1>
+  <p class="mb-8 max-w-2xl text-lg text-slate-700">
+    Ein Bruttolohn, alle 26 Kantone: sehen Sie auf einen Blick, wo die Quellensteuer am tiefsten und wo sie am höchsten
+    ist — mit den offiziellen ESTV-Tarifen {SITE_YEAR}.
+  </p>
+
+  <QstCompare locale="de" />
+
+  <div class="prose-content mt-14 max-w-2xl">
+    <h2>Wie funktioniert der Vergleich?</h2>
+    <p>
+      Für jeden Kanton wird derselbe monatliche Bruttolohn durch die offizielle Tariftabelle {SITE_YEAR} des Kantons
+      gerechnet — mit dem Tarifcode, der Ihrer Situation entspricht (A/B/C/H, Anzahl Kinder, Kirchensteuer). Die
+      Tabelle sortiert die Kantone vom günstigsten zum teuersten. Ein Klick auf den Kanton öffnet dessen
+      Quellensteuer-Seite mit Details und eigenem Rechner.
+    </p>
+    <h3>Grenzen dieser Berechnung</h3>
+    <ul>
+      <li>In Genf, Neuenburg, Tessin, Waadt und Wallis wird die Kirchensteuer <strong>nicht an der Quelle</strong> erhoben; im Jura ist sie immer enthalten. Die Kirchensteuer-Option wirkt deshalb nur in den übrigen Kantonen.</li>
+      <li>Fünf Kantone rechnen nach dem <strong>Jahresmodell</strong> (Sternchen in der Tabelle) — bei unregelmässigen Löhnen kann die effektive Jahresrechnung vom Monatswert abweichen.</li>
+      <li>Sonderfälle (Grenzgänger-Tarife DE/FR/IT, Nebenerwerb, Ersatzeinkünfte) sind nicht abgebildet; die Sätze sind auf 0,05 Prozentpunkte zusammengefasst (indikative Berechnung).</li>
+    </ul>
+
+    <h2>Häufige Fragen</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Details für einen Kanton: <a href="/quellensteuer-rechner/">Quellensteuer-Rechner</a>. Ordentlich besteuert?
+      <a href="/steuervergleich/">Steuervergleich aller 26 Kantone</a>. Vom Brutto- zum Nettolohn:
+      <a href="/brutto-netto-rechner/">Brutto-Netto-Rechner</a>.
+    </p>
+  </div>
+
+  <RatgeberLinks ids={['quellensteuer-expats', 'kantonswechsel-steuern-sparen']} />
+
+  <RelatedTools current="quellensteuer-vergleich" />
+
+  <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
+    <p class="mb-1">
+      <strong>Quellen:</strong> Quellensteuertarife {SITE_YEAR} der Kantone:
+      <a class="underline" href="https://www.estv.admin.ch/estv/de/home/direkte-bundessteuer/quellensteuer.html" rel="noopener">ESTV / kantonale Steuerverwaltungen</a>.
+      Für den Inhalt der Tarife sind die Kantone zuständig. Methodik und Grenzen:
+      <a class="underline" href="/methodik/">Methodik</a>.
+    </p>
+    <p>Zuletzt aktualisiert: 15.07.2026 · Datenstand Steuerjahr {SITE_YEAR}</p>
+  </div>
+</BaseLayout>

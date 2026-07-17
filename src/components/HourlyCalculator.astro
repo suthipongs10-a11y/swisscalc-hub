@@ -1,0 +1,130 @@
+---
+/**
+ * Stundenlohn calculator island — pure client-side math (no data fetch).
+ * Server-renders a working default result so the page is useful without JS;
+ * the client script recomputes with the same engine + renderer.
+ */
+import { convertWage, DEFAULT_HOURS_PER_WEEK, type Direction, type VacationWeeks } from '../lib/hourly/engine';
+import { renderHourlyHtml, HOURLY_LABELS_DE, HOURLY_LABELS_FR, HOURLY_LABELS_EN } from '../lib/hourly/render';
+import type { Locale } from '../lib/locales';
+
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'de' } = Astro.props;
+const labels = locale === 'fr' ? HOURLY_LABELS_FR : locale === 'en' ? HOURLY_LABELS_EN : HOURLY_LABELS_DE;
+
+const T = {
+  de: {
+    aria: 'Stundenlohn-Rechner', toHourly: 'Monatslohn → Stundenlohn', toMonthly: 'Stundenlohn → Monatslohn',
+    amountMonthly: 'Bruttolohn pro Monat (CHF)', amountHourly: 'Stundenlohn brutto (CHF)',
+    hours: 'Wochenstunden', vacation: 'Ferienanspruch', weeks: 'Wochen', thirteenth: '13. Monatslohn',
+  },
+  fr: {
+    aria: 'Calculateur de salaire horaire', toHourly: 'Salaire mensuel → horaire', toMonthly: 'Salaire horaire → mensuel',
+    amountMonthly: 'Salaire brut par mois (CHF)', amountHourly: 'Salaire horaire brut (CHF)',
+    hours: 'Heures par semaine', vacation: 'Droit aux vacances', weeks: 'semaines', thirteenth: '13e salaire',
+  },
+  en: {
+    aria: 'Hourly wage calculator', toHourly: 'Monthly salary → hourly', toMonthly: 'Hourly wage → monthly',
+    amountMonthly: 'Gross salary per month (CHF)', amountHourly: 'Gross hourly wage (CHF)',
+    hours: 'Hours per week', vacation: 'Vacation entitlement', weeks: 'weeks', thirteenth: '13th month salary',
+  },
+}[locale];
+
+const DEFAULTS = {
+  direction: 'toHourly' as Direction,
+  amount: 6500,
+  hoursPerWeek: DEFAULT_HOURS_PER_WEEK,
+  vacationWeeks: 4 as VacationWeeks,
+  thirteenth: false,
+};
+const initialHtml = renderHourlyHtml(convertWage(DEFAULTS), labels);
+
+const inputClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+const labelClass = 'block text-sm font-medium text-slate-700';
+---
+
+<section aria-label={T.aria} class="grid gap-6 md:grid-cols-2" data-hourly data-locale={locale}>
+  <form class="space-y-4" data-hourly-form novalidate>
+    <fieldset>
+      <legend class="sr-only">{T.aria}</legend>
+      <div class="mt-1 inline-flex rounded-md border border-slate-300 p-0.5">
+        <label class="cursor-pointer">
+          <input type="radio" name="direction" value="toHourly" class="peer sr-only" checked />
+          <span class="block rounded px-3 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">{T.toHourly}</span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="direction" value="toMonthly" class="peer sr-only" />
+          <span class="block rounded px-3 py-1.5 text-sm peer-checked:bg-slate-900 peer-checked:text-white">{T.toMonthly}</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div>
+      <label class={labelClass} for="hw-amount" data-hourly-amount-label data-monthly={T.amountMonthly} data-hourly-l={T.amountHourly}>
+        {T.amountMonthly}
+      </label>
+      <input class={inputClass} type="number" id="hw-amount" name="amount" min="0" step="50" inputmode="decimal" value={DEFAULTS.amount} />
+    </div>
+
+    <div>
+      <label class={labelClass} for="hw-hours">{T.hours}</label>
+      <input class={inputClass} type="number" id="hw-hours" name="hours" min="1" max="60" step="0.5" inputmode="decimal" value={DEFAULTS.hoursPerWeek} />
+    </div>
+
+    <div>
+      <label class={labelClass} for="hw-vacation">{T.vacation}</label>
+      <select class={inputClass} id="hw-vacation" name="vacation">
+        <option value="4" selected>4 {T.weeks}</option>
+        <option value="5">5 {T.weeks}</option>
+        <option value="6">6 {T.weeks}</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+        <input type="checkbox" name="thirteenth" class="h-4 w-4 rounded border-slate-300" />
+        {T.thirteenth}
+      </label>
+    </div>
+  </form>
+
+  <div data-hourly-result aria-live="polite" set:html={initialHtml}></div>
+</section>
+
+<script>
+  import { convertWage, type Direction, type VacationWeeks } from '../lib/hourly/engine';
+  import { renderHourlyHtml, HOURLY_LABELS_DE, HOURLY_LABELS_FR, HOURLY_LABELS_EN } from '../lib/hourly/render';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-hourly]')) {
+    const form = root.querySelector<HTMLFormElement>('[data-hourly-form]');
+    const resultEl = root.querySelector<HTMLElement>('[data-hourly-result]');
+    if (!form || !resultEl) continue;
+    const locale = root.dataset.locale ?? 'de';
+    const labels = locale === 'fr' ? HOURLY_LABELS_FR : locale === 'en' ? HOURLY_LABELS_EN : HOURLY_LABELS_DE;
+    const amountLabel = root.querySelector<HTMLElement>('[data-hourly-amount-label]');
+
+    const recompute = () => {
+      const direction = ((form.elements.namedItem('direction') as RadioNodeList).value || 'toHourly') as Direction;
+      if (amountLabel) {
+        amountLabel.textContent = (direction === 'toHourly' ? amountLabel.dataset.monthly : amountLabel.dataset.hourlyL) ?? '';
+      }
+      const num = (name: string) => {
+        const el = form.elements.namedItem(name) as HTMLInputElement | null;
+        const v = el ? parseFloat(el.value) : NaN;
+        return Number.isFinite(v) ? v : 0;
+      };
+      const vacation = parseInt((form.elements.namedItem('vacation') as HTMLSelectElement).value, 10) as VacationWeeks;
+      const thirteenth = (form.elements.namedItem('thirteenth') as HTMLInputElement).checked;
+      resultEl.innerHTML = renderHourlyHtml(
+        convertWage({ direction, amount: num('amount'), hoursPerWeek: num('hours'), vacationWeeks: vacation, thirteenth }),
+        labels,
+      );
+    };
+
+    form.addEventListener('input', recompute);
+    form.addEventListener('change', recompute);
+  }
+</script>

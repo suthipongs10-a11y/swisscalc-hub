@@ -9,6 +9,8 @@ relatedTool:
   href: '/quellensteuer-rechner/'
   label: 'Quellensteuer-Rechner'
 related:
+  - quellensteuer-oder-veranlagung
+  - grenzgaenger-steuern
   - kantonswechsel-steuern-sparen
   - heiraten-steuern
 order: 1

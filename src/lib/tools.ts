@@ -36,6 +36,18 @@ export const TOOLS: Tool[] = [
     href: '/saeule-3a-rechner/',
   },
   {
+    id: 'quellensteuer-vergleich',
+    name: 'Quellensteuer-Vergleich',
+    description: 'Ein Bruttolohn, alle 26 Kantone: wo ist die Quellensteuer am tiefsten?',
+    href: '/quellensteuer-vergleich/',
+  },
+  {
+    id: 'stundenlohn-rechner',
+    name: 'Stundenlohn-Rechner',
+    description: 'Monatslohn und Stundenlohn umrechnen — mit Ferienentschädigung und 13. Monatslohn.',
+    href: '/stundenlohn-rechner/',
+  },
+  {
     id: 'franchise-rechner',
     name: 'Franchise-Rechner Krankenkasse',
     description: 'Welche Franchise lohnt sich bei Ihren Gesundheitskosten? Break-even einfach berechnet.',

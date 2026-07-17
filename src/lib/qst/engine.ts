@@ -42,11 +42,10 @@ export interface QstResult {
 }
 
 /**
- * Monthly withholding tax for a monthly gross salary under one tariff code.
- * Returns zeros if the code is missing from the canton data.
+ * Monthly withholding tax for a monthly gross salary against one band table.
+ * Returns zeros for empty tables or non-positive income.
  */
-export function qstForCode(monthlyGross: number, data: QstData, code: string): QstResult {
-  const bands = data.codes[code];
+export function qstFromBands(monthlyGross: number, bands: QstBand[] | undefined, code = ''): QstResult {
   const empty: QstResult = { monthlyTax: 0, annualTax: 0, ratePct: 0, monthlyNet: monthlyGross, code };
   if (!bands || bands.length === 0 || !(monthlyGross > 0)) return empty;
 
@@ -76,6 +75,14 @@ export function qstForCode(monthlyGross: number, data: QstData, code: string): Q
     monthlyNet: Math.round((monthlyGross - rounded) * 100) / 100,
     code,
   };
+}
+
+/**
+ * Monthly withholding tax for a monthly gross salary under one tariff code.
+ * Returns zeros if the code is missing from the canton data.
+ */
+export function qstForCode(monthlyGross: number, data: QstData, code: string): QstResult {
+  return qstFromBands(monthlyGross, data.codes[code], code);
 }
 
 export interface QstInput {

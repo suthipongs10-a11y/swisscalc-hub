@@ -42,7 +42,10 @@ unzip -o data/raw/qst/tar<jj>txt.zip -d data/raw/qst/txt
 #    rates merged to 0.05pp for a compact indicative model)
 node scripts/import-qst.mjs --year <YYYY> --retrieved <YYYY-MM-DD>
 
-# 3. Rebuild + verify; the tool + tests pick up the new public/data/qst/*.json
+# 3. Regroup for the cross-canton comparison tool (public/data/qstv/<key>.json)
+node scripts/build-qst-compare.mjs
+
+# 4. Rebuild + verify; the tools + tests pick up the new public/data/qst[v]/*.json
 npm run build && npm test
 ```
 
