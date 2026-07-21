@@ -9,6 +9,7 @@ relatedTool:
   href: '/en/salary-calculator/'
   label: 'Salary calculator'
 related:
+  - bonus-gratuity-switzerland
   - pension-fund-bvg-explained
   - withholding-or-ordinary-assessment
   - withholding-tax-for-expats

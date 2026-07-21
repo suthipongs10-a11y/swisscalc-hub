@@ -9,6 +9,7 @@ relatedTool:
   href: '/brutto-netto-rechner/'
   label: 'Brutto-Netto-Rechner'
 related:
+  - bonus-gratifikation
   - pensionskasse-bvg-erklaert
   - quellensteuer-oder-veranlagung
   - quellensteuer-expats

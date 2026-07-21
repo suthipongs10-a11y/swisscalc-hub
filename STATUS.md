@@ -2,7 +2,9 @@
 
 ## Current state
 
-**Latest (Session 17, M13): guide depth during AdSense review — 229 pages, 11 articles per language.** Four new articles ×3 locales (3a vs 3b, health-insurance premiums, tax-return deadlines & deductions, pension fund/BVG), all numbers repo-sourced. Awaiting review.
+**Latest (Session 18, M14): guide at full target — 241 pages, 15 articles per language — and explicit formulas on every tool page.** Four new articles ×3 locales (AHV explained, part-time work, understanding the payslip, bonus & gratuity — completing the salary/pension cluster) plus explicit formula sentences added to the 3a and QST tool pages in all locales (every calculator now shows description + method + formula + FAQ). Awaiting review.
+
+**Session 17 (M13): guide depth during AdSense review — 11 articles per language.** Four new articles ×3 locales (3a vs 3b, health-insurance premiums, tax-return deadlines & deductions, pension fund/BVG), all numbers repo-sourced. Awaiting review.
 
 **Session 16 (M12): two new tools.** Quellensteuer-Vergleich (all 26 cantons ranked from one salary; unique in the market), Stundenlohn-Rechner (high-volume keyword, OR-derived vacation supplements), and 3 new guide articles ×3 languages (NOV/ordinary assessment, 13th month salary, cross-border commuters). Tests 98/98. Awaiting review.
 
@@ -68,6 +70,18 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-17 — Session 18: M14 — Guide auf 15 Artikel/Sprache + explizite Formeln auf allen Tool-Seiten
+
+- **Owner-Ziel erfüllt:** «10–15 Artikel» → Guide nun **15 Artikel je Sprache** (45 Dateien total); jede Tool-Seite hat Beschreibung + Methodik + **explizite Formel** + FAQ.
+- **4 neue Artikel** (order 12–15), je DE + FR + EN — der Lohn-/Vorsorge-Cluster ist damit komplett:
+  1. *AHV einfach erklärt* — Umlageprinzip, 5.3%/10.6% (sourced), Skala 44 & Beitragslücken (1/44, 5-Jahres-Nachzahlung), Splitting/150%-Plafond, Referenzalter 65 (AHV 21), Vorbezug/Aufschub, 13. AHV-Rente ab 2026; vervollständigt die 3-Säulen-Serie (AHV↔BVG↔3a verlinkt).
+  2. *Teilzeit* — fixer Koordinationsabzug mit Rechen-Tabelle (90k: 71%→51%→27% versichert), Eintrittsschwelle je Arbeitgeber, Auffangeinrichtung, 8h-NBU-Regel, QST-Satzhochrechnung bei mehreren Jobs.
+  3. *Lohnabrechnung verstehen* — jede Abzugszeile erklärt (Tabelle mit sourced Sätzen), 2 Kontroll-Punkte (NBU/KTG, BVG vs. Vorsorgeausweis), Lohnausweis-Abgleich.
+  4. *Bonus & Gratifikation* — variabler Lohn vs. OR 322d, stillschweigender Anspruch, volle Beitragspflicht, Monats-/Jahresmodell-Effekt, Gegenmittel (PK-Einkauf/3a im Bonusjahr).
+- **Formeln ergänzt** (9 Seiten): 3a (Ersparnis = Steuer(E) − Steuer(E − Einzahlung), Grenzsteuersatz-Erklärung), QST-Rechner + QST-Vergleich (QST = max(Brutto × Satz, Mindeststeuer), 5-Rappen-Rundung) — DE/FR/EN.
+- **Fix unterwegs:** YAML-Frontmatter-Fehler (`\'` statt `''` in 2 EN-Dateien) vom Build gefangen und korrigiert; 3 fragile Seiten (Lohnabrechnung nur mit Hub-Inbound) via reziproke related-Links (Teilzeit↔Lohnabrechnung) geschlossen.
+- **Re-checked before push:** build clean (**241 Seiten**), Tests 98/98, Links green (240), Audit clean (keine fragile pages, 80/80 je Locale), Hubs 15/15/15, Formeln im dist verifiziert, hreflang-Sample OK, kein ß, Lighthouse ≥95×4 auf 6 gesampelten URLs (4 neue Artikel + 2 Formel-Seiten). Committed, stopped for review.
 
 ### 2026-07-16 — Session 17: M13 — 4 neue Guide-Artikel ×3 Sprachen (guide depth während AdSense-Review)
 

@@ -9,6 +9,7 @@ relatedTool:
   href: '/brutto-netto-rechner/'
   label: 'Brutto-Netto-Rechner'
 related:
+  - ahv-einfach-erklaert
   - saeule-3a-vs-3b
   - 13-monatslohn
 order: 11

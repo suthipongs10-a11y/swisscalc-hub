@@ -58,6 +58,11 @@ const STATIC_GROUPS: PageGroup[] = [
   { de: '/ratgeber/krankenkasse-praemien-senken/', fr: '/fr/guide/caisse-maladie-reduire-primes/', en: '/en/guide/reduce-health-insurance-premiums/' },
   { de: '/ratgeber/steuererklaerung-fristen-abzuege/', fr: '/fr/guide/declaration-impots-delais-deductions/', en: '/en/guide/swiss-tax-return-deadlines-deductions/' },
   { de: '/ratgeber/pensionskasse-bvg-erklaert/', fr: '/fr/guide/caisse-de-pension-lpp/', en: '/en/guide/pension-fund-bvg-explained/' },
+  // M14 guide articles.
+  { de: '/ratgeber/ahv-einfach-erklaert/', fr: '/fr/guide/avs-expliquee/', en: '/en/guide/ahv-explained/' },
+  { de: '/ratgeber/teilzeit-lohn-bvg-steuern/', fr: '/fr/guide/temps-partiel-salaire-lpp-impots/', en: '/en/guide/part-time-work-switzerland/' },
+  { de: '/ratgeber/lohnabrechnung-verstehen/', fr: '/fr/guide/comprendre-fiche-salaire/', en: '/en/guide/understanding-swiss-payslip/' },
+  { de: '/ratgeber/bonus-gratifikation/', fr: '/fr/guide/bonus-gratification/', en: '/en/guide/bonus-gratuity-switzerland/' },
 ];
 
 /** The 26 programmatic income-tax canton pages exist in all three locales (M6/M8). */

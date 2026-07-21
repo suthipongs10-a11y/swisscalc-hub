@@ -70,6 +70,11 @@ const faqSchema = {
       already include cantonal, municipal and federal tax as well as flat-rate deductions. This calculator evaluates the
       official FTA tariff files {SITE_YEAR}.
     </p>
+    <p>
+      As a formula: <strong>withholding tax = max(gross salary × rate, minimum tax)</strong> — the rate comes from your
+      monthly salary's band for the chosen tariff code (e.g. A0N), the minimum tax from the same tariff row; the result
+      is rounded to 5 centimes. Net salary is gross salary − withholding tax (before social contributions).
+    </p>
     <h3>Limits of this calculation</h3>
     <ul>
       <li>Covered are tariff codes <strong>A, B, C and H</strong> with 0–5 children and church tax (where the canton levies it at source). Special cases (cross-border tariffs, board members, replacement income) are not reproduced.</li>

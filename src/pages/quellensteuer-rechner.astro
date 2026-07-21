@@ -72,6 +72,12 @@ const faqSchema = {
       Gemeinde- und Bundessteuer sowie pauschale Abzüge bereits enthalten. Dieser Rechner wertet die offiziellen
       ESTV-Tarifdateien {SITE_YEAR} aus.
     </p>
+    <p>
+      Als Formel: <strong>Quellensteuer = max(Bruttolohn × Satz, Mindeststeuer)</strong> — der Satz stammt aus der
+      Tarifstufe Ihres Monatslohns für den Tarifcode (z.B. A0N), die Mindeststeuer aus derselben Tabellenzeile; das
+      Resultat wird auf 5 Rappen gerundet. Der Nettolohn ist entsprechend Bruttolohn − Quellensteuer (vor
+      Sozialabzügen).
+    </p>
     <h3>Grenzen dieser Berechnung</h3>
     <ul>
       <li>Berücksichtigt sind die Tarifcodes <strong>A, B, C und H</strong> mit 0–5 Kindern und Kirchensteuer (soweit der Kanton sie an der Quelle erhebt). Sonderfälle (Grenzgänger-Tarife, Verwaltungsräte, Ersatzeinkünfte) sind nicht abgebildet.</li>

@@ -9,6 +9,7 @@ relatedTool:
   href: '/fr/calculateur-salaire-brut-net/'
   label: 'Calculateur salaire brut-net'
 related:
+  - avs-expliquee
   - pilier-3a-vs-3b
   - 13e-salaire
 order: 11

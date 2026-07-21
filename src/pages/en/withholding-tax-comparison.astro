@@ -67,6 +67,11 @@ const faqSchema = {
       cantons from cheapest to most expensive. Clicking a canton opens its withholding-tax page with details and its
       own calculator.
     </p>
+    <p>
+      For every canton, the same formula as in the single calculator: <strong>withholding tax = max(gross salary ×
+      rate, minimum tax)</strong>, with rate and minimum tax from that canton's band, rounded to 5 centimes.
+      Differences between cantons therefore come purely from the tariff tables — not from the method.
+    </p>
     <h3>Limits of this calculation</h3>
     <ul>
       <li>In Geneva, Neuchâtel, Ticino, Vaud and Valais, church tax is <strong>not levied at source</strong>; in Jura it is always included. The church-tax option therefore only affects the remaining cantons.</li>

@@ -81,6 +81,11 @@ const faqSchema = {
       Gemeinde am Hauptort + direkte Bundessteuer) einmal ohne und einmal mit Abzug — die Differenz ist Ihre
       Steuerersparnis. Grundlage sind die kantonalen Tarife und Steuerfüsse {SITE_YEAR} aus den ESTV-Steuerdaten.
     </p>
+    <p>
+      Als Formel: <strong>Ersparnis = Steuer(Einkommen) − Steuer(Einkommen − Einzahlung)</strong>. Weil die Einzahlung
+      die obersten — am höchsten besteuerten — Einkommensfranken wegschneidet, entspricht die Ersparnis Ihrem
+      Grenzsteuersatz auf dem eingezahlten Betrag: je höher Einkommen und Progression, desto grösser der Effekt.
+    </p>
     <h3>Rechenbeispiel</h3>
     <p>Steuerbares Einkommen {formatCHF(100000, 0)}, alleinstehend, Kanton Zürich, Einzahlung {formatCHF(maxPK, 0)}:</p>
     <ul>

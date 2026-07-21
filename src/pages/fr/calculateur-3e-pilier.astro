@@ -71,6 +71,11 @@ const faqSchema = {
       chef-lieu + impôt fédéral direct) une fois sans et une fois avec la déduction — la différence est votre économie
       d’impôt. La base : les tarifs et coefficients cantonaux {SITE_YEAR} issus des données fiscales de l’AFC.
     </p>
+    <p>
+      En formule : <strong>économie = impôt(revenu) − impôt(revenu − versement)</strong>. Comme le versement retranche
+      les francs de revenu les plus élevés — les plus imposés —, l’économie correspond à votre taux marginal appliqué
+      au montant versé : plus le revenu et la progression sont élevés, plus l’effet est grand.
+    </p>
     <h3>Exemple de calcul</h3>
     <p>Revenu imposable {formatCHF(100000, 0)}, célibataire, canton de Zurich, versement {formatCHF(maxPK, 0)} :</p>
     <ul>

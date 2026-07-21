@@ -71,6 +71,11 @@ const faqSchema = {
       + direct federal tax) once without and once with the deduction — the difference is your tax saving. The basis:
       the cantonal {SITE_YEAR} schedules and multipliers from the FTA tax data.
     </p>
+    <p>
+      As a formula: <strong>saving = tax(income) − tax(income − contribution)</strong>. Because the contribution cuts
+      away your top — most heavily taxed — francs of income, the saving equals your marginal tax rate applied to the
+      amount paid in: the higher your income and progression, the bigger the effect.
+    </p>
     <h3>Worked example</h3>
     <p>Taxable income {formatCHF(100000, 0)}, single, canton of Zurich, contribution {formatCHF(maxPK, 0)}:</p>
     <ul>

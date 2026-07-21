@@ -67,6 +67,11 @@ const faqSchema = {
       les cantons du moins cher au plus cher. Un clic sur le canton ouvre sa page d’impôt à la source avec les détails
       et son propre calculateur.
     </p>
+    <p>
+      Pour chaque canton, la même formule que dans le calculateur individuel : <strong>impôt à la source = max(salaire
+      brut × taux, impôt minimal)</strong>, avec le taux et l’impôt minimal de l’échelon du canton concerné, arrondi à
+      5 centimes. Les différences entre cantons viennent donc uniquement des barèmes — pas de la méthode.
+    </p>
     <h3>Limites de ce calcul</h3>
     <ul>
       <li>À Genève, Neuchâtel, au Tessin, dans le canton de Vaud et en Valais, l’impôt ecclésiastique n’est <strong>pas prélevé à la source</strong> ; dans le Jura, il est toujours inclus. L’option n’agit donc que dans les autres cantons.</li>

@@ -66,6 +66,11 @@ const faqSchema = {
       Tabelle sortiert die Kantone vom günstigsten zum teuersten. Ein Klick auf den Kanton öffnet dessen
       Quellensteuer-Seite mit Details und eigenem Rechner.
     </p>
+    <p>
+      Pro Kanton gilt dieselbe Formel wie im Einzelrechner: <strong>Quellensteuer = max(Bruttolohn × Satz,
+      Mindeststeuer)</strong>, mit Satz und Mindeststeuer aus der Tarifstufe des jeweiligen Kantons, gerundet auf 5
+      Rappen. Unterschiede zwischen den Kantonen kommen also allein aus den Tariftabellen — nicht aus der Methode.
+    </p>
     <h3>Grenzen dieser Berechnung</h3>
     <ul>
       <li>In Genf, Neuenburg, Tessin, Waadt und Wallis wird die Kirchensteuer <strong>nicht an der Quelle</strong> erhoben; im Jura ist sie immer enthalten. Die Kirchensteuer-Option wirkt deshalb nur in den übrigen Kantonen.</li>

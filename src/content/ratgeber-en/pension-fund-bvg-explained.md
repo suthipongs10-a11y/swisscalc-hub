@@ -9,6 +9,7 @@ relatedTool:
   href: '/en/salary-calculator/'
   label: 'Salary calculator'
 related:
+  - ahv-explained
   - pillar-3a-vs-3b
   - 13th-month-salary
 order: 11
