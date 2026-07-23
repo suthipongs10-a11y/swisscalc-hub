@@ -5,6 +5,15 @@ import QstCompare from '../components/QstCompare.astro';
 import RatgeberLinks from '../components/RatgeberLinks.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
+import { readFileSync } from 'node:fs';
+import { formatCHF, formatPercent } from '../lib/format';
+import { compareQst, type QstvFile } from '../lib/qst/compare';
+import { deName } from '../lib/tax/labels';
+
+// Worked-example spread from the shipped data (single, CHF 6'500, no church).
+const qvRows = compareQst(6500, false, JSON.parse(readFileSync('public/data/qstv/a0.json', 'utf8')) as QstvFile);
+const qvCheapest = qvRows[0]!;
+const qvDearest = qvRows[qvRows.length - 1]!;
 
 const path = '/quellensteuer-vergleich/';
 const title = `Quellensteuer-Vergleich ${SITE_YEAR} – alle 26 Kantone | ${BRAND}`;
@@ -59,6 +68,15 @@ const faqSchema = {
   <QstCompare locale="de" />
 
   <div class="prose-content mt-14 max-w-2xl">
+    <h2>Warum sich der Kantonsvergleich lohnt</h2>
+    <p>
+      Die Quellensteuertarife bündeln Kantons-, Gemeinde- und Bundessteuer — und weil die kantonalen Sätze weit
+      auseinanderliegen, zahlt eine quellenbesteuerte Person für denselben Lohn je nach Wohnkanton sehr
+      unterschiedlich viel. Wer eine Stelle in der Schweiz annimmt und den Wohnort noch frei wählen kann, oder wer über
+      einen Umzug nachdenkt, trifft hier eine Entscheidung mit spürbarer Wirkung aufs Monatsbudget. Der Vergleich
+      stellt alle 26 Kantone für Ihren Lohn nebeneinander — sortiert vom günstigsten zum teuersten.
+    </p>
+
     <h2>Wie funktioniert der Vergleich?</h2>
     <p>
       Für jeden Kanton wird derselbe monatliche Bruttolohn durch die offizielle Tariftabelle {SITE_YEAR} des Kantons
@@ -71,11 +89,36 @@ const faqSchema = {
       Mindeststeuer)</strong>, mit Satz und Mindeststeuer aus der Tarifstufe des jeweiligen Kantons, gerundet auf 5
       Rappen. Unterschiede zwischen den Kantonen kommen also allein aus den Tariftabellen — nicht aus der Methode.
     </p>
-    <h3>Grenzen dieser Berechnung</h3>
+    <h2>Rechenbeispiel Schritt für Schritt</h2>
+    <p>
+      Alleinstehend, keine Kinder, keine Kirchensteuer (Tarifcode A0N), {formatCHF(6500, 0)} Bruttolohn pro Monat:
+    </p>
     <ul>
-      <li>In Genf, Neuenburg, Tessin, Waadt und Wallis wird die Kirchensteuer <strong>nicht an der Quelle</strong> erhoben; im Jura ist sie immer enthalten. Die Kirchensteuer-Option wirkt deshalb nur in den übrigen Kantonen.</li>
-      <li>Fünf Kantone rechnen nach dem <strong>Jahresmodell</strong> (Sternchen in der Tabelle) — bei unregelmässigen Löhnen kann die effektive Jahresrechnung vom Monatswert abweichen.</li>
-      <li>Sonderfälle (Grenzgänger-Tarife DE/FR/IT, Nebenerwerb, Ersatzeinkünfte) sind nicht abgebildet; die Sätze sind auf 0,05 Prozentpunkte zusammengefasst (indikative Berechnung).</li>
+      <li>Günstigster Kanton: <strong>{deName(qvCheapest.abbr)}</strong> mit {formatCHF(qvCheapest.monthlyTax)} pro Monat ({formatPercent(qvCheapest.ratePct / 100)})</li>
+      <li>Teuerster Kanton: <strong>{deName(qvDearest.abbr)}</strong> mit {formatCHF(qvDearest.monthlyTax)} pro Monat ({formatPercent(qvDearest.ratePct / 100)})</li>
+      <li><strong>Differenz: {formatCHF(qvDearest.monthlyTax - qvCheapest.monthlyTax)} pro Monat</strong> — rund {formatCHF((qvDearest.monthlyTax - qvCheapest.monthlyTax) * 12, 0)} pro Jahr für denselben Lohn</li>
+    </ul>
+
+    <h2>Klug entscheiden: worauf Sie achten sollten</h2>
+    <ul>
+      <li>
+        <strong>Nicht nur die Steuer zählt:</strong> Ein günstiger Kanton nützt wenig, wenn Miete und
+        Krankenkassenprämien den Vorteil auffressen — rechnen Sie die Gesamtkosten.
+      </li>
+      <li>
+        <strong>Kirchensteuer beachten:</strong> In Genf, Neuenburg, Tessin, Waadt und Wallis wird sie
+        <strong>nicht an der Quelle</strong> erhoben, im Jura ist sie immer enthalten — die Option wirkt nur in den
+        übrigen Kantonen.
+      </li>
+      <li>
+        <strong>Jahresmodell (Sternchen):</strong> Freiburg, Genf, Tessin, Waadt und Wallis glätten den Lohn übers
+        Jahr — bei Boni oder unregelmässigem Lohn kann die effektive Jahresrechnung vom Monatswert abweichen.
+      </li>
+      <li>
+        <strong>Details pro Kanton:</strong> Ein Klick auf den Kanton öffnet dessen
+        <a href="/quellensteuer-rechner/">Quellensteuer-Seite</a> mit eigenem Rechner. Grenzgänger-Tarife (DE/FR/IT)
+        sind nicht abgebildet; die Sätze sind auf 0,05 Prozentpunkte zusammengefasst (indikativ).
+      </li>
     </ul>
 
     <h2>Häufige Fragen</h2>

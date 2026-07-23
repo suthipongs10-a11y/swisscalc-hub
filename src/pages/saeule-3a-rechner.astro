@@ -75,7 +75,16 @@ const faqSchema = {
   <ThreeACalculator />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>Wie wird gerechnet?</h2>
+    <h2>Warum die Säule 3a der einfachste Steuerabzug ist</h2>
+    <p>
+      Die Säule 3a ist die private, steuerlich geförderte Vorsorge — und für die meisten Erwerbstätigen der
+      wirksamste Steuerabzug, der ohne grossen Aufwand zu haben ist. Jeder einbezahlte Franken senkt das steuerbare
+      Einkommen sofort, und das Guthaben ist während der Laufzeit von der Vermögens- und Ertragssteuer befreit. Wer
+      wissen will, ob sich die Einzahlung lohnt und wie viel sie konkret bringt, braucht eine Zahl statt eines
+      Bauchgefühls: Genau diese liefert der Säule-3a-Rechner — für Ihren Kanton, Ihr Einkommen und Ihren Zivilstand.
+    </p>
+
+    <h2>So wird gerechnet</h2>
     <p>
       Ihre 3a-Einzahlung wird vom steuerbaren Einkommen abgezogen. Wir berechnen Ihre Einkommenssteuer (Kanton +
       Gemeinde am Hauptort + direkte Bundessteuer) einmal ohne und einmal mit Abzug — die Differenz ist Ihre
@@ -86,18 +95,38 @@ const faqSchema = {
       die obersten — am höchsten besteuerten — Einkommensfranken wegschneidet, entspricht die Ersparnis Ihrem
       Grenzsteuersatz auf dem eingezahlten Betrag: je höher Einkommen und Progression, desto grösser der Effekt.
     </p>
-    <h3>Rechenbeispiel</h3>
+    <h2>Rechenbeispiel Schritt für Schritt</h2>
     <p>Steuerbares Einkommen {formatCHF(100000, 0)}, alleinstehend, Kanton Zürich, Einzahlung {formatCHF(maxPK, 0)}:</p>
     <ul>
       <li>Steuern ohne Einzahlung: {formatCHF(exBefore.totalTax, 0)}</li>
       <li>Steuern mit Einzahlung: {formatCHF(exAfter.totalTax, 0)}</li>
       <li><strong>Ersparnis: rund {formatCHF(exSaving, 0)} pro Jahr</strong></li>
     </ul>
-    <h3>Grenzen dieser Berechnung</h3>
+    <p>
+      Über 30 Erwerbsjahre wiederholt sich dieser Effekt Jahr für Jahr — allein die Steuerersparnis summiert sich auf
+      einen fünfstelligen Betrag, zusätzlich zum angesparten und verzinsten Kapital selbst.
+    </p>
+
+    <h2>Klug entscheiden: worauf Sie achten sollten</h2>
     <ul>
-      <li>Steuerfuss des Kantonshauptorts; Ihre Gemeinde kann abweichen. Ohne Kirchensteuer.</li>
-      <li>Die spätere Kapitalauszahlungssteuer beim Bezug ist nicht Teil dieser Rechnung.</li>
-      <li>Vergleich auf Basis des steuerbaren Einkommens (nach übrigen Abzügen).</li>
+      <li>
+        <strong>Zuerst das Maximum ausschöpfen:</strong> Der Abzug wirkt nur bis zum Jahres­maximum ({formatCHF(maxPK, 0)}
+        mit Pensionskasse). Wer kann, zahlt früh im Jahr ein — so ist das Geld länger investiert.
+      </li>
+      <li>
+        <strong>Mehrere Konten für den gestaffelten Bezug:</strong> Beim Bezug wird das Kapital separat besteuert. Wer
+        über mehrere Konten verfügt und sie in verschiedenen Jahren bezieht, bricht die Progression — Details unter
+        <a href="/ratgeber/saeule-3a-gestaffelt-beziehen/">Säule 3a gestaffelt beziehen</a>.
+      </li>
+      <li>
+        <strong>3a oder 3b?</strong> Die gebundene Säule 3a bringt den Abzug, die freie Säule 3b bleibt jederzeit
+        verfügbar. Was zu Ihnen passt, klärt <a href="/ratgeber/saeule-3a-vs-3b/">Säule 3a vs. 3b</a>.
+      </li>
+      <li>
+        <strong>Grenzen der Rechnung:</strong> Wir verwenden den Steuerfuss des Kantonshauptorts (Ihre Gemeinde kann
+        abweichen) und rechnen ohne Kirchensteuer; die spätere Kapitalauszahlungssteuer ist nicht Teil dieser
+        Ersparnisrechnung.
+      </li>
     </ul>
 
     <h2>Häufige Fragen</h2>

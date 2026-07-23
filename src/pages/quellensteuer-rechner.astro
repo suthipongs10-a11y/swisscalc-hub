@@ -5,11 +5,17 @@ import QstCalculator from '../components/QstCalculator.astro';
 import RatgeberLinks from '../components/RatgeberLinks.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
+import { formatCHF, formatPercent } from '../lib/format';
 import qstIndex from '../data/qst/index.json';
 import cantonData from '../data/cantons.json';
+import zhQst from '../../public/data/qst/zh.json';
+import { qstForCode, type QstData } from '../lib/qst/engine';
 import { deName, cantonSlugOf } from '../lib/tax/labels';
 
 const cantonsByName = [...cantonData.cantons].sort((a, b) => deName(a.abbr).localeCompare(deName(b.abbr)));
+
+// Worked-example figure from the engine (single-source with the calculator): ZH, single, no church.
+const qstEx = qstForCode(6500, zhQst as unknown as QstData, 'A0N');
 
 const path = '/quellensteuer-rechner/';
 const title = `Quellensteuer-Rechner ${SITE_YEAR} – alle Kantone | ${BRAND}`;
@@ -65,6 +71,16 @@ const faqSchema = {
   <QstCalculator locale="de" />
 
   <div class="prose-content mt-14 max-w-2xl">
+    <h2>Warum die Quellensteuer für Zugezogene zählt</h2>
+    <p>
+      Wer als ausländische Arbeitskraft ohne Niederlassungsbewilligung C in der Schweiz arbeitet, zahlt die
+      Einkommenssteuer nicht per Steuererklärung, sondern direkt über den Lohn — als Quellensteuer. Für die
+      Budgetplanung ist das ein grosser Unterschied: Der Nettolohn ist bereits um die Steuer reduziert, und wie hoch
+      sie ausfällt, hängt stark vom Wohnkanton ab. Wer eine Stelle in der Schweiz annimmt, einen Umzug plant oder
+      prüfen will, ob sich eine nachträgliche Veranlagung lohnt, sollte die Quellensteuer vorher kennen — genau dafür
+      ist dieser Rechner da.
+    </p>
+
     <h2>Wie wird die Quellensteuer berechnet?</h2>
     <p>
       Die Quellensteuer wird direkt vom monatlichen Bruttolohn abgezogen. Massgebend sind der Wohnkanton, der Tarifcode
@@ -78,11 +94,44 @@ const faqSchema = {
       Resultat wird auf 5 Rappen gerundet. Der Nettolohn ist entsprechend Bruttolohn − Quellensteuer (vor
       Sozialabzügen).
     </p>
-    <h3>Grenzen dieser Berechnung</h3>
+
+    <h2>Rechenbeispiel Schritt für Schritt</h2>
+    <p>
+      Eine alleinstehende Person ohne Kinder und ohne Kirchensteuer (Tarifcode A0N) mit {formatCHF(6500, 0)}
+      Bruttolohn pro Monat im Kanton Zürich:
+    </p>
     <ul>
-      <li>Berücksichtigt sind die Tarifcodes <strong>A, B, C und H</strong> mit 0–5 Kindern und Kirchensteuer (soweit der Kanton sie an der Quelle erhebt). Sonderfälle (Grenzgänger-Tarife, Verwaltungsräte, Ersatzeinkünfte) sind nicht abgebildet.</li>
-      <li>Die Tarife bemessen sich am <strong>Monatslohn</strong>. Der 13. Monatslohn, Boni und das kantonale Monats- vs. Jahresmodell können die effektive Jahresrechnung beeinflussen.</li>
-      <li>Die Steuersätze sind für eine indikative Berechnung auf 0,05 Prozentpunkte zusammengefasst — die verbindliche Abrechnung erstellt Ihr Arbeitgeber nach den kantonalen Tarifen.</li>
+      <li>Tarifstufe für {formatCHF(6500, 0)} im ZH-Tarif A0N → Satz {formatPercent(qstEx.ratePct / 100)}</li>
+      <li>Quellensteuer pro Monat: <strong>{formatCHF(qstEx.monthlyTax)}</strong> ({formatCHF(qstEx.annualTax, 0)} pro Jahr)</li>
+      <li>Nettolohn vor Sozialabzügen: {formatCHF(qstEx.monthlyNet)} pro Monat</li>
+    </ul>
+    <p>
+      Im selben Tarif zahlt eine verheiratete Person mit zwei Kindern deutlich weniger — die familiäre Situation
+      verschiebt den Satz stark. Genau das rechnen Sie oben für Ihren Fall durch.
+    </p>
+
+    <h2>Klug entscheiden: worauf Sie achten sollten</h2>
+    <ul>
+      <li>
+        <strong>Der Kanton macht den Unterschied:</strong> Für denselben Lohn variiert die Quellensteuer je nach Kanton
+        erheblich — vergleichen Sie alle 26 im <a href="/quellensteuer-vergleich/">Quellensteuer-Vergleich</a>.
+      </li>
+      <li>
+        <strong>Ab CHF 120'000 wird es anders:</strong> Über dieser Grenze werden Sie nachträglich ordentlich
+        veranlagt; auch darunter kann sich der freiwillige Antrag lohnen, wenn Sie hohe Abzüge haben — siehe
+        <a href="/ratgeber/quellensteuer-oder-veranlagung/">Quellensteuer oder ordentliche Veranlagung</a>.
+      </li>
+      <li>
+        <strong>Grenzgänger folgen eigenen Regeln:</strong> Für Deutschland, Frankreich und Italien gelten
+        Sondertarife (nicht in diesem Rechner abgebildet) — der Leitfaden
+        <a href="/ratgeber/grenzgaenger-steuern/">Grenzgänger</a> ordnet sie ein.
+      </li>
+      <li>
+        <strong>Indikative Werte:</strong> Berücksichtigt sind die Tarifcodes A/B/C/H mit 0–5 Kindern und Kirchensteuer
+        (wo der Kanton sie an der Quelle erhebt); die Sätze sind auf 0,05 Prozentpunkte zusammengefasst. Verbindlich ist
+        die Abrechnung Ihres Arbeitgebers. Der 13. Monatslohn und Boni können die effektive Jahresrechnung
+        beeinflussen.
+      </li>
     </ul>
 
     <h2>Häufige Fragen</h2>

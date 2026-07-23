@@ -77,14 +77,29 @@ const faqSchema = {
   <TaxComparison />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>Wie wird gerechnet?</h2>
+    <h2>Warum der Wohnort über Tausende Franken entscheidet</h2>
+    <p>
+      Die Einkommenssteuer ist in der Schweiz zu einem grossen Teil <strong>kantonal und kommunal</strong> — und die
+      Bandbreite ist enorm. Für dasselbe Einkommen zahlen Sie je nach Kanton das Doppelte oder mehr. Wer einen Umzug,
+      einen Stellenwechsel in einen anderen Kanton oder den Kauf von Wohneigentum plant, trifft mit der Wohnortwahl eine
+      der grössten finanziellen Entscheidungen überhaupt: Über ein Erwerbsleben summieren sich die Unterschiede auf
+      sechsstellige Beträge. Der Steuervergleich macht diese Spannweite für Ihr konkretes Einkommen sichtbar — als
+      Ranking aller 26 Kantonshauptorte.
+    </p>
+
+    <h2>So wird gerechnet</h2>
     <p>
       Für jeden Kanton berechnen wir die <strong>einfache Staatssteuer</strong> nach dem kantonalen Einkommenssteuertarif
       {SITE_YEAR} (Quelle: ESTV-Steuerdaten) und multiplizieren sie mit den Steuerfüssen von Kanton und Hauptort. Dazu
       kommt die <strong>direkte Bundessteuer</strong> nach Bundestarif. Kirchensteuer und Personalsteuern sind nicht
       enthalten. In Kantonen mit eigenem Gemeindetarif (Schwyz, Sitten) verwenden wir den offiziellen Gemeindetarif.
     </p>
-    <h3>Rechenbeispiel</h3>
+    <p>
+      Kurz als Formel: <strong>Gesamtsteuer = einfache Staatssteuer × (Steuerfuss Kanton + Steuerfuss Gemeinde) +
+      direkte Bundessteuer</strong>. Die einfache Staatssteuer folgt dem progressiven Kantonstarif, der Steuerfuss ist
+      ein jährlich festgelegter Multiplikator in Prozent.
+    </p>
+    <h2>Rechenbeispiel Schritt für Schritt</h2>
     <p>Steuerbares Einkommen {formatCHF(100000, 0)}, alleinstehend, Hauptort Zürich:</p>
     <ul>
       <li>Einfache Staatssteuer (ZH-Tarif): {formatCHF(zh.baseTax, 0)}</li>
@@ -93,11 +108,29 @@ const faqSchema = {
       <li>Direkte Bundessteuer: {formatCHF(zh.federalTax, 0)}</li>
       <li><strong>Total: {formatCHF(zh.totalTax, 0)} ({(zh.effectiveRate * 100).toFixed(1)}% effektiv)</strong></li>
     </ul>
-    <h3>Grenzen dieser Berechnung</h3>
+    <h2>Klug entscheiden: worauf Sie achten sollten</h2>
     <ul>
-      <li>Vergleich auf Basis des <strong>steuerbaren Einkommens</strong> — kantonale Unterschiede bei den Abzügen sind darin nicht abgebildet.</li>
-      <li>Steuerfüsse der <strong>Hauptorte</strong>; Ihre Gemeinde kann abweichen.</li>
-      <li>Ohne Kirchensteuer, Personalsteuer und Vermögenssteuer.</li>
+      <li>
+        <strong>Die Gemeinde ist der zweite Hebel:</strong> Innerhalb eines Kantons unterscheiden sich die
+        Gemeinden teils um über 30 Steuerfuss-Prozentpunkte. Wir rechnen mit dem <strong>Hauptort</strong> — in einer
+        günstigen Gemeinde desselben Kantons kann die Belastung deutlich tiefer liegen.
+      </li>
+      <li>
+        <strong>Nicht nur die Steuer zählt:</strong> Ein steuergünstiger Kanton nützt wenig, wenn Wohnkosten und
+        Krankenkassenprämien den Vorteil aufzehren. Rechnen Sie die Gesamtkosten — Steuern, Miete, Prämien — gegen den
+        Steuervorteil.
+      </li>
+      <li>
+        <strong>Zivilstand verschiebt das Ranking:</strong> Verheiratete werden anders besteuert als Alleinstehende;
+        was für Sie gilt, zeigt der Rechner mit dem passenden Zivilstand — mehr dazu unter
+        <a href="/ratgeber/heiraten-steuern/">Heiraten &amp; Steuern</a>.
+      </li>
+      <li>
+        <strong>Vor dem Umzug durchrechnen:</strong> Der Leitfaden
+        <a href="/ratgeber/kantonswechsel-steuern-sparen/">Kantonswechsel: Steuern sparen</a> zeigt, worauf es beim
+        Wohnsitzwechsel steuerlich ankommt. Steuerbares Einkommen ist Ihr Einkommen <em>nach</em> Abzügen — Ihre
+        <a href="/saeule-3a-rechner/">Säule 3a</a> senkt es zusätzlich.
+      </li>
     </ul>
 
     <h2>Häufige Fragen</h2>

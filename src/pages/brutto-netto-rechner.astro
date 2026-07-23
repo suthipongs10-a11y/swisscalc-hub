@@ -72,7 +72,16 @@ const faqSchema = {
   <SalaryCalculator />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>Wie wird gerechnet?</h2>
+    <h2>Warum der Nettolohn zählt</h2>
+    <p>
+      Der Bruttolohn steht im Arbeitsvertrag — bezahlen können Sie aber nur mit dem Nettolohn. Zwischen den beiden
+      liegen die Sozialversicherungsbeiträge, und wer eine Stelle vergleicht, eine Lohnverhandlung führt oder ein
+      Haushaltsbudget plant, braucht die Zahl <em>nach</em> Abzügen. Genau diese Lücke schliesst der Brutto-Netto-Rechner:
+      Er macht transparent, wie viel von jeder Lohnerhöhung tatsächlich auf dem Konto ankommt — und weshalb zwei
+      Personen mit gleichem Bruttolohn je nach Alter unterschiedlich viel netto erhalten.
+    </p>
+
+    <h2>So funktioniert die Berechnung</h2>
     <p>
       Der Rechner zieht vom Bruttojahreslohn die gesetzlichen Sozialversicherungsbeiträge der Arbeitnehmenden ab. Diese
       Sätze sind eidgenössisch und in allen Kantonen gleich. Massgebend für {SITE_YEAR}:
@@ -109,7 +118,14 @@ const faqSchema = {
       </tbody>
     </table>
 
-    <h3>Rechenbeispiel</h3>
+    <p>
+      Die vier Abzüge folgen unterschiedlicher Logik: AHV/IV/EO und ALV sind reine Prozentsätze auf dem Lohn, die NBU
+      hängt vom Versicherungsvertrag des Arbeitgebers ab, und der BVG-Beitrag wird nur auf dem
+      <strong>koordinierten Lohn</strong> berechnet und steigt mit dem Alter. Deshalb ist der Nettolohn kein fixer
+      Prozentsatz des Bruttolohns, sondern verschiebt sich mit Ihrer Situation.
+    </p>
+
+    <h2>Rechenbeispiel Schritt für Schritt</h2>
     <p>
       Bruttolohn {formatCHF(100000, 0)} pro Jahr, 40 Jahre alt, NBU-Satz 1.4%:
     </p>
@@ -123,16 +139,33 @@ const faqSchema = {
       <li><strong>Total Abzüge: {formatCHF(11013, 0)} → Nettolohn {formatCHF(88987, 0)} pro Jahr</strong></li>
     </ul>
 
-    <h3>Grenzen dieser Berechnung</h3>
+    <h2>Klug entscheiden: worauf Sie achten sollten</h2>
     <ul>
       <li>
-        Der <strong>NBU-Satz</strong> und die <strong>BVG-Beiträge</strong> hängen vom Arbeitgeber bzw. der
-        Pensionskasse ab. Wir rechnen mit dem gesetzlichen Minimum (BVG-Obligatorium, 50%-Anteil); überobligatorische
-        Lösungen führen zu höheren Abzügen.
+        <strong>Netto vergleichen, nicht brutto:</strong> Zwei Stellen mit gleichem Bruttolohn können netto spürbar
+        auseinanderliegen — etwa wenn eine Pensionskasse überobligatorisch versichert. Fragen Sie im Bewerbungsprozess
+        nach dem <strong>BVG-Reglement</strong> und dem NBU-Satz.
       </li>
-      <li>Die <strong>Einkommenssteuer</strong> ist nicht enthalten (separate Veranlagung, siehe oben).</li>
-      <li>Freiwillige Beiträge wie das Krankentaggeld (KTG) sind nicht berücksichtigt.</li>
+      <li>
+        <strong>Die Einkommenssteuer kommt separat:</strong> Der Nettolohn hier ist <em>vor Steuern</em>. Bei
+        Schweizer:innen und Ausweis C wird die Einkommenssteuer nicht vom Lohn abgezogen, sondern jährlich veranlagt —
+        planen Sie sie im Budget separat ein und vergleichen Sie sie im
+        <a href="/steuervergleich/">Steuervergleich aller 26 Kantone</a>.
+      </li>
+      <li>
+        <strong>Der BVG-Abzug wächst mit dem Alter:</strong> In den Jahren 35, 45 und 55 steigt der Satz stufenweise —
+        Ihr Nettolohn sinkt dann leicht, ohne dass sich sonst etwas ändert (mehr dazu unter
+        <a href="/ratgeber/pensionskasse-bvg-erklaert/">Pensionskasse &amp; BVG erklärt</a>).
+      </li>
+      <li>
+        <strong>Steuern optimieren:</strong> Eine Einzahlung in die <a href="/saeule-3a-rechner/">Säule 3a</a> senkt
+        das steuerbare Einkommen — der wirksamste legale Hebel neben dem Pensionskassen-Einkauf.
+      </li>
     </ul>
+    <p>
+      Im Stundenlohn angestellt? Monats- und Stundenlohn rechnen Sie im
+      <a href="/stundenlohn-rechner/">Stundenlohn-Rechner</a> um — inklusive Ferienentschädigung und 13. Monatslohn.
+    </p>
 
     <h2>Häufige Fragen</h2>
     {
@@ -143,11 +176,6 @@ const faqSchema = {
         </div>
       ))
     }
-
-    <p>
-      Im Stundenlohn angestellt? Monats- und Stundenlohn rechnen Sie im
-      <a href="/stundenlohn-rechner/">Stundenlohn-Rechner</a> um — inklusive Ferienentschädigung und 13. Monatslohn.
-    </p>
   </div>
 
   <RatgeberLinks ids={['quellensteuer-expats']} />

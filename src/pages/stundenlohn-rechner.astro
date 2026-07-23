@@ -4,6 +4,11 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import HourlyCalculator from '../components/HourlyCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../lib/site';
+import { formatCHF, formatNumber } from '../lib/format';
+import { convertWage } from '../lib/hourly/engine';
+
+// Worked-example figures from the engine (single source with the calculator).
+const hwEx = convertWage({ direction: 'toHourly', amount: 6500, hoursPerWeek: 42, vacationWeeks: 4, thirteenth: false });
 
 const path = '/stundenlohn-rechner/';
 const title = `Stundenlohn-Rechner Schweiz – Lohn umrechnen | ${BRAND}`;
@@ -62,7 +67,17 @@ const faqSchema = {
   <HourlyCalculator locale="de" />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>Wie wird gerechnet?</h2>
+    <h2>Warum Stunden- und Monatslohn nicht direkt vergleichbar sind</h2>
+    <p>
+      Ein Stundenlohn und ein Monatslohn lassen sich nicht einfach gegeneinander aufrechnen: Im Monatslohn sind Ferien
+      und oft ein 13. Monatslohn bereits enthalten, im Stundenlohn müssen sie als Zuschlag <em>obendrauf</em> kommen.
+      Wer ein Stellenangebot im Stundenlohn mit einer Festanstellung vergleicht, eine Temporär- oder Teilzeitstelle
+      bewertet oder als Arbeitgeber einen fairen Ansatz festlegen will, braucht eine saubere Umrechnung — sonst
+      vergleicht man Äpfel mit Birnen. Genau diese Umrechnung nimmt Ihnen der Stundenlohn-Rechner ab, in beide
+      Richtungen.
+    </p>
+
+    <h2>So wird gerechnet</h2>
     <p>
       Ausgangspunkt ist die Standardformel der Schweizer Lohnpraxis: Ein Monatslohn deckt durchschnittlich 52 ÷ 12 =
       4.33 Wochen ab. Der Basis-Stundenlohn ist deshalb <strong>Monatslohn × 12 ÷ (52 × Wochenstunden)</strong>. Im
@@ -75,10 +90,42 @@ const faqSchema = {
     </ul>
     <p>
       Ein vertraglicher 13. Monatslohn entspricht einem weiteren Zuschlag von <strong>8.33%</strong> (1/12), berechnet
-      auf dem ferienentschädigten Lohn. Feiertagsentschädigungen sind je nach Kanton und GAV unterschiedlich geregelt
-      und hier nicht enthalten. Alle Werte sind Bruttowerte — die Sozialabzüge zeigt der
-      <a href="/brutto-netto-rechner/">Brutto-Netto-Rechner</a>.
+      auf dem ferienentschädigten Lohn.
     </p>
+
+    <h2>Rechenbeispiel Schritt für Schritt</h2>
+    <p>Monatslohn {formatCHF(6500, 0)}, 42 Wochenstunden, 4 Wochen Ferien:</p>
+    <ul>
+      <li>Basis-Stundenlohn: {formatCHF(6500, 0)} × 12 ÷ (52 × 42) = <strong>{formatCHF(hwEx.baseHourly)}</strong></li>
+      <li>+ Ferienentschädigung 8.33%: {formatCHF(hwEx.vacationPerHour)}</li>
+      <li><strong>Stundenlohn inkl. Ferien: {formatCHF(hwEx.totalHourly)}</strong> (bei {formatNumber(hwEx.monthlyHours, 0)} Std./Monat)</li>
+    </ul>
+    <p>
+      Wer einen Stundenlohn von {formatCHF(hwEx.totalHourly)} <em>ohne</em> Ferienzuschlag anbietet, zahlt also faktisch
+      weniger als {formatCHF(6500, 0)} im Monat — genau hier lohnt sich das genaue Hinschauen.
+    </p>
+
+    <h2>Klug entscheiden: worauf Sie achten sollten</h2>
+    <ul>
+      <li>
+        <strong>Ferienzuschlag muss ausgewiesen sein:</strong> Die Ferienentschädigung gehört auf die Lohnabrechnung
+        separat ausgewiesen — fehlt sie, ist der Stundenlohn faktisch tiefer, als er scheint.
+      </li>
+      <li>
+        <strong>13. Monatslohn ist nicht automatisch dabei:</strong> Im Stundenlohn gibt es ihn nur, wenn Vertrag oder
+        GAV ihn vorsehen (dann +8.33%) — mehr dazu unter <a href="/ratgeber/13-monatslohn/">13. Monatslohn</a>.
+      </li>
+      <li>
+        <strong>Feiertage separat:</strong> Feiertagsentschädigungen sind je nach Kanton und GAV unterschiedlich
+        geregelt und hier nicht enthalten.
+      </li>
+      <li>
+        <strong>Alles brutto:</strong> Die Werte sind vor Sozialabzügen — den Nettolohn zeigt der
+        <a href="/brutto-netto-rechner/">Brutto-Netto-Rechner</a>. Steuern im Kantonsvergleich:
+        <a href="/steuervergleich/">Steuervergleich</a>. Quellenbesteuert?
+        <a href="/quellensteuer-rechner/">Quellensteuer-Rechner</a>.
+      </li>
+    </ul>
 
     <h2>Häufige Fragen</h2>
     {faqs.map((f) => (
@@ -87,12 +134,6 @@ const faqSchema = {
         <p class="text-slate-700">{f.a}</p>
       </div>
     ))}
-
-    <p>
-      Vom Brutto- zum Nettolohn: <a href="/brutto-netto-rechner/">Brutto-Netto-Rechner</a>. Steuern im Kantonsvergleich:
-      <a href="/steuervergleich/">Steuervergleich aller 26 Kantone</a>. Quellenbesteuert?
-      <a href="/quellensteuer-rechner/">Quellensteuer-Rechner</a>.
-    </p>
   </div>
 
   <RelatedTools current="stundenlohn-rechner" />
