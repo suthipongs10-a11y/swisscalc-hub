@@ -3,6 +3,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import HourlyCalculator from '../../components/HourlyCalculator.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF, formatNumber } from '../../lib/format';
+import { convertWage } from '../../lib/hourly/engine';
+
+// Worked-example figures from the engine (single source with the calculator).
+const hwEx = convertWage({ direction: 'toHourly', amount: 6500, hoursPerWeek: 42, vacationWeeks: 4, thirteenth: false });
 
 const path = '/en/hourly-wage-calculator/';
 const title = `Swiss hourly wage calculator | ${BRAND}`;
@@ -61,7 +66,16 @@ const faqSchema = {
   <HourlyCalculator locale="en" />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>How is it calculated?</h2>
+    <h2>Why hourly and monthly pay are not directly comparable</h2>
+    <p>
+      An hourly wage and a monthly salary cannot simply be set against each other: in a monthly salary, vacation and
+      often a 13th month salary are already included; on an hourly wage they must come <em>on top</em>, as a supplement.
+      Anyone comparing an hourly-wage offer with a permanent position, evaluating a temporary or part-time role, or
+      setting a fair rate as an employer needs a clean conversion — otherwise you compare apples and oranges. That is
+      exactly what the hourly wage calculator does for you, in both directions.
+    </p>
+
+    <h2>How it is calculated</h2>
     <p>
       The starting point is the standard Swiss payroll formula: a monthly salary covers on average 52 ÷ 12 = 4.33
       weeks. The base hourly rate is therefore <strong>monthly salary × 12 ÷ (52 × weekly hours)</strong>. In a monthly
@@ -73,11 +87,43 @@ const faqSchema = {
       <li><strong>13.04%</strong> for 6 weeks of vacation (6 ÷ 46)</li>
     </ul>
     <p>
-      A contractual 13th month salary adds a further <strong>8.33%</strong> (1/12), calculated on the
-      vacation-inclusive pay. Public-holiday compensation varies by canton and collective agreement and is not
-      included. All values are gross — see the <a href="/en/salary-calculator/">salary calculator</a> for the social
-      contributions.
+      A contractual 13th month salary adds a further <strong>8.33%</strong> (1/12), calculated on the vacation-inclusive
+      pay.
     </p>
+
+    <h2>Worked example step by step</h2>
+    <p>Monthly salary {formatCHF(6500, 0)}, 42 weekly hours, 4 weeks of vacation:</p>
+    <ul>
+      <li>Base hourly rate: {formatCHF(6500, 0)} × 12 ÷ (52 × 42) = <strong>{formatCHF(hwEx.baseHourly)}</strong></li>
+      <li>+ Vacation compensation 8.33%: {formatCHF(hwEx.vacationPerHour)}</li>
+      <li><strong>Hourly wage incl. vacation: {formatCHF(hwEx.totalHourly)}</strong> (at {formatNumber(hwEx.monthlyHours, 0)} h/month)</li>
+    </ul>
+    <p>
+      Anyone offering an hourly wage of {formatCHF(hwEx.totalHourly)} <em>without</em> a vacation supplement effectively
+      pays less than {formatCHF(6500, 0)} a month — this is exactly where a close look pays off.
+    </p>
+
+    <h2>Deciding smartly: what to watch for</h2>
+    <ul>
+      <li>
+        <strong>Vacation compensation must be shown:</strong> it belongs on the payslip separately — if it is missing,
+        the hourly wage is effectively lower than it appears.
+      </li>
+      <li>
+        <strong>The 13th month is not automatic:</strong> on an hourly wage it only exists if the contract or collective
+        agreement provides for it (then +8.33%) — see <a href="/en/guide/13th-month-salary/">13th month salary</a>.
+      </li>
+      <li>
+        <strong>Public holidays separate:</strong> public-holiday compensation varies by canton and collective agreement
+        and is not included here.
+      </li>
+      <li>
+        <strong>All gross:</strong> the values are before social contributions — the net is shown by the
+        <a href="/en/salary-calculator/">salary calculator</a>. Taxes across cantons:
+        <a href="/en/cantonal-tax-comparison/">cantonal tax comparison</a>. Taxed at source?
+        <a href="/en/withholding-tax-calculator/">withholding tax calculator</a>.
+      </li>
+    </ul>
 
     <h2>Frequently asked questions</h2>
     {faqs.map((f) => (
@@ -86,12 +132,6 @@ const faqSchema = {
         <p class="text-slate-700">{f.a}</p>
       </div>
     ))}
-
-    <p>
-      From gross to net: <a href="/en/salary-calculator/">salary calculator</a>. Taxes across cantons:
-      <a href="/en/cantonal-tax-comparison/">cantonal tax comparison</a>. Taxed at source?
-      <a href="/en/withholding-tax-calculator/">withholding tax calculator</a>.
-    </p>
   </div>
 
   <section aria-label="Other calculators" class="mt-14">

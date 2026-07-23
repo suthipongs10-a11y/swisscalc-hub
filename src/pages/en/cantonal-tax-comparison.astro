@@ -62,13 +62,27 @@ const faqSchema = {
   <EnTaxComparison />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>How is the calculation done?</h2>
+    <h2>Why where you live decides thousands of francs</h2>
+    <p>
+      In Switzerland, income tax is largely <strong>cantonal and municipal</strong> — and the range is enormous. For
+      the same income you pay double or more depending on the canton. Anyone planning a move, a job change into another
+      canton or buying a home makes, with the choice of residence, one of the biggest financial decisions there is:
+      over a working life the differences add up to six-figure amounts. The tax comparison makes that spread visible for
+      your specific income — as a ranking of all 26 cantonal capitals.
+    </p>
+
+    <h2>How the calculation works</h2>
     <p>
       For each canton we calculate the <strong>simple cantonal tax</strong> using the {SITE_YEAR} cantonal schedule
       (source: FTA tax data) and multiply it by the canton and capital multipliers. Added to this is the
       <strong>direct federal tax</strong>. Church tax and personal taxes are not included.
     </p>
-    <h3>Worked example</h3>
+    <p>
+      As a formula: <strong>total tax = simple cantonal tax × (canton multiplier + municipal multiplier) + direct
+      federal tax</strong>. The simple cantonal tax follows the progressive cantonal schedule; the multiplier is a
+      percentage set anew each year.
+    </p>
+    <h2>Worked example step by step</h2>
     <p>Taxable income {formatCHF(100000, 0)}, single, capital Zurich:</p>
     <ul>
       <li>Simple cantonal tax (ZH schedule): {formatCHF(zh.baseTax, 0)}</li>
@@ -77,11 +91,27 @@ const faqSchema = {
       <li>Direct federal tax: {formatCHF(zh.federalTax, 0)}</li>
       <li><strong>Total: {formatCHF(zh.totalTax, 0)} ({(zh.effectiveRate * 100).toFixed(1)}% effective)</strong> — in Zug: {formatCHF(zg.totalTax, 0)}</li>
     </ul>
-    <h3>Limits of this calculation</h3>
+    <h2>Deciding smartly: what to watch for</h2>
     <ul>
-      <li>Comparison on the basis of <strong>taxable income</strong> — cantonal differences in deductions are not reflected.</li>
-      <li>Multipliers of the <strong>capitals</strong>; your municipality can differ.</li>
-      <li>Excluding church tax, personal tax and wealth tax.</li>
+      <li>
+        <strong>The municipality is the second lever:</strong> within a canton, municipalities differ by more than 30
+        multiplier percentage points. We use the <strong>capital</strong> — in a low-tax municipality of the same
+        canton the burden can be markedly lower.
+      </li>
+      <li>
+        <strong>Tax is not everything:</strong> a low-tax canton helps little if rents and health-insurance premiums
+        eat up the advantage. Weigh the total cost — tax, rent, premiums — against the tax saving.
+      </li>
+      <li>
+        <strong>Marital status shifts the ranking:</strong> married couples are taxed differently from singles; see
+        <a href="/en/guide/marriage-and-taxes/">marriage &amp; taxes</a>.
+      </li>
+      <li>
+        <strong>Calculate before you move:</strong> the guide
+        <a href="/en/guide/changing-canton-to-save-tax/">changing canton to save tax</a> shows what matters. Taxable
+        income is your income <em>after</em> deductions — your <a href="/en/pillar-3a-calculator/">pillar 3a</a> lowers
+        it further.
+      </li>
     </ul>
 
     <h2>Frequently asked questions</h2>

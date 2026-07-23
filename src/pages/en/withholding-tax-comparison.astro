@@ -3,6 +3,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import QstCompare from '../../components/QstCompare.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { readFileSync } from 'node:fs';
+import { formatCHF, formatPercent } from '../../lib/format';
+import { compareQst, type QstvFile } from '../../lib/qst/compare';
+import { enName } from '../../lib/tax/labels';
+
+// Worked-example spread from the shipped data (single, CHF 6'500, no church).
+const qvRows = compareQst(6500, false, JSON.parse(readFileSync('public/data/qstv/a0.json', 'utf8')) as QstvFile);
+const qvCheapest = qvRows[0]!;
+const qvDearest = qvRows[qvRows.length - 1]!;
 
 const path = '/en/withholding-tax-comparison/';
 const title = `Swiss withholding tax comparison ${SITE_YEAR} | ${BRAND}`;
@@ -60,6 +69,15 @@ const faqSchema = {
   <QstCompare locale="en" />
 
   <div class="prose-content mt-14 max-w-2xl">
+    <h2>Why the cantonal comparison pays off</h2>
+    <p>
+      Withholding tariffs bundle cantonal, municipal and federal tax — and because cantonal rates are far apart, a
+      source-taxed person pays very differently for the same salary depending on the canton of residence. Anyone
+      accepting a job in Switzerland who can still choose their place of residence freely, or who is considering a move,
+      makes a decision here with a noticeable effect on the monthly budget. The comparison places all 26 cantons side by
+      side for your salary — from cheapest to most expensive.
+    </p>
+
     <h2>How does the comparison work?</h2>
     <p>
       For every canton, the same monthly gross salary is run through the canton's official {SITE_YEAR} tariff table —
@@ -72,11 +90,34 @@ const faqSchema = {
       rate, minimum tax)</strong>, with rate and minimum tax from that canton's band, rounded to 5 centimes.
       Differences between cantons therefore come purely from the tariff tables — not from the method.
     </p>
-    <h3>Limits of this calculation</h3>
+    <h2>Worked example step by step</h2>
+    <p>Single, no children, no church tax (tariff code A0N), {formatCHF(6500, 0)} gross salary per month:</p>
     <ul>
-      <li>In Geneva, Neuchâtel, Ticino, Vaud and Valais, church tax is <strong>not levied at source</strong>; in Jura it is always included. The church-tax option therefore only affects the remaining cantons.</li>
-      <li>Five cantons use the <strong>annual model</strong> (asterisk in the table) — with irregular salaries the effective annual settlement can differ from the monthly figure.</li>
-      <li>Special cases (cross-border tariffs DE/FR/IT, secondary employment, replacement income) are not covered; rates are merged to 0.05 percentage points (indicative calculation).</li>
+      <li>Cheapest canton: <strong>{enName(qvCheapest.abbr)}</strong> at {formatCHF(qvCheapest.monthlyTax)} per month ({formatPercent(qvCheapest.ratePct / 100)})</li>
+      <li>Most expensive canton: <strong>{enName(qvDearest.abbr)}</strong> at {formatCHF(qvDearest.monthlyTax)} per month ({formatPercent(qvDearest.ratePct / 100)})</li>
+      <li><strong>Difference: {formatCHF(qvDearest.monthlyTax - qvCheapest.monthlyTax)} per month</strong> — about {formatCHF((qvDearest.monthlyTax - qvCheapest.monthlyTax) * 12, 0)} per year for the same salary</li>
+    </ul>
+
+    <h2>Deciding smartly: what to watch for</h2>
+    <ul>
+      <li>
+        <strong>Tax is not everything:</strong> a cheap canton helps little if rent and health-insurance premiums eat up
+        the advantage — weigh the total cost.
+      </li>
+      <li>
+        <strong>Mind the church tax:</strong> in Geneva, Neuchâtel, Ticino, Vaud and Valais it is <strong>not levied at
+        source</strong>; in Jura it is always included — the option only affects the remaining cantons.
+      </li>
+      <li>
+        <strong>Annual model (asterisk):</strong> Fribourg, Geneva, Ticino, Vaud and Valais smooth the salary across the
+        year — with bonuses or irregular pay the effective annual settlement can differ.
+      </li>
+      <li>
+        <strong>Details per canton:</strong> clicking a canton opens its
+        <a href="/en/withholding-tax-calculator/">withholding-tax page</a> with its own calculator. Cross-border
+        tariffs (DE/FR/IT) are not reproduced; rates are merged to 0.05 points (indicative). Ordinarily taxed?
+        <a href="/en/cantonal-tax-comparison/">cantonal tax comparison</a>.
+      </li>
     </ul>
 
     <h2>Frequently asked questions</h2>
@@ -86,12 +127,6 @@ const faqSchema = {
         <p class="text-slate-700">{f.a}</p>
       </div>
     ))}
-
-    <p>
-      Details per canton: <a href="/en/withholding-tax-calculator/">withholding tax calculator</a>. Ordinarily taxed?
-      <a href="/en/cantonal-tax-comparison/">cantonal tax comparison</a>. From gross to net:
-      <a href="/en/salary-calculator/">salary calculator</a>.
-    </p>
   </div>
 
   <section aria-label="Other calculators" class="mt-14">

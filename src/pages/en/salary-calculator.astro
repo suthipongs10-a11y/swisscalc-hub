@@ -62,7 +62,16 @@ const faqSchema = {
   <EnSalaryCalculator />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>How is the calculation done?</h2>
+    <h2>Why your net salary matters</h2>
+    <p>
+      The gross salary is in your contract — but you can only spend the net. Between the two sit the social-insurance
+      contributions, and anyone comparing two offers, negotiating a raise or planning a household budget needs the
+      figure <em>after</em> deductions. That is exactly the gap the salary calculator closes: it makes transparent how
+      much of every pay rise actually reaches your account — and why two people on the same gross salary take home
+      different amounts depending on their age.
+    </p>
+
+    <h2>How the calculation works</h2>
     <p>
       The calculator deducts the statutory employee contributions from the gross annual salary. These rates are federal
       and identical in every canton. Decisive for {SITE_YEAR}:
@@ -83,10 +92,37 @@ const faqSchema = {
       </tbody>
     </table>
 
-    <h3>Limits of this calculation</h3>
+    <h2>Worked example step by step</h2>
+    <p>Gross salary {formatCHF(100000, 0)} per year, age 40, NBU rate 1.4%:</p>
     <ul>
-      <li>The <strong>NBU</strong> rate and <strong>BVG</strong> contributions depend on the employer and pension fund; we use the statutory minimum (mandatory BVG, 50% share).</li>
-      <li><strong>Income tax</strong> is not included (assessed separately).</li>
+      <li>AHV/IV/EO: {formatCHF(100000, 0)} × 5.3% = {formatCHF(5300, 0)}</li>
+      <li>ALV: {formatCHF(100000, 0)} × 1.1% = {formatCHF(1100, 0)}</li>
+      <li>NBU: {formatCHF(100000, 0)} × 1.4% = {formatCHF(1400, 0)}</li>
+      <li>BVG: coordinated salary {formatCHF(64260, 0)} (maximum) × 10% × 50% = {formatCHF(3213, 0)}</li>
+      <li><strong>Total deductions: {formatCHF(11013, 0)} → net salary {formatCHF(88987, 0)} per year</strong></li>
+    </ul>
+
+    <h2>Deciding smartly: what to watch for</h2>
+    <ul>
+      <li>
+        <strong>Compare net, not gross:</strong> two jobs on the same gross salary can differ noticeably in net — for
+        example if a pension fund insures above the minimum. Ask about the <strong>BVG regulations</strong> and the NBU
+        rate during the hiring process.
+      </li>
+      <li>
+        <strong>Income tax comes separately:</strong> the net here is <em>before tax</em>. For Swiss nationals and
+        C-permit holders, income tax is not deducted from salary but assessed annually — budget for it separately and
+        compare it in the <a href="/en/cantonal-tax-comparison/">cantonal tax comparison</a>.
+      </li>
+      <li>
+        <strong>The BVG deduction grows with age:</strong> at the 35, 45 and 55 steps the rate rises — your net dips
+        slightly then (see <a href="/en/guide/pension-fund-bvg-explained/">pension fund &amp; BVG explained</a>).
+      </li>
+      <li>
+        <strong>Optimise taxes:</strong> a contribution to <a href="/en/pillar-3a-calculator/">pillar 3a</a> lowers
+        taxable income. Paid by the hour? The <a href="/en/hourly-wage-calculator/">hourly wage calculator</a> converts
+        monthly and hourly pay, vacation compensation and 13th month salary included.
+      </li>
     </ul>
 
     <h2>Frequently asked questions</h2>
@@ -96,12 +132,6 @@ const faqSchema = {
         <p class="text-slate-700">{f.a}</p>
       </div>
     ))}
-
-    <p>
-      Paid by the hour? Convert monthly and hourly pay with the
-      <a href="/en/hourly-wage-calculator/">hourly wage calculator</a> — vacation compensation and 13th month salary
-      included.
-    </p>
   </div>
 
   <section aria-label="Other calculators" class="mt-14">

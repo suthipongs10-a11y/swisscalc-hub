@@ -65,7 +65,16 @@ const faqSchema = {
   <EnThreeACalculator />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>How is the calculation done?</h2>
+    <h2>Why pillar 3a is the simplest tax deduction</h2>
+    <p>
+      Pillar 3a is the private, tax-privileged pension — and for most working people the most effective deduction you
+      can get without much effort. Every franc paid in immediately lowers taxable income, and the balance is exempt
+      from wealth and income tax on returns for the whole term. Anyone who wants to know whether a contribution pays off
+      and how much it concretely brings needs a figure, not a gut feeling: that is exactly what the calculator delivers
+      — for your canton, income and marital status.
+    </p>
+
+    <h2>How the calculation works</h2>
     <p>
       Your 3a contribution is deducted from taxable income. We calculate your income tax (canton + capital municipality
       + direct federal tax) once without and once with the deduction — the difference is your tax saving. The basis:
@@ -76,17 +85,37 @@ const faqSchema = {
       away your top — most heavily taxed — francs of income, the saving equals your marginal tax rate applied to the
       amount paid in: the higher your income and progression, the bigger the effect.
     </p>
-    <h3>Worked example</h3>
+    <h2>Worked example step by step</h2>
     <p>Taxable income {formatCHF(100000, 0)}, single, canton of Zurich, contribution {formatCHF(maxPK, 0)}:</p>
     <ul>
       <li>Tax without contribution: {formatCHF(before.totalTax, 0)}</li>
       <li>Tax with contribution: {formatCHF(after.totalTax, 0)}</li>
       <li><strong>Saving: about {formatCHF(saving, 0)} per year</strong></li>
     </ul>
-    <h3>Limits of this calculation</h3>
+    <p>
+      Over 30-plus working years this effect repeats year after year — the tax saving alone adds up to a five-figure
+      amount, on top of the saved and compounded capital itself.
+    </p>
+
+    <h2>Deciding smartly: what to watch for</h2>
     <ul>
-      <li>Capital’s multiplier; your municipality can differ. Excluding church tax.</li>
-      <li>The later capital-benefits tax (on withdrawal) is not part of this calculation.</li>
+      <li>
+        <strong>Max out first:</strong> the deduction only works up to the annual maximum ({formatCHF(maxPK, 0)} with a
+        pension fund). If you can, pay in early in the year — the money is then invested longer.
+      </li>
+      <li>
+        <strong>Several accounts for a staggered withdrawal:</strong> at payout the capital is taxed separately. Holding
+        several accounts and withdrawing them in different years breaks the progression — see
+        <a href="/en/guide/staggered-pillar-3a-withdrawal/">staggered pillar 3a withdrawal</a>.
+      </li>
+      <li>
+        <strong>3a or 3b?</strong> Restricted pillar 3a brings the deduction, flexible pillar 3b stays available any
+        time. What suits you: <a href="/en/guide/pillar-3a-vs-3b/">pillar 3a vs 3b</a>.
+      </li>
+      <li>
+        <strong>Limits of the calculation:</strong> we use the capital's multiplier (your municipality can differ) and
+        exclude church tax; the later capital-benefits tax on withdrawal is not part of this saving calculation.
+      </li>
     </ul>
 
     <h2>Frequently asked questions</h2>

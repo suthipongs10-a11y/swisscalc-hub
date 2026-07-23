@@ -3,11 +3,17 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import QstCalculator from '../../components/QstCalculator.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF, formatPercent } from '../../lib/format';
 import qstIndex from '../../data/qst/index.json';
 import cantonData from '../../data/cantons.json';
+import zhQst from '../../../public/data/qst/zh.json';
+import { qstForCode, type QstData } from '../../lib/qst/engine';
 import { enName, enSlugOf } from '../../lib/tax/labels';
 
 const cantonsByName = [...cantonData.cantons].sort((a, b) => enName(a.abbr).localeCompare(enName(b.abbr)));
+
+// Worked-example figure from the engine (single source with the calculator): ZH, single, no church.
+const qstEx = qstForCode(6500, zhQst as unknown as QstData, 'A0N');
 
 const path = '/en/withholding-tax-calculator/';
 const title = `Withholding tax calculator ${SITE_YEAR} | ${BRAND}`;
@@ -63,6 +69,15 @@ const faqSchema = {
   <QstCalculator locale="en" />
 
   <div class="prose-content mt-14 max-w-2xl">
+    <h2>Why withholding tax matters for newcomers</h2>
+    <p>
+      Anyone working in Switzerland as a foreign employee without a C settlement permit pays income tax not by tax
+      return but directly through the salary — as withholding tax. For budget planning that is a big difference: the net
+      salary is already reduced by the tax, and how high it is depends strongly on the canton of residence. Anyone
+      accepting a job in Switzerland, planning a move or checking whether a subsequent assessment pays off should know
+      the withholding tax in advance — that is exactly what this calculator is for.
+    </p>
+
     <h2>How is withholding tax calculated?</h2>
     <p>
       Withholding tax is deducted directly from the monthly gross salary. Decisive are the canton of residence, the
@@ -75,11 +90,43 @@ const faqSchema = {
       monthly salary's band for the chosen tariff code (e.g. A0N), the minimum tax from the same tariff row; the result
       is rounded to 5 centimes. Net salary is gross salary − withholding tax (before social contributions).
     </p>
-    <h3>Limits of this calculation</h3>
+    <h2>Worked example step by step</h2>
+    <p>
+      A single person with no children and no church tax (tariff code A0N) on {formatCHF(6500, 0)} gross salary per
+      month in the canton of Zurich:
+    </p>
     <ul>
-      <li>Covered are tariff codes <strong>A, B, C and H</strong> with 0–5 children and church tax (where the canton levies it at source). Special cases (cross-border tariffs, board members, replacement income) are not reproduced.</li>
-      <li>The tariffs are based on the <strong>monthly salary</strong>. A 13th month, bonuses and the cantonal monthly-vs-annual model can affect the effective annual figure.</li>
-      <li>Rates are grouped to 0.05 points for an indicative calculation — the binding statement is produced by your employer under the cantonal tariffs.</li>
+      <li>Band for {formatCHF(6500, 0)} under the ZH A0N tariff → rate {formatPercent(qstEx.ratePct / 100)}</li>
+      <li>Withholding tax per month: <strong>{formatCHF(qstEx.monthlyTax)}</strong> ({formatCHF(qstEx.annualTax, 0)} per year)</li>
+      <li>Net salary before social contributions: {formatCHF(qstEx.monthlyNet)} per month</li>
+    </ul>
+    <p>
+      Under the same tariff, a married person with two children pays markedly less — the family situation shifts the
+      rate strongly. That is exactly what you compute above for your case.
+    </p>
+
+    <h2>Deciding smartly: what to watch for</h2>
+    <ul>
+      <li>
+        <strong>The canton makes the difference:</strong> for the same salary, withholding tax varies considerably by
+        canton — compare all 26 in the <a href="/en/withholding-tax-comparison/">withholding tax comparison</a>.
+      </li>
+      <li>
+        <strong>From CHF 120,000 it changes:</strong> above that you are assessed ordinarily afterwards; below it the
+        voluntary application can pay off if you have high deductions — see
+        <a href="/en/guide/withholding-or-ordinary-assessment/">withholding tax or ordinary assessment</a>.
+      </li>
+      <li>
+        <strong>Cross-border commuters follow their own rules:</strong> for Germany, France and Italy special tariffs
+        apply (not reproduced here) — the guide <a href="/en/guide/cross-border-commuter-taxes/">cross-border
+        commuters</a> puts them in context.
+      </li>
+      <li>
+        <strong>Indicative values:</strong> covered are tariff codes A/B/C/H with 0–5 children and church tax (where the
+        canton levies it at source); rates are grouped to 0.05 points. The binding statement is your employer's. A 13th
+        month and bonuses can affect the effective annual figure. Detailed guide:
+        <a href="/en/guide/withholding-tax-for-expats/">withholding tax for expats</a>.
+      </li>
     </ul>
 
     <h2>Frequently asked questions</h2>
@@ -89,12 +136,6 @@ const faqSchema = {
         <p class="text-slate-700">{f.a}</p>
       </div>
     ))}
-
-    <p>
-      Detailed guide for expats: <a href="/en/guide/withholding-tax-for-expats/">withholding tax in Switzerland</a>.
-      Where is withholding tax lowest? All 26 cantons at a glance in the
-      <a href="/en/withholding-tax-comparison/">withholding tax comparison</a>.
-    </p>
   </div>
 
   <section aria-label="Withholding tax by canton" class="mt-14">

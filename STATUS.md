@@ -2,7 +2,9 @@
 
 ## Current state
 
-**Latest (Session 18, M14): guide at full target — 241 pages, 15 articles per language — and explicit formulas on every tool page.** Four new articles ×3 locales (AHV explained, part-time work, understanding the payslip, bonus & gratuity — completing the salary/pension cluster) plus explicit formula sentences added to the 3a and QST tool pages in all locales (every calculator now shows description + method + formula + FAQ). Awaiting review.
+**Latest (Session 19, M15): every tool page rebuilt into a 5-section educational article.** All 18 calculator pages (6 tools × DE/FR/EN) now follow the explicit structure below the calculator: Strategic Value → Financial Logic & Formula → Worked Example (step by step, engine-computed numbers) → Smart Decision Tips → FAQ. Calculators unchanged (still SSR + recompute, driven in Chromium). Awaiting review.
+
+**Session 18 (M14): guide at full target — 15 articles per language — and explicit formulas on every tool page.** Four new articles ×3 locales (AHV explained, part-time work, understanding the payslip, bonus & gratuity — completing the salary/pension cluster) plus explicit formula sentences added to the 3a and QST tool pages in all locales (every calculator now shows description + method + formula + FAQ). Awaiting review.
 
 **Session 17 (M13): guide depth during AdSense review — 11 articles per language.** Four new articles ×3 locales (3a vs 3b, health-insurance premiums, tax-return deadlines & deductions, pension fund/BVG), all numbers repo-sourced. Awaiting review.
 
@@ -70,6 +72,14 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 | Builder | Sessions may run on different models; docs are the contract (see CLAUDE.md) | 2026-07-12 |
 
 ## Session log
+
+### 2026-07-18 — Session 19: M15 — jede Tool-Seite als 5-teiliger Bildungsartikel (18 Seiten, DE/FR/EN)
+
+- **Auftrag des Owners** (Content-Architect-Brief): zu jedem Rechner einen erklärenden Artikel (600–800 Wörter) unter dem Rechner, mit fixer 5-Teil-Struktur. Umgesetzt für **alle 6 Tools × 3 Sprachen = 18 Seiten**.
+- **Struktur je Seite** (H2): (1) *Strategic Value* — warum die Berechnung fürs Finanzleben zählt, welches Problem sie löst; (2) *Financial Logic & Formula* — Methodik + explizite Formel; (3) *Worked Example* — Schritt für Schritt mit **serverseitig aus den Engines berechneten Zahlen** (single source mit dem Rechner); (4) *Smart Decision Tips* — actionable Tipps + Fallstricke, mit internen Links; (5) *FAQ* — bestehende, speist FAQPage-JSON-LD.
+- **Neue serverseitige Beispielwerte** (statt Hardcoding): QST-Rechner + QST-Vergleich importieren die Engine bzw. lesen `public/data/qstv/a0.json` und rechnen live (ZH A0N 6500 = **CHF 469.95**; Spanne Zug **219.70** → Neuenburg **885.30**); Stundenlohn ruft `convertWage` (6500/42h → **35.71** Basis, **38.69** inkl. Ferien); Steuervergleich/3a nutzen die schon vorhandenen `cantonTax`-Werte. Alle im dist verifiziert.
+- **Keine Regression:** Die Rechner-Islands blieben unangetastet — nur der Prosablock darunter wurde umstrukturiert. In Chromium bestätigt: Salary SSR + Recompute, QST SSR 469.95, 3a-Formular, Stundenlohn SSR 38.69, keine Konsolenfehler. FAQ-JSON-LD und alle internen Links erhalten.
+- **Re-checked before push (pro Locale committet):** build clean (**241 Seiten**), Tests **98/98**, Links green (240), Audit clean (keine fragile pages, 80/80 je Locale), jede der 18 Seiten mit **5 H2-Sektionen**, kein ß, Lighthouse **≥95×4** auf gesampelten DE/FR/EN-Tool-Seiten. Committed (DE/FR/EN), stopped for review.
 
 ### 2026-07-17 — Session 18: M14 — Guide auf 15 Artikel/Sprache + explizite Formeln auf allen Tool-Seiten
 
