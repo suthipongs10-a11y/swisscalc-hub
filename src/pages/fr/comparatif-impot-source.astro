@@ -3,6 +3,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import QstCompare from '../../components/QstCompare.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { readFileSync } from 'node:fs';
+import { formatCHF, formatPercent } from '../../lib/format';
+import { compareQst, type QstvFile } from '../../lib/qst/compare';
+import { frName } from '../../lib/tax/labels';
+
+// Écart chiffré depuis les données livrées (célibataire, CHF 6'500, sans impôt ecclésiastique).
+const qvRows = compareQst(6500, false, JSON.parse(readFileSync('public/data/qstv/a0.json', 'utf8')) as QstvFile);
+const qvCheapest = qvRows[0]!;
+const qvDearest = qvRows[qvRows.length - 1]!;
 
 const path = '/fr/comparatif-impot-source/';
 const title = `Comparatif de l’impôt à la source ${SITE_YEAR} | ${BRAND}`;
@@ -60,6 +69,15 @@ const faqSchema = {
   <QstCompare locale="fr" />
 
   <div class="prose-content mt-14 max-w-2xl">
+    <h2>Pourquoi le comparatif cantonal en vaut la peine</h2>
+    <p>
+      Les barèmes de l’impôt à la source regroupent impôt cantonal, communal et fédéral — et comme les taux cantonaux
+      sont très éloignés, une personne imposée à la source paie, pour le même salaire, très différemment selon le canton
+      de domicile. Qui accepte un poste en Suisse et peut encore choisir librement son domicile, ou qui envisage un
+      déménagement, prend ici une décision aux effets sensibles sur le budget mensuel. Le comparatif place les 26
+      cantons côte à côte pour votre salaire — du moins cher au plus cher.
+    </p>
+
     <h2>Comment fonctionne le comparatif ?</h2>
     <p>
       Pour chaque canton, le même salaire mensuel brut est calculé avec le barème officiel {SITE_YEAR} du canton — selon
@@ -72,11 +90,37 @@ const faqSchema = {
       brut × taux, impôt minimal)</strong>, avec le taux et l’impôt minimal de l’échelon du canton concerné, arrondi à
       5 centimes. Les différences entre cantons viennent donc uniquement des barèmes — pas de la méthode.
     </p>
-    <h3>Limites de ce calcul</h3>
+    <h2>Exemple de calcul étape par étape</h2>
+    <p>
+      Célibataire, sans enfant, sans impôt ecclésiastique (barème A0N), {formatCHF(6500, 0)} de salaire brut par mois :
+    </p>
     <ul>
-      <li>À Genève, Neuchâtel, au Tessin, dans le canton de Vaud et en Valais, l’impôt ecclésiastique n’est <strong>pas prélevé à la source</strong> ; dans le Jura, il est toujours inclus. L’option n’agit donc que dans les autres cantons.</li>
-      <li>Cinq cantons appliquent le <strong>modèle annuel</strong> (astérisque dans le tableau) — avec des salaires irréguliers, le décompte annuel effectif peut différer de la valeur mensuelle.</li>
-      <li>Les cas particuliers (barèmes frontaliers DE/FR/IT, activité accessoire, revenus acquis en compensation) ne sont pas couverts ; les taux sont agrégés à 0,05 point (calcul indicatif).</li>
+      <li>Canton le moins cher : <strong>{frName(qvCheapest.abbr)}</strong> avec {formatCHF(qvCheapest.monthlyTax)} par mois ({formatPercent(qvCheapest.ratePct / 100)})</li>
+      <li>Canton le plus cher : <strong>{frName(qvDearest.abbr)}</strong> avec {formatCHF(qvDearest.monthlyTax)} par mois ({formatPercent(qvDearest.ratePct / 100)})</li>
+      <li><strong>Écart : {formatCHF(qvDearest.monthlyTax - qvCheapest.monthlyTax)} par mois</strong> — soit environ {formatCHF((qvDearest.monthlyTax - qvCheapest.monthlyTax) * 12, 0)} par an pour le même salaire</li>
+    </ul>
+
+    <h2>Décider intelligemment : à quoi faire attention</h2>
+    <ul>
+      <li>
+        <strong>L’impôt n’est pas tout :</strong> un canton avantageux sert peu si loyer et primes d’assurance-maladie
+        absorbent le gain — calculez les coûts totaux.
+      </li>
+      <li>
+        <strong>Attention à l’impôt ecclésiastique :</strong> à Genève, Neuchâtel, au Tessin, dans le canton de Vaud et
+        en Valais, il n’est <strong>pas prélevé à la source</strong> ; dans le Jura, il est toujours inclus — l’option
+        n’agit que dans les autres cantons.
+      </li>
+      <li>
+        <strong>Modèle annuel (astérisque) :</strong> Fribourg, Genève, le Tessin, Vaud et le Valais lissent le salaire
+        sur l’année — avec des bonus ou salaires irréguliers, le décompte annuel effectif peut différer.
+      </li>
+      <li>
+        <strong>Détails par canton :</strong> un clic sur le canton ouvre sa
+        <a href="/fr/calculateur-impot-source/">page d’impôt à la source</a> avec son propre calculateur. Les barèmes
+        frontaliers (DE/FR/IT) ne sont pas reproduits ; les taux sont agrégés à 0,05 point (indicatif). Imposé
+        ordinairement ? <a href="/fr/comparatif-impots-cantons/">comparatif des 26 cantons</a>.
+      </li>
     </ul>
 
     <h2>Questions fréquentes</h2>
@@ -86,12 +130,6 @@ const faqSchema = {
         <p class="text-slate-700">{f.a}</p>
       </div>
     ))}
-
-    <p>
-      Les détails par canton : <a href="/fr/calculateur-impot-source/">calculateur d’impôt à la source</a>. Imposé
-      ordinairement ? <a href="/fr/comparatif-impots-cantons/">comparatif des impôts des 26 cantons</a>. Du brut au
-      net : <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>.
-    </p>
   </div>
 
   <section aria-label="Autres calculateurs" class="mt-14">

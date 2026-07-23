@@ -3,6 +3,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import HourlyCalculator from '../../components/HourlyCalculator.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF, formatNumber } from '../../lib/format';
+import { convertWage } from '../../lib/hourly/engine';
+
+// Exemple chiffré depuis le moteur (même source que le calculateur).
+const hwEx = convertWage({ direction: 'toHourly', amount: 6500, hoursPerWeek: 42, vacationWeeks: 4, thirteenth: false });
 
 const path = '/fr/calculateur-salaire-horaire/';
 const title = `Calculateur de salaire horaire suisse | ${BRAND}`;
@@ -61,6 +66,15 @@ const faqSchema = {
   <HourlyCalculator locale="fr" />
 
   <div class="prose-content mt-14 max-w-2xl">
+    <h2>Pourquoi salaire horaire et mensuel ne se comparent pas directement</h2>
+    <p>
+      Un salaire horaire et un salaire mensuel ne s’additionnent pas simplement : dans le salaire mensuel, les vacances
+      et souvent un 13e salaire sont déjà inclus ; dans le salaire horaire, ils doivent venir <em>en plus</em>, sous
+      forme de supplément. Qui compare une offre au salaire horaire avec une place fixe, évalue un poste temporaire ou à
+      temps partiel, ou veut fixer un taux équitable comme employeur, a besoin d’une conversion propre — sinon on
+      compare des pommes et des poires. C’est exactement ce que fait le calculateur, dans les deux sens.
+    </p>
+
     <h2>Comment est-ce calculé ?</h2>
     <p>
       Le point de départ est la formule standard de la pratique salariale suisse : un salaire mensuel couvre en moyenne
@@ -75,10 +89,42 @@ const faqSchema = {
     </ul>
     <p>
       Un 13e salaire contractuel correspond à un supplément additionnel de <strong>8.33%</strong> (1/12), calculé sur le
-      salaire vacances comprises. Les indemnités pour jours fériés varient selon le canton et la CCT et ne sont pas
-      incluses. Toutes les valeurs sont brutes — les déductions sociales sont détaillées dans le
-      <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>.
+      salaire vacances comprises.
     </p>
+
+    <h2>Exemple de calcul étape par étape</h2>
+    <p>Salaire mensuel {formatCHF(6500, 0)}, 42 heures par semaine, 4 semaines de vacances :</p>
+    <ul>
+      <li>Salaire horaire de base : {formatCHF(6500, 0)} × 12 ÷ (52 × 42) = <strong>{formatCHF(hwEx.baseHourly)}</strong></li>
+      <li>+ Indemnité de vacances 8.33% : {formatCHF(hwEx.vacationPerHour)}</li>
+      <li><strong>Salaire horaire vacances comprises : {formatCHF(hwEx.totalHourly)}</strong> (pour {formatNumber(hwEx.monthlyHours, 0)} h/mois)</li>
+    </ul>
+    <p>
+      Qui propose un salaire horaire de {formatCHF(hwEx.totalHourly)} <em>sans</em> supplément de vacances paie donc en
+      réalité moins que {formatCHF(6500, 0)} par mois — c’est là que le regard attentif paie.
+    </p>
+
+    <h2>Décider intelligemment : à quoi faire attention</h2>
+    <ul>
+      <li>
+        <strong>L’indemnité de vacances doit figurer :</strong> elle doit apparaître séparément sur la fiche de
+        salaire — si elle manque, le salaire horaire est en réalité plus bas qu’il n’y paraît.
+      </li>
+      <li>
+        <strong>Le 13e salaire n’est pas automatique :</strong> au salaire horaire, il n’existe que si le contrat ou la
+        CCT le prévoit (alors +8.33%) — voir <a href="/fr/guide/13e-salaire/">13e salaire</a>.
+      </li>
+      <li>
+        <strong>Jours fériés séparés :</strong> les indemnités pour jours fériés varient selon le canton et la CCT et ne
+        sont pas incluses ici.
+      </li>
+      <li>
+        <strong>Tout est brut :</strong> les valeurs sont avant déductions sociales — le net est détaillé dans le
+        <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>. Impôts en comparaison :
+        <a href="/fr/comparatif-impots-cantons/">comparatif des 26 cantons</a>. Imposé à la source ?
+        <a href="/fr/calculateur-impot-source/">calculateur d’impôt à la source</a>.
+      </li>
+    </ul>
 
     <h2>Questions fréquentes</h2>
     {faqs.map((f) => (
@@ -87,12 +133,6 @@ const faqSchema = {
         <p class="text-slate-700">{f.a}</p>
       </div>
     ))}
-
-    <p>
-      Du salaire brut au net : <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>. Les impôts
-      en comparaison : <a href="/fr/comparatif-impots-cantons/">comparatif des 26 cantons</a>. Imposé à la source ?
-      <a href="/fr/calculateur-impot-source/">calculateur d’impôt à la source</a>.
-    </p>
   </div>
 
   <section aria-label="Autres calculateurs" class="mt-14">

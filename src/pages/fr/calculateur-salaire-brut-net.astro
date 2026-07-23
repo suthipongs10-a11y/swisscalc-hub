@@ -62,7 +62,16 @@ const faqSchema = {
   <FrSalaryCalculator />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>Comment le calcul est-il effectué ?</h2>
+    <h2>Pourquoi connaître son salaire net</h2>
+    <p>
+      Le salaire brut figure dans le contrat de travail — mais vous ne payez qu’avec le net. Entre les deux se trouvent
+      les cotisations sociales, et quiconque compare deux postes, négocie une augmentation ou établit un budget a besoin
+      du chiffre <em>après</em> déductions. C’est précisément cette lacune que comble le calculateur brut-net : il rend
+      transparent ce qui arrive réellement sur le compte à chaque hausse de salaire — et pourquoi deux personnes au même
+      brut ne touchent pas le même net selon leur âge.
+    </p>
+
+    <h2>Comment le calcul fonctionne</h2>
     <p>
       Le calculateur déduit du salaire annuel brut les cotisations sociales légales à la charge du salarié. Ces taux
       sont fédéraux et identiques dans tous les cantons. Déterminants pour {SITE_YEAR} :
@@ -83,10 +92,38 @@ const faqSchema = {
       </tbody>
     </table>
 
-    <h3>Limites de ce calcul</h3>
+    <h2>Exemple de calcul étape par étape</h2>
+    <p>Salaire brut {formatCHF(100000, 0)} par an, 40 ans, taux AANP 1.4% :</p>
     <ul>
-      <li>Le taux <strong>AANP</strong> et les cotisations <strong>LPP</strong> dépendent de l’employeur et de la caisse de pension ; nous utilisons le minimum légal (régime obligatoire LPP, part de 50%).</li>
-      <li>L’<strong>impôt sur le revenu</strong> n’est pas compris (taxation séparée).</li>
+      <li>AVS/AI/APG : {formatCHF(100000, 0)} × 5.3% = {formatCHF(5300, 0)}</li>
+      <li>AC : {formatCHF(100000, 0)} × 1.1% = {formatCHF(1100, 0)}</li>
+      <li>AANP : {formatCHF(100000, 0)} × 1.4% = {formatCHF(1400, 0)}</li>
+      <li>LPP : salaire coordonné {formatCHF(64260, 0)} (maximum) × 10% × 50% = {formatCHF(3213, 0)}</li>
+      <li><strong>Total des déductions : {formatCHF(11013, 0)} → salaire net {formatCHF(88987, 0)} par an</strong></li>
+    </ul>
+
+    <h2>Décider intelligemment : à quoi faire attention</h2>
+    <ul>
+      <li>
+        <strong>Comparer le net, pas le brut :</strong> deux postes au même brut peuvent diverger sensiblement en net —
+        p. ex. si une caisse de pension assure au-delà du minimum. Renseignez-vous sur le <strong>règlement LPP</strong>
+        et le taux AANP lors de l’embauche.
+      </li>
+      <li>
+        <strong>L’impôt sur le revenu vient séparément :</strong> le net ici est <em>avant impôt</em>. Pour les Suisses
+        et les titulaires du permis C, l’impôt n’est pas retenu sur le salaire mais taxé chaque année — prévoyez-le à
+        part et comparez-le dans le <a href="/fr/comparatif-impots-cantons/">comparatif des 26 cantons</a>.
+      </li>
+      <li>
+        <strong>La retenue LPP croît avec l’âge :</strong> aux paliers 35, 45 et 55, le taux monte — votre net baisse
+        alors légèrement (voir <a href="/fr/guide/caisse-de-pension-lpp/">caisse de pension &amp; LPP expliquées</a>).
+      </li>
+      <li>
+        <strong>Optimiser les impôts :</strong> un versement au <a href="/fr/calculateur-3e-pilier/">3e pilier</a>
+        réduit le revenu imposable. Payé à l’heure ? Le
+        <a href="/fr/calculateur-salaire-horaire/">calculateur de salaire horaire</a> convertit brut mensuel et horaire,
+        indemnité de vacances et 13e salaire compris.
+      </li>
     </ul>
 
     <h2>Questions fréquentes</h2>
@@ -96,12 +133,6 @@ const faqSchema = {
         <p class="text-slate-700">{f.a}</p>
       </div>
     ))}
-
-    <p>
-      Payé à l’heure ? Convertissez salaire mensuel et salaire horaire avec le
-      <a href="/fr/calculateur-salaire-horaire/">calculateur de salaire horaire</a> — indemnité de vacances et 13e
-      salaire compris.
-    </p>
   </div>
 
   <section aria-label="Autres calculateurs" class="mt-14">

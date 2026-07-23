@@ -3,11 +3,17 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import QstCalculator from '../../components/QstCalculator.astro';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
+import { formatCHF, formatPercent } from '../../lib/format';
 import qstIndex from '../../data/qst/index.json';
 import cantonData from '../../data/cantons.json';
+import zhQst from '../../../public/data/qst/zh.json';
+import { qstForCode, type QstData } from '../../lib/qst/engine';
 import { frName, frSlugOf } from '../../lib/tax/labels';
 
 const cantonsByName = [...cantonData.cantons].sort((a, b) => frName(a.abbr).localeCompare(frName(b.abbr)));
+
+// Exemple chiffré depuis le moteur (même source que le calculateur) : ZH, célibataire, sans impôt ecclésiastique.
+const qstEx = qstForCode(6500, zhQst as unknown as QstData, 'A0N');
 
 const path = '/fr/calculateur-impot-source/';
 const title = `Calculateur impôt à la source ${SITE_YEAR} | ${BRAND}`;
@@ -63,6 +69,15 @@ const faqSchema = {
   <QstCalculator locale="fr" />
 
   <div class="prose-content mt-14 max-w-2xl">
+    <h2>Pourquoi l’impôt à la source compte pour les nouveaux arrivants</h2>
+    <p>
+      Qui travaille en Suisse comme salarié étranger sans permis d’établissement C ne paie pas l’impôt sur le revenu
+      par déclaration, mais directement sur le salaire — l’impôt à la source. Pour la planification budgétaire, c’est
+      une grande différence : le salaire net est déjà réduit de l’impôt, et son montant dépend fortement du canton de
+      domicile. Qui accepte un poste en Suisse, envisage un déménagement ou veut vérifier si une taxation ultérieure
+      vaut la peine devrait connaître l’impôt à la source à l’avance — c’est précisément le rôle de ce calculateur.
+    </p>
+
     <h2>Comment l’impôt à la source est-il calculé ?</h2>
     <p>
       L’impôt à la source est prélevé directement sur le salaire mensuel brut. Sont déterminants le canton de domicile,
@@ -76,11 +91,44 @@ const faqSchema = {
       barème ; le résultat est arrondi à 5 centimes. Le salaire net correspond au salaire brut − impôt à la source
       (avant déductions sociales).
     </p>
-    <h3>Limites de ce calcul</h3>
+    <h2>Exemple de calcul étape par étape</h2>
+    <p>
+      Célibataire sans enfant et sans impôt ecclésiastique (barème A0N), {formatCHF(6500, 0)} de salaire brut par mois
+      dans le canton de Zurich :
+    </p>
     <ul>
-      <li>Sont pris en compte les barèmes <strong>A, B, C et H</strong> avec 0 à 5 enfants et l’impôt ecclésiastique (là où le canton le prélève à la source). Les cas particuliers (frontaliers, administrateurs, revenus acquis en compensation) ne sont pas reproduits.</li>
-      <li>Les barèmes se fondent sur le <strong>salaire mensuel</strong>. Le 13e salaire, les bonus et le modèle cantonal (mensuel ou annuel) peuvent influencer le décompte annuel effectif.</li>
-      <li>Les taux sont regroupés à 0,05 point pour un calcul indicatif — le décompte contraignant est établi par votre employeur selon les barèmes cantonaux.</li>
+      <li>Échelon pour {formatCHF(6500, 0)} au barème ZH A0N → taux {formatPercent(qstEx.ratePct / 100)}</li>
+      <li>Impôt à la source par mois : <strong>{formatCHF(qstEx.monthlyTax)}</strong> ({formatCHF(qstEx.annualTax, 0)} par an)</li>
+      <li>Salaire net avant déductions sociales : {formatCHF(qstEx.monthlyNet)} par mois</li>
+    </ul>
+    <p>
+      Au même barème, une personne mariée avec deux enfants paie nettement moins — la situation familiale déplace
+      fortement le taux. C’est exactement ce que vous calculez ci-dessus pour votre cas.
+    </p>
+
+    <h2>Décider intelligemment : à quoi faire attention</h2>
+    <ul>
+      <li>
+        <strong>Le canton fait la différence :</strong> pour le même salaire, l’impôt à la source varie beaucoup selon
+        le canton — comparez les 26 dans le
+        <a href="/fr/comparatif-impot-source/">comparatif de l’impôt à la source</a>.
+      </li>
+      <li>
+        <strong>Dès CHF 120'000, tout change :</strong> au-delà, vous êtes taxé ordinairement ultérieurement ; en
+        dessous, la demande volontaire peut valoir la peine si vous avez de fortes déductions — voir
+        <a href="/fr/guide/imposition-source-ou-ordinaire/">impôt à la source ou taxation ordinaire</a>.
+      </li>
+      <li>
+        <strong>Les frontaliers suivent d’autres règles :</strong> pour l’Allemagne, la France et l’Italie, des
+        barèmes particuliers s’appliquent (non reproduits ici) — le guide
+        <a href="/fr/guide/frontaliers-impots/">frontaliers</a> les situe.
+      </li>
+      <li>
+        <strong>Valeurs indicatives :</strong> sont pris en compte les barèmes A/B/C/H avec 0 à 5 enfants et l’impôt
+        ecclésiastique (là où le canton le prélève à la source) ; les taux sont regroupés à 0,05 point. Le décompte
+        contraignant est celui de votre employeur. Le 13e salaire et les bonus peuvent influencer le décompte annuel.
+        Guide détaillé : <a href="/fr/guide/impot-a-la-source-expatries/">l’impôt à la source pour les expatriés</a>.
+      </li>
     </ul>
 
     <h2>Questions fréquentes</h2>
@@ -90,12 +138,6 @@ const faqSchema = {
         <p class="text-slate-700">{f.a}</p>
       </div>
     ))}
-
-    <p>
-      Guide détaillé pour les expatriés : <a href="/fr/guide/impot-a-la-source-expatries/">l’impôt à la source en Suisse</a>.
-      Où l’impôt à la source est-il le plus bas ? Les 26 cantons en un coup d’oeil dans le
-      <a href="/fr/comparatif-impot-source/">comparatif de l’impôt à la source</a>.
-    </p>
   </div>
 
   <section aria-label="Impôt à la source par canton" class="mt-14">

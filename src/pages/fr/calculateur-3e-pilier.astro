@@ -65,7 +65,16 @@ const faqSchema = {
   <FrThreeACalculator />
 
   <div class="prose-content mt-14 max-w-2xl">
-    <h2>Comment le calcul est-il effectué ?</h2>
+    <h2>Pourquoi le 3e pilier est la déduction la plus simple</h2>
+    <p>
+      Le pilier 3a est la prévoyance privée encouragée fiscalement — et pour la plupart des actifs, la déduction la
+      plus efficace à obtenir sans effort. Chaque franc versé réduit immédiatement le revenu imposable, et l’avoir est
+      exonéré de l’impôt sur la fortune et sur les rendements pendant toute la durée. Qui veut savoir si le versement
+      vaut la peine et combien il rapporte concrètement a besoin d’un chiffre, pas d’une intuition : c’est exactement ce
+      que fournit le calculateur — pour votre canton, votre revenu et votre état civil.
+    </p>
+
+    <h2>Comment le calcul fonctionne</h2>
     <p>
       Votre versement 3a est déduit du revenu imposable. Nous calculons votre impôt sur le revenu (canton + commune du
       chef-lieu + impôt fédéral direct) une fois sans et une fois avec la déduction — la différence est votre économie
@@ -76,17 +85,38 @@ const faqSchema = {
       les francs de revenu les plus élevés — les plus imposés —, l’économie correspond à votre taux marginal appliqué
       au montant versé : plus le revenu et la progression sont élevés, plus l’effet est grand.
     </p>
-    <h3>Exemple de calcul</h3>
+    <h2>Exemple de calcul étape par étape</h2>
     <p>Revenu imposable {formatCHF(100000, 0)}, célibataire, canton de Zurich, versement {formatCHF(maxPK, 0)} :</p>
     <ul>
       <li>Impôts sans versement : {formatCHF(before.totalTax, 0)}</li>
       <li>Impôts avec versement : {formatCHF(after.totalTax, 0)}</li>
       <li><strong>Économie : environ {formatCHF(saving, 0)} par an</strong></li>
     </ul>
-    <h3>Limites de ce calcul</h3>
+    <p>
+      Sur plus de 30 années d’activité, cet effet se répète chaque année — la seule économie d’impôt se chiffre à un
+      montant à cinq chiffres, en plus du capital épargné et rémunéré lui-même.
+    </p>
+
+    <h2>Décider intelligemment : à quoi faire attention</h2>
     <ul>
-      <li>Coefficient du chef-lieu ; votre commune peut différer. Sans impôt ecclésiastique.</li>
-      <li>L’impôt ultérieur sur les prestations en capital (au retrait) ne fait pas partie de ce calcul.</li>
+      <li>
+        <strong>Épuiser d’abord le maximum :</strong> la déduction n’agit que jusqu’au plafond annuel ({formatCHF(maxPK, 0)}
+        avec caisse de pension). Qui le peut verse tôt dans l’année — l’argent est ainsi investi plus longtemps.
+      </li>
+      <li>
+        <strong>Plusieurs comptes pour un retrait échelonné :</strong> au retrait, le capital est imposé séparément.
+        Qui répartit sur plusieurs comptes et les retire sur des années différentes casse la progression — voir
+        <a href="/fr/guide/retrait-echelonne-3e-pilier/">retrait échelonné du 3e pilier</a>.
+      </li>
+      <li>
+        <strong>3a ou 3b ?</strong> Le pilier 3a lié apporte la déduction, le pilier 3b libre reste disponible en tout
+        temps. Ce qui vous convient : <a href="/fr/guide/pilier-3a-vs-3b/">pilier 3a vs 3b</a>.
+      </li>
+      <li>
+        <strong>Limites du calcul :</strong> nous utilisons le coefficient du chef-lieu (votre commune peut différer),
+        sans impôt ecclésiastique ; l’impôt ultérieur sur les prestations en capital ne fait pas partie de ce calcul
+        d’économie.
+      </li>
     </ul>
 
     <h2>Questions fréquentes</h2>
