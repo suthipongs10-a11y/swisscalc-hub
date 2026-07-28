@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
+# Calculator data feeds (~9.5 MB of derived tariff JSON). The islands fetch
+# these only on user interaction — every page server-renders its default
+# result — so blocking them hides no rendered content and keeps crawl budget
+# on actual pages.
+Disallow: /data/
+
 Sitemap: https://calcswiss.ch/sitemap-index.xml
