@@ -73,6 +73,12 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-07-31 — Session 20c: pronetserm auf eigenen Branch ausgelagert (Cloudflare-Pages-Fix)
+
+- **Auslöser:** Das Cloudflare-Pages-Projekt «pronetserm» lieferte Error 522 — auf `*.pages.dev` heisst das: kein erfolgreiches Production-Deployment vorhanden; die Root-Directory-Konfiguration im Unterordner-Setup war fehleranfällig. Der Owner wollte die beiden Websites ohnehin strikt getrennt haben («คนละ Branch หรือคนละส่วน»).
+- **Neuer Branch `pronetserm`:** enthält die komplette Thai-Website am **Branch-Root** (125 Dateien; per `git commit-tree` aus dem Unterordner-Baum erzeugt, Inhalt byte-identisch) plus aktualisiertes `README-DEPLOY.md`. Cloudflare-Konfiguration damit trivial: Production branch `pronetserm`, Framework preset None, Build command leer, Output `/`, Root directory leer.
+- **Ordner `pronetserm/` vom Hauptbranch entfernt** — dieser Branch ist wieder reine SwissCalc-Codebasis. Weiterentwicklung der Thai-Site direkt auf dem Branch `pronetserm` (lokal via Worktree: `git fetch origin pronetserm && git worktree add ../pronetserm-site pronetserm`). SwissCalc-Build und Tests unverändert grün.
+
 ### 2026-07-31 — Session 20b: pronetserm/ — zweite Website im Repo (โปรเน็ตเสริม.com, +65 Long-Tail-Seiten)
 
 - **Separates Projekt, separater Ordner:** Auf Owner-Wunsch wurde die bereits AdSense-genehmigte thailändische Website โปรเน็ตเสริม.com (site.zip) als eigenständiger Ordner `pronetserm/` importiert (ohne Editor-Artefakte) — eigenes Cloudflare-Pages-Projekt mit Root-Directory `pronetserm`, dokumentiert in `pronetserm/README-DEPLOY.md`. Betrifft die SwissCalc-Site nicht; alle 102 Tests weiterhin grün.

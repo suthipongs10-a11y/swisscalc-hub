@@ -61,3 +61,7 @@ This project may be built by different assistants/models across sessions. The do
 4. All new numbers have sources in `/src/data/*.json` `_meta`.
 5. `STATUS.md` updated (what shipped, pending decisions).
 6. Committed and pushed. **Stop — wait for review before the next milestone.**
+
+## Second website in this repo (branch `pronetserm`)
+
+The repo also hosts an unrelated Thai site (โปรเน็ตเสริม.com, mobile data packages) on the **orphan branch `pronetserm`** — site root = branch root, static pre-generated HTML, own Cloudflare Pages project, no build step. It is NOT part of SwissCalc and none of this file's rules about content/data apply to it except: prices/USSD codes come verbatim from its `data/packages.json` (never invent or edit them). To work on it: `git fetch origin pronetserm && git worktree add ../pronetserm-site pronetserm`, edit there, run `node build.cjs`, commit + push to `origin pronetserm`. See `README-DEPLOY.md` on that branch.
