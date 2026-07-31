@@ -14,8 +14,11 @@ import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
 import { formatCHF, formatPercent } from '../../lib/format';
 import { deName, cantonSlugOf } from '../../lib/tax/labels';
 import { CANTON_QST_CONTENT } from '../../lib/cantonQstContent';
+import { CANTON_QST_PRACTICE } from '../../lib/cantonQstPractice';
 import { isAnnualModel } from '../../lib/qst/cantons';
 import { qstForCode, buildCode, resolveChurch, type QstData, type ChurchMode } from '../../lib/qst/engine';
+import { compareQst } from '../../lib/qst/compare';
+import { loadQstvFile } from '../../lib/qst/compareData';
 
 export function getStaticPaths() {
   return cantonData.cantons.map((c) => ({ params: { kanton: c.slug }, props: { canton: c } }));
@@ -26,6 +29,8 @@ const { abbr } = canton;
 
 const editorial = CANTON_QST_CONTENT[abbr];
 if (!editorial) throw new Error(`Missing QST editorial for ${abbr}`);
+const practice = CANTON_QST_PRACTICE[abbr];
+if (!practice) throw new Error(`Missing QST practice editorial for ${abbr}`);
 const name = deName(abbr);
 const meta = qstIndex.cantons.find((c) => c.abbr === abbr)!;
 const data = JSON.parse(readFileSync(`public/data/qst/${abbr.toLowerCase()}.json`, 'utf8')) as QstData;
@@ -35,8 +40,39 @@ const churchText =
   meta.church === 'both' ? 'mit und ohne Kirchensteuer' : meta.church === 'Y' ? 'nur mit Kirchensteuer' : 'ohne Kirchensteuer (im Kanton nicht an der Quelle erhoben)';
 
 // Example: single person, no children, income levels — from this canton's tariff.
-const code = buildCode('A', 0, resolveChurch(meta.church as ChurchMode, false));
+const church = resolveChurch(meta.church as ChurchMode, false);
+const code = buildCode('A', 0, church);
 const examples = [6000, 8000, 10000].map((m) => ({ m, r: qstForCode(m, data, code) }));
+
+/* --- What the tariff code does to the deduction, at one reference salary --- */
+const REF = 8000;
+const situations: { label: string; code: string }[] = [
+  { label: 'Alleinstehend, ohne Kinder', code: buildCode('A', 0, church) },
+  { label: 'Verheiratet, ein Erwerbseinkommen, ohne Kinder', code: buildCode('B', 0, church) },
+  { label: 'Verheiratet, ein Erwerbseinkommen, zwei Kinder', code: buildCode('B', 2, church) },
+  { label: 'Verheiratet, beide erwerbstätig, ohne Kinder', code: buildCode('C', 0, church) },
+  { label: 'Verheiratet, beide erwerbstätig, zwei Kinder', code: buildCode('C', 2, church) },
+  { label: 'Alleinerziehend, ein Kind', code: buildCode('H', 1, church) },
+];
+const codeRows = situations
+  .map((s) => ({ ...s, r: qstForCode(REF, data, s.code) }))
+  .filter((s) => s.r.monthlyTax > 0);
+const codeSpread =
+  codeRows.length > 1 ? codeRows[0]!.r.monthlyTax - codeRows[codeRows.length - 1]!.r.monthlyTax : 0;
+
+/* --- How the rate climbs with the salary, in this canton --- */
+const ladder = [4000, 6000, 8000, 12000, 16000].map((m) => ({ m, r: qstForCode(m, data, code) }));
+const ladderFirst = ladder[0]!;
+const ladderLast = ladder[ladder.length - 1]!;
+
+/* --- Where this canton sits nationally, same situation and salary --- */
+const rows = compareQst(REF, false, loadQstvFile('a0'));
+const rank = rows.findIndex((r) => r.abbr === abbr) + 1;
+const self = rows[rank - 1]!;
+const cheapest = rows[0]!;
+const dearest = rows[rows.length - 1]!;
+const vsCheapest = self.monthlyTax - cheapest.monthlyTax;
+const vsDearest = dearest.monthlyTax - self.monthlyTax;
 
 const path = `/quellensteuer-rechner/${canton.slug}/`;
 const title = `Quellensteuer ${name} ${SITE_YEAR} berechnen | ${BRAND}`;
@@ -52,6 +88,7 @@ const faqs = [
     a: `Eine alleinstehende Person ohne Kinder zahlt in ${name} bei ${formatCHF(8000, 0)} Bruttolohn pro Monat rund ${formatCHF(examples[1].r.monthlyTax, 0)} Quellensteuer (${formatPercent(examples[1].r.ratePct / 100)} effektiv). Mit Kindern, verheiratet oder mit Kirchensteuer verschiebt sich der Satz — der Rechner oben zeigt Ihren Fall.`,
   },
   editorial.faq,
+  practice.faq,
 ];
 
 const webApp = {
@@ -96,6 +133,94 @@ const incomeTaxSlug = cantonSlugOf(abbr);
       </tbody>
     </table>
 
+    <h2>Quellensteuer in {name} in der Praxis</h2>
+    <p>{practice.practice}</p>
+
+    <h2>Was der Tarifcode in {name} ausmacht</h2>
+    <p>
+      {formatCHF(REF, 0)} Bruttolohn pro Monat im Kanton {name}, sechs Familiensituationen — nach dem
+      {' '}{abbr}-Tarif {SITE_YEAR}:
+    </p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Situation</th>
+          <th class="py-2 pl-2 text-right font-semibold">Code</th>
+          <th class="py-2 pl-2 text-right font-semibold">Quellensteuer</th>
+        </tr>
+      </thead>
+      <tbody>
+        {codeRows.map((s) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2">{s.label}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{s.code}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(s.r.monthlyTax)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    {codeSpread > 0 && (
+      <p>
+        Spannweite in {name}: <strong>{formatCHF(codeSpread, 0)} pro Monat</strong> bei identischem Lohn, über ein Jahr
+        {' '}{formatCHF(codeSpread * 12, 0)}. Prüfen Sie den Code auf Ihrer
+        {' '}<a href="/ratgeber/lohnabrechnung-verstehen/">Lohnabrechnung</a>.
+      </p>
+    )}
+
+    <h2>Wie der Satz mit dem Lohn steigt</h2>
+    <p>Alleinstehend ohne Kinder, Tarif {code}, Kanton {name}:</p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Bruttolohn / Monat</th>
+          <th class="py-2 pl-2 text-right font-semibold">Satz</th>
+          <th class="py-2 pl-2 text-right font-semibold">Quellensteuer</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ladder.map((e) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2 tabular-nums">{formatCHF(e.m, 0)}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatPercent(e.r.ratePct / 100)}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(e.r.monthlyTax)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p>
+      Der Lohn vervierfacht sich, die Quellensteuer in {name} steigt von
+      {' '}{formatCHF(ladderFirst.r.monthlyTax, 0)} auf {formatCHF(ladderLast.r.monthlyTax, 0)} — der Satz von
+      {' '}{formatPercent(ladderFirst.r.ratePct / 100)} auf {formatPercent(ladderLast.r.ratePct / 100)}.
+    </p>
+
+    <h2>{name} im Vergleich mit den anderen Kantonen</h2>
+    <p>
+      Bei {formatCHF(REF, 0)} Bruttolohn pro Monat (alleinstehend, ohne Kinder, ohne Kirchensteuer) liegt
+      {' '}{name} auf <strong>Rang {rank} von {rows.length}</strong> — von der günstigsten zur teuersten Quellensteuer
+      gezählt.
+    </p>
+    <ul>
+      <li>
+        Günstigster Kanton: <a href={`/quellensteuer-rechner/${cantonSlugOf(cheapest.abbr)}/`}>{deName(cheapest.abbr)}</a>
+        {' '}mit {formatCHF(cheapest.monthlyTax)} pro Monat
+        {rank === 1 ? ' — das ist dieser Kanton.' : ` (${formatCHF(vsCheapest, 0)} weniger als in ${name})`}
+      </li>
+      <li>
+        Teuerster Kanton: <a href={`/quellensteuer-rechner/${cantonSlugOf(dearest.abbr)}/`}>{deName(dearest.abbr)}</a>
+        {' '}mit {formatCHF(dearest.monthlyTax)} pro Monat
+        {rank === rows.length ? ' — das ist dieser Kanton.' : ` (${formatCHF(vsDearest, 0)} mehr als in ${name})`}
+      </li>
+      <li>
+        {name}: {formatCHF(self.monthlyTax)} pro Monat, also {formatCHF(self.annualTax, 0)} im Jahr.
+      </li>
+    </ul>
+    <p>
+      Alle Kantone nebeneinander: <a href="/quellensteuer-vergleich/">Quellensteuer-Vergleich</a>. Zu viel bezahlt?
+      Tarifkorrektur und nachträgliche Veranlagung bei der Steuerverwaltung {name} laufen bis zum 31. März des
+      Folgejahres — wie das geht, steht im Ratgeber
+      <a href="/ratgeber/quellensteuer-oder-veranlagung/">Quellensteuer oder Veranlagung</a>.
+    </p>
+
     <h2>Häufige Fragen</h2>
     {faqs.map((f) => (
       <div class="mb-4">
@@ -107,7 +232,8 @@ const incomeTaxSlug = cantonSlugOf(abbr);
     <p>
       Ordentliche Einkommenssteuer im Kanton {name}: <a href={`/steuerrechner/${incomeTaxSlug}/`}>Steuerrechner {name}</a>.
       Sozialabzüge auf dem Lohn: <a href="/brutto-netto-rechner/">Brutto-Netto-Rechner</a>. Alle Kantone:
-      <a href="/quellensteuer-rechner/">Quellensteuer-Rechner</a>.
+      <a href="/quellensteuer-rechner/">Quellensteuer-Rechner</a>. Für Expats:
+      <a href="/ratgeber/quellensteuer-expats/">Quellensteuer für Expats</a>.
     </p>
   </div>
 

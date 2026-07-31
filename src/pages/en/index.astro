@@ -14,6 +14,31 @@ const websiteJsonLd = {
   publisher: { '@id': `${SITE_URL}/#organization` },
 };
 
+const faqs = [
+  {
+    q: 'Are the calculators free, and do I need an account?',
+    a: 'Every calculator is free and works without signing up. No account, no advertising, no cookies. Your entries never leave your browser — the calculation runs locally on your device and we store no salary or tax data.',
+  },
+  {
+    q: 'How accurate are the results?',
+    a: 'Tariffs and tax multipliers come from the official FTA data for the current tax year, and the social-security rates from federal ordinances. The results are therefore arithmetically correct but indicative: only the assessment issued by the competent tax authority — or your employer’s payroll statement — is binding.',
+  },
+  {
+    q: 'Which tax year do the figures apply to?',
+    a: `All calculators use ${SITE_YEAR} tax-year data. Every data file carries its source and retrieval date; the Sources page shows, value by value, where a figure comes from and when it was last checked.`,
+  },
+  {
+    q: 'Do the tax calculators account for my deductions?',
+    a: 'No — you enter your taxable income, meaning the amount after all deductions. To see what an additional pillar 3a contribution does to your tax bill, the pillar 3a calculator shows the saving directly in francs.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+
 const tools = [
   {
     href: '/en/salary-calculator/',
@@ -53,7 +78,7 @@ const tools = [
   description="Free tax and finance calculators for Switzerland: gross-to-net salary, cantonal tax comparison across all 26 cantons, pillar 3a. Ad-free and cookie-free."
   path={path}
   locale="en"
-  jsonLd={[websiteJsonLd]}
+  jsonLd={[websiteJsonLd, faqSchema]}
 >
   <h1 class="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">Swiss tax and finance calculators</h1>
   <p class="mb-10 max-w-2xl text-lg leading-relaxed text-slate-700">
@@ -78,12 +103,99 @@ const tools = [
   </ul>
 
   <section class="prose-content mt-12 max-w-2xl">
-    <h2>Why CalcSwiss?</h2>
+    <h2>Which calculator answers which question?</h2>
     <p>
-      Every figure on this site comes from an official source — the Federal Tax Administration (FTA), the Federal
-      Statistical Office (FSO), the Federal Office of Public Health (FOPH) or the cantonal tax administrations — and is
-      documented with its source and date. Our calculations are for guidance only; only the official assessment is
-      binding. Ad-free, cookie-free, no sign-up. See our <a href="/en/methodology/">methodology</a> for the details.
+      In Switzerland, pay and taxes sit in different systems: social insurance is regulated federally, income tax
+      cantonally and municipally, and anyone without a C settlement permit pays withholding tax straight off the salary
+      instead of filing a return. Depending on your situation, a different calculator gives the answer:
+    </p>
+    <ul>
+      <li>
+        <strong>“What is left of my salary?”</strong> — the
+        <a href="/en/salary-calculator/">salary calculator</a> itemises AHV, IV, EO, ALV, NBU and BVG line by line.
+      </li>
+      <li>
+        <strong>“How much tax will I pay in my municipality?”</strong> — the
+        <a href="/en/cantonal-tax-comparison/">cantonal tax comparison</a> computes cantonal, municipal and federal tax
+        for all 26 cantons and links through to each canton's own page.
+      </li>
+      <li>
+        <strong>“I have just moved here and I am taxed at source.”</strong> — the
+        <a href="/en/withholding-tax-calculator/">withholding tax calculator</a> applies the cantonal tariffs by code
+        (A/B/C/H), number of children and church tax; the
+        <a href="/en/withholding-tax-comparison/">withholding tax comparison</a> ranks every canton side by side.
+      </li>
+      <li>
+        <strong>“Is a pillar 3a contribution worth it?”</strong> — the
+        <a href="/en/pillar-3a-calculator/">pillar 3a calculator</a> puts the tax saving in francs.
+      </li>
+      <li>
+        <strong>“Is this hourly rate a fair offer?”</strong> — the
+        <a href="/en/hourly-wage-calculator/">hourly wage calculator</a> converts in both directions, including vacation
+        compensation and the 13th month salary.
+      </li>
+    </ul>
+
+    <h2>Where the numbers come from</h2>
+    <p>
+      Every figure on this site comes from an official source and is documented with that source and a retrieval date —
+      there is no value on CalcSwiss without a traceable origin:
+    </p>
+    <ul>
+      <li>
+        <strong>Tax tariffs and multipliers:</strong> the Federal Tax Administration (FTA) and the cantonal tax
+        administrations. The cantons are responsible for the content of their tariffs.
+      </li>
+      <li>
+        <strong>Withholding tax tariffs:</strong> the cantonal tariff files for the current tax year, broken down by
+        tariff code (A/B/C/H), number of children and church tax.
+      </li>
+      <li>
+        <strong>Social-security contributions:</strong> the rates for AHV/IV/EO, ALV, non-occupational accident
+        insurance and BVG under federal ordinances.
+      </li>
+      <li>
+        <strong>Municipalities:</strong> the BFS number of the Federal Statistical Office as the unique key for each of
+        Switzerland's roughly 2,100 municipalities.
+      </li>
+    </ul>
+    <p>
+      Which file supplies which value, and when it was last checked, is listed individually on the
+      <a href="/en/sources/">sources</a> page.
+    </p>
+
+    <h2>How we calculate — and what we deliberately do not</h2>
+    <p>
+      Transparency also means naming the limits. Our tax calculators start from <em>taxable</em> income — the amount
+      after all deductions — and do not determine your deductions for you, because those depend on your personal
+      circumstances. Results are shown <strong>excluding church tax</strong> and excluding the personal tax levied in
+      some cantons. For withholding tax we cover the ordinary A/B/C/H tariffs; the special tariffs for cross-border
+      commuters from Germany, France and Italy are not reproduced.
+    </p>
+    <p>
+      All results are indicative figures for your own orientation and are no substitute for tax advice. What is binding
+      is the assessment of the competent tax authority — for withholding tax, your employer's statement. The full
+      calculation logic is documented on the <a href="/en/methodology/">methodology</a> page.
+    </p>
+
+    <h2>Ad-free and cookie-free</h2>
+    <p>
+      CalcSwiss sets no cookies, embeds no ad networks and requires no sign-up. That is why you see no consent banner
+      here. Your entries — salary, income, family situation — are processed exclusively in your browser and are never
+      transmitted to a server. More on this in our <a href="/en/privacy/">privacy policy</a>.
+    </p>
+
+    <h2>Frequently asked questions</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Background reading on pay, taxes and pensions is collected in our <a href="/en/guide/">guide</a>. Who is behind
+      CalcSwiss: <a href="/en/about/">about us</a>.
     </p>
   </section>
 </BaseLayout>

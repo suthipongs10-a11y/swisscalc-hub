@@ -15,7 +15,7 @@ import statsData from '../../data/tax/canton-stats-2026.json';
 import cantonalData from '../../data/tax/cantonal-income-2026.json';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../lib/site';
 import { formatCHF, formatNumber } from '../../lib/format';
-import { cantonTax, compareCantons, cantonMultipliers } from '../../lib/tax/engine';
+import { cantonTax, cantonTaxAtMultiplier, compareCantons, cantonMultipliers } from '../../lib/tax/engine';
 import { CANTON_CONTENT } from '../../lib/cantonContent';
 
 export function getStaticPaths() {
@@ -95,6 +95,41 @@ const faqSchema = {
     acceptedAnswer: { '@type': 'Answer', text: f.a },
   })),
 };
+
+/* --- What the municipal Steuerfuss is worth inside this canton, in francs --- */
+const REF_INCOME = 100_000;
+const atMin = cantonTaxAtMultiplier(REF_INCOME, abbr, 'single', stats.minCity.pct);
+const atMax = cantonTaxAtMultiplier(REF_INCOME, abbr, 'single', stats.maxCity.pct);
+const municipalSpread = atMax.totalTax - atMin.totalTax;
+
+/* --- How the burden grows with income, in this canton --- */
+const ladder = [50_000, 80_000, 100_000, 150_000, 200_000].map((i) => ({
+  income: i,
+  single: cantonTax(i, abbr, 'single'),
+  married: cantonTax(i, abbr, 'married'),
+}));
+const ladderFirst = ladder[0]!;
+const ladderLast = ladder[ladder.length - 1]!;
+const marriedRef = cantonTax(REF_INCOME, abbr, 'married');
+const marriageGap = ref.totalTax - marriedRef.totalTax;
+
+/* Guide cluster, rotated per canton (SEO_SPEC §5): every article below is
+   relevant to an income-tax page, and rotating them spreads internal links
+   across the Ratgeber instead of repeating one teaser on all 26 pages. */
+const GUIDE_POOL = [
+  'kantonswechsel-steuern-sparen',
+  'steuererklaerung-fristen-abzuege',
+  'heiraten-steuern',
+  'saeule-3a-vs-3b',
+  'pensionskasse-bvg-erklaert',
+  'lohnabrechnung-verstehen',
+  'saeule-3a-gestaffelt-beziehen',
+];
+const cantonIdx = cantonData.cantons.findIndex((c) => c.abbr === abbr);
+const guideIds = [
+  GUIDE_POOL[cantonIdx % GUIDE_POOL.length]!,
+  GUIDE_POOL[(cantonIdx + 3) % GUIDE_POOL.length]!,
+];
 
 const compareRows = editorial.compare.map((other) => {
   const r = cantonTax(100_000, other, 'single');
@@ -177,6 +212,79 @@ const compareRows = editorial.compare.map((other) => {
       <a href={`/quellensteuer-rechner/${slug}/`}>Quellensteuer im Kanton {name}</a>.
     </p>
 
+    <h2>Was die Gemeinde im Kanton {name} ausmacht</h2>
+    <p>
+      Der Kantonstarif ist überall gleich — der Gemeindesteuerfuss nicht. Bei
+      {' '}{formatCHF(REF_INCOME, 0)} steuerbarem Einkommen (alleinstehend) bedeutet das im Kanton {name}:
+    </p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Gemeinde</th>
+          <th class="py-2 pl-2 text-right font-semibold">Steuerfuss</th>
+          <th class="py-2 pl-2 text-right font-semibold">Steuer pro Jahr</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">{stats.minCity.name} (günstigste)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(stats.minCity.pct, 0)}%</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(atMin.totalTax, 0)}</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">{ref.capital} (Hauptort)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(m.cityPct, 0)}%</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(ref.totalTax, 0)}</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-2">{stats.maxCity.name} (teuerste)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(stats.maxCity.pct, 0)}%</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(atMax.totalTax, 0)}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Zwischen {stats.minCity.name} und {stats.maxCity.name} liegen bei gleichem Einkommen
+      {' '}<strong>{formatCHF(municipalSpread, 0)} pro Jahr</strong> — allein wegen der Wohngemeinde, innerhalb
+      desselben Kantons. Über zehn Jahre sind das {formatCHF(municipalSpread * 10, 0)}. Der Rechner oben verwendet den
+      Hauptort {ref.capital}; für eine andere Gemeinde verschiebt sich der Gemeindeanteil entsprechend ihrem Steuerfuss.
+    </p>
+
+    <h2>Steuerbelastung nach Einkommen in {name}</h2>
+    <p>Steuer pro Jahr in {ref.capital}, Kantons-, Gemeinde- und Bundessteuer zusammen, ohne Kirchensteuer:</p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Steuerbares Einkommen</th>
+          <th class="py-2 pl-2 text-right font-semibold">Alleinstehend</th>
+          <th class="py-2 pl-2 text-right font-semibold">Verheiratet</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ladder.map((e) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2 tabular-nums">{formatCHF(e.income, 0)}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">
+              {formatCHF(e.single.totalTax, 0)} ({(e.single.effectiveRate * 100).toFixed(1)}%)
+            </td>
+            <td class="py-2 pl-2 text-right tabular-nums">
+              {formatCHF(e.married.totalTax, 0)} ({(e.married.effectiveRate * 100).toFixed(1)}%)
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p>
+      Das Einkommen vervierfacht sich von {formatCHF(ladderFirst.income, 0)} auf {formatCHF(ladderLast.income, 0)}, die
+      Steuer in {ref.capital} steigt dabei von {formatCHF(ladderFirst.single.totalTax, 0)} auf
+      {' '}{formatCHF(ladderLast.single.totalTax, 0)} — der effektive Satz von
+      {' '}{(ladderFirst.single.effectiveRate * 100).toFixed(1)}% auf
+      {' '}{(ladderLast.single.effectiveRate * 100).toFixed(1)}%.
+      {marriageGap > 0
+        ? ` Ein Ehepaar spart in ${ref.capital} bei diesem Einkommen ${formatCHF(marriageGap, 0)}.`
+        : ''}
+    </p>
+
     <h2>Häufige Fragen</h2>
     {
       faqs.map((f) => (
@@ -193,7 +301,7 @@ const compareRows = editorial.compare.map((other) => {
     </p>
   </div>
 
-  <RatgeberLinks ids={['kantonswechsel-steuern-sparen']} />
+  <RatgeberLinks ids={guideIds} />
 
   <RelatedTools current="steuervergleich" />
 

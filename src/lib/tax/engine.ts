@@ -305,6 +305,41 @@ export function cantonTax(
   };
 }
 
+/**
+ * Same as {@link cantonTax}, but for an arbitrary municipal Steuerfuss instead
+ * of the cantonal capital's — used to show the spread between the cheapest and
+ * the most expensive municipality of a canton.
+ *
+ * Indicative: the municipal base is the one this canton's capital uses (the
+ * cantonal tarif, except in SZ and VS where the ESTV data gives the capital its
+ * own municipal tarif). Applying it at another municipality's Steuerfuss is an
+ * approximation there; the multiplier itself is the municipality's own.
+ */
+export function cantonTaxAtMultiplier(
+  taxableIncome: number,
+  abbr: string,
+  relationship: Relationship,
+  cityPct: number,
+): CantonTaxResult {
+  const base = cantonalBaseTax(taxableIncome, abbr, relationship);
+  const cityBase = cityBaseTax(taxableIncome, abbr, relationship);
+  const m = cantonMultipliers(abbr);
+  const canton = round2((base * m.cantonPct) / 100);
+  const city = round2((cityBase * cityPct) / 100);
+  const fed = federalTax(taxableIncome, relationship);
+  const total = round2(canton + city + fed);
+  return {
+    abbr,
+    capital: m.capital,
+    baseTax: base,
+    cantonTax: canton,
+    cityTax: city,
+    federalTax: fed,
+    totalTax: total,
+    effectiveRate: taxableIncome > 0 ? total / taxableIncome : 0,
+  };
+}
+
 export const ALL_CANTONS: string[] = Object.keys(cantonalData.cantons);
 
 /** All 26 cantons ranked by total tax (ascending). */

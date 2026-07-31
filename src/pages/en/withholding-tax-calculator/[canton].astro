@@ -9,8 +9,11 @@ import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../../lib/site';
 import { formatCHF, formatPercent } from '../../../lib/format';
 import { enName, enSlugOf } from '../../../lib/tax/labels';
 import { CANTON_QST_CONTENT_EN } from '../../../lib/cantonQstContentEn';
+import { CANTON_QST_PRACTICE_EN } from '../../../lib/cantonQstPracticeEn';
 import { isAnnualModel } from '../../../lib/qst/cantons';
 import { qstForCode, buildCode, resolveChurch, type QstData, type ChurchMode } from '../../../lib/qst/engine';
+import { compareQst } from '../../../lib/qst/compare';
+import { loadQstvFile } from '../../../lib/qst/compareData';
 
 export function getStaticPaths() {
   return cantonData.cantons.map((c) => ({ params: { canton: enSlugOf(c.abbr)! }, props: { canton: c } }));
@@ -21,6 +24,8 @@ const { abbr } = canton;
 
 const editorial = CANTON_QST_CONTENT_EN[abbr];
 if (!editorial) throw new Error(`Missing EN QST editorial for ${abbr}`);
+const practice = CANTON_QST_PRACTICE_EN[abbr];
+if (!practice) throw new Error(`Missing EN QST practice for ${abbr}`);
 const name = enName(abbr);
 const meta = qstIndex.cantons.find((c) => c.abbr === abbr)!;
 const data = JSON.parse(readFileSync(`public/data/qst/${abbr.toLowerCase()}.json`, 'utf8')) as QstData;
@@ -29,8 +34,36 @@ const model = isAnnualModel(abbr) ? 'annual model' : 'monthly model';
 const churchText =
   meta.church === 'both' ? 'with and without church tax' : meta.church === 'Y' ? 'only with church tax' : 'without church tax (not levied at source in the canton)';
 
-const code = buildCode('A', 0, resolveChurch(meta.church as ChurchMode, false));
+const church = resolveChurch(meta.church as ChurchMode, false);
+const code = buildCode('A', 0, church);
 const examples = [6000, 8000, 10000].map((m) => ({ m, r: qstForCode(m, data, code) }));
+
+const REF = 8000;
+const situations: { label: string; code: string }[] = [
+  { label: 'Single, no children', code: buildCode('A', 0, church) },
+  { label: 'Married, single earner, no children', code: buildCode('B', 0, church) },
+  { label: 'Married, single earner, two children', code: buildCode('B', 2, church) },
+  { label: 'Married, dual earners, no children', code: buildCode('C', 0, church) },
+  { label: 'Married, dual earners, two children', code: buildCode('C', 2, church) },
+  { label: 'Single parent, one child', code: buildCode('H', 1, church) },
+];
+const codeRows = situations
+  .map((s) => ({ ...s, r: qstForCode(REF, data, s.code) }))
+  .filter((s) => s.r.monthlyTax > 0);
+const codeSpread =
+  codeRows.length > 1 ? codeRows[0]!.r.monthlyTax - codeRows[codeRows.length - 1]!.r.monthlyTax : 0;
+
+const ladder = [4000, 6000, 8000, 12000, 16000].map((m) => ({ m, r: qstForCode(m, data, code) }));
+const ladderFirst = ladder[0]!;
+const ladderLast = ladder[ladder.length - 1]!;
+
+const rows = compareQst(REF, false, loadQstvFile('a0'));
+const rank = rows.findIndex((r) => r.abbr === abbr) + 1;
+const self = rows[rank - 1]!;
+const cheapest = rows[0]!;
+const dearest = rows[rows.length - 1]!;
+const vsCheapest = self.monthlyTax - cheapest.monthlyTax;
+const vsDearest = dearest.monthlyTax - self.monthlyTax;
 
 const path = `/en/withholding-tax-calculator/${enSlugOf(abbr)}/`;
 const title = `Withholding tax ${name} ${SITE_YEAR} | ${BRAND}`;
@@ -46,6 +79,7 @@ const faqs = [
     a: `A single person without children pays in ${name}, at ${formatCHF(8000, 0)} gross monthly salary, about ${formatCHF(examples[1].r.monthlyTax, 0)} withholding tax (${formatPercent(examples[1].r.ratePct / 100)} effective). With children, married or with church tax the rate shifts — the calculator above shows your case.`,
   },
   editorial.faq,
+  practice.faq,
 ];
 
 const webApp = {
@@ -88,6 +122,93 @@ const faqSchema = {
         ))}
       </tbody>
     </table>
+
+    <h2>Withholding tax in {name} in practice</h2>
+    <p>{practice.practice}</p>
+
+    <h2>What the tariff code changes in {name}</h2>
+    <p>
+      {formatCHF(REF, 0)} gross salary per month in the canton of {name}, six family situations — under the
+      {' '}{abbr} tariff {SITE_YEAR}:
+    </p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Situation</th>
+          <th class="py-2 pl-2 text-right font-semibold">Code</th>
+          <th class="py-2 pl-2 text-right font-semibold">Withholding tax</th>
+        </tr>
+      </thead>
+      <tbody>
+        {codeRows.map((s) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2">{s.label}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{s.code}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(s.r.monthlyTax)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    {codeSpread > 0 && (
+      <p>
+        Spread in {name}: <strong>{formatCHF(codeSpread, 0)} per month</strong> at an identical salary —
+        {' '}{formatCHF(codeSpread * 12, 0)} over a year. Check the code on your
+        {' '}<a href="/en/guide/understanding-swiss-payslip/">payslip</a>.
+      </p>
+    )}
+
+    <h2>How the rate climbs with the salary</h2>
+    <p>Single, no children, tariff {code}, canton of {name}:</p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Gross salary / month</th>
+          <th class="py-2 pl-2 text-right font-semibold">Rate</th>
+          <th class="py-2 pl-2 text-right font-semibold">Withholding tax</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ladder.map((e) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2 tabular-nums">{formatCHF(e.m, 0)}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatPercent(e.r.ratePct / 100)}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(e.r.monthlyTax)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p>
+      The salary quadruples; withholding tax in {name} rises from {formatCHF(ladderFirst.r.monthlyTax, 0)} to
+      {' '}{formatCHF(ladderLast.r.monthlyTax, 0)} — the rate from {formatPercent(ladderFirst.r.ratePct / 100)} to
+      {' '}{formatPercent(ladderLast.r.ratePct / 100)}.
+    </p>
+
+    <h2>{name} against the other cantons</h2>
+    <p>
+      At {formatCHF(REF, 0)} gross per month (single, no children, no church tax), {name} sits at
+      {' '}<strong>rank {rank} of {rows.length}</strong>, counting from the cheapest canton to the most expensive.
+    </p>
+    <ul>
+      <li>
+        Cheapest canton: <a href={`/en/withholding-tax-calculator/${enSlugOf(cheapest.abbr)}/`}>{enName(cheapest.abbr)}</a>
+        {' '}at {formatCHF(cheapest.monthlyTax)} per month
+        {rank === 1 ? ' — that is this canton.' : ` (${formatCHF(vsCheapest, 0)} less than in ${name})`}
+      </li>
+      <li>
+        Most expensive canton: <a href={`/en/withholding-tax-calculator/${enSlugOf(dearest.abbr)}/`}>{enName(dearest.abbr)}</a>
+        {' '}at {formatCHF(dearest.monthlyTax)} per month
+        {rank === rows.length ? ' — that is this canton.' : ` (${formatCHF(vsDearest, 0)} more than in ${name})`}
+      </li>
+      <li>
+        {name}: {formatCHF(self.monthlyTax)} per month, or {formatCHF(self.annualTax, 0)} a year.
+      </li>
+    </ul>
+    <p>
+      Every canton side by side: <a href="/en/withholding-tax-comparison/">withholding tax comparison</a>. Paid too
+      much? A tariff correction or subsequent ordinary assessment with the {name} tax administration runs until 31 March
+      of the following year — the guide
+      <a href="/en/guide/withholding-or-ordinary-assessment/">withholding tax or ordinary assessment</a> explains how.
+    </p>
 
     <h2>Frequently asked questions</h2>
     {faqs.map((f) => (

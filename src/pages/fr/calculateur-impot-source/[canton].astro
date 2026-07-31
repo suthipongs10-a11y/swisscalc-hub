@@ -9,8 +9,11 @@ import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../../lib/site';
 import { formatCHF, formatPercent } from '../../../lib/format';
 import { frName, frSlugOf } from '../../../lib/tax/labels';
 import { CANTON_QST_CONTENT_FR } from '../../../lib/cantonQstContentFr';
+import { CANTON_QST_PRACTICE_FR } from '../../../lib/cantonQstPracticeFr';
 import { isAnnualModel } from '../../../lib/qst/cantons';
 import { qstForCode, buildCode, resolveChurch, type QstData, type ChurchMode } from '../../../lib/qst/engine';
+import { compareQst } from '../../../lib/qst/compare';
+import { loadQstvFile } from '../../../lib/qst/compareData';
 
 export function getStaticPaths() {
   return cantonData.cantons.map((c) => ({ params: { canton: frSlugOf(c.abbr)! }, props: { canton: c } }));
@@ -21,6 +24,8 @@ const { abbr } = canton;
 
 const editorial = CANTON_QST_CONTENT_FR[abbr];
 if (!editorial) throw new Error(`Missing FR QST editorial for ${abbr}`);
+const practice = CANTON_QST_PRACTICE_FR[abbr];
+if (!practice) throw new Error(`Missing FR QST practice for ${abbr}`);
 const name = frName(abbr);
 const meta = qstIndex.cantons.find((c) => c.abbr === abbr)!;
 const data = JSON.parse(readFileSync(`public/data/qst/${abbr.toLowerCase()}.json`, 'utf8')) as QstData;
@@ -29,8 +34,36 @@ const model = isAnnualModel(abbr) ? 'modèle annuel' : 'modèle mensuel';
 const churchText =
   meta.church === 'both' ? 'avec et sans impôt ecclésiastique' : meta.church === 'Y' ? 'uniquement avec impôt ecclésiastique' : 'sans impôt ecclésiastique (non prélevé à la source dans le canton)';
 
-const code = buildCode('A', 0, resolveChurch(meta.church as ChurchMode, false));
+const church = resolveChurch(meta.church as ChurchMode, false);
+const code = buildCode('A', 0, church);
 const examples = [6000, 8000, 10000].map((m) => ({ m, r: qstForCode(m, data, code) }));
+
+const REF = 8000;
+const situations: { label: string; code: string }[] = [
+  { label: 'Célibataire, sans enfant', code: buildCode('A', 0, church) },
+  { label: 'Marié, un seul revenu, sans enfant', code: buildCode('B', 0, church) },
+  { label: 'Marié, un seul revenu, deux enfants', code: buildCode('B', 2, church) },
+  { label: 'Marié, deux revenus, sans enfant', code: buildCode('C', 0, church) },
+  { label: 'Marié, deux revenus, deux enfants', code: buildCode('C', 2, church) },
+  { label: 'Famille monoparentale, un enfant', code: buildCode('H', 1, church) },
+];
+const codeRows = situations
+  .map((s) => ({ ...s, r: qstForCode(REF, data, s.code) }))
+  .filter((s) => s.r.monthlyTax > 0);
+const codeSpread =
+  codeRows.length > 1 ? codeRows[0]!.r.monthlyTax - codeRows[codeRows.length - 1]!.r.monthlyTax : 0;
+
+const ladder = [4000, 6000, 8000, 12000, 16000].map((m) => ({ m, r: qstForCode(m, data, code) }));
+const ladderFirst = ladder[0]!;
+const ladderLast = ladder[ladder.length - 1]!;
+
+const rows = compareQst(REF, false, loadQstvFile('a0'));
+const rank = rows.findIndex((r) => r.abbr === abbr) + 1;
+const self = rows[rank - 1]!;
+const cheapest = rows[0]!;
+const dearest = rows[rows.length - 1]!;
+const vsCheapest = self.monthlyTax - cheapest.monthlyTax;
+const vsDearest = dearest.monthlyTax - self.monthlyTax;
 
 const path = `/fr/calculateur-impot-source/${frSlugOf(abbr)}/`;
 const title = `Impôt à la source ${name} ${SITE_YEAR} | ${BRAND}`;
@@ -46,6 +79,7 @@ const faqs = [
     a: `Une personne célibataire sans enfant paie à ${name}, pour ${formatCHF(8000, 0)} de salaire brut mensuel, environ ${formatCHF(examples[1].r.monthlyTax, 0)} d’impôt à la source (${formatPercent(examples[1].r.ratePct / 100)} effectif). Avec des enfants, marié ou avec impôt ecclésiastique, le taux change — le calculateur ci-dessus affiche votre cas.`,
   },
   editorial.faq,
+  practice.faq,
 ];
 
 const webApp = {
@@ -89,6 +123,93 @@ const faqSchema = {
       </tbody>
     </table>
 
+    <h2>L’impôt à la source à {name} en pratique</h2>
+    <p>{practice.practice}</p>
+
+    <h2>Ce que le barème change à {name}</h2>
+    <p>
+      {formatCHF(REF, 0)} de salaire brut par mois dans le canton de {name}, six situations familiales — selon le barème
+      {' '}{abbr} {SITE_YEAR} :
+    </p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Situation</th>
+          <th class="py-2 pl-2 text-right font-semibold">Code</th>
+          <th class="py-2 pl-2 text-right font-semibold">Impôt à la source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {codeRows.map((s) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2">{s.label}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{s.code}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(s.r.monthlyTax)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    {codeSpread > 0 && (
+      <p>
+        Écart à {name} : <strong>{formatCHF(codeSpread, 0)} par mois</strong> à salaire identique, soit
+        {' '}{formatCHF(codeSpread * 12, 0)} sur l’année. Vérifiez le code figurant sur votre
+        {' '}<a href="/fr/guide/comprendre-fiche-salaire/">fiche de salaire</a>.
+      </p>
+    )}
+
+    <h2>Comment le taux progresse avec le salaire</h2>
+    <p>Célibataire sans enfant, barème {code}, canton de {name} :</p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Salaire brut / mois</th>
+          <th class="py-2 pl-2 text-right font-semibold">Taux</th>
+          <th class="py-2 pl-2 text-right font-semibold">Impôt à la source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ladder.map((e) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2 tabular-nums">{formatCHF(e.m, 0)}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatPercent(e.r.ratePct / 100)}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(e.r.monthlyTax)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p>
+      Le salaire quadruple, l’impôt à la source à {name} passe de {formatCHF(ladderFirst.r.monthlyTax, 0)} à
+      {' '}{formatCHF(ladderLast.r.monthlyTax, 0)} — le taux de {formatPercent(ladderFirst.r.ratePct / 100)} à
+      {' '}{formatPercent(ladderLast.r.ratePct / 100)}.
+    </p>
+
+    <h2>{name} face aux autres cantons</h2>
+    <p>
+      Pour {formatCHF(REF, 0)} de salaire brut mensuel (célibataire, sans enfant, sans impôt ecclésiastique),
+      {' '}{name} occupe le <strong>rang {rank} sur {rows.length}</strong>, du canton le moins cher au plus cher.
+    </p>
+    <ul>
+      <li>
+        Canton le moins cher : <a href={`/fr/calculateur-impot-source/${frSlugOf(cheapest.abbr)}/`}>{frName(cheapest.abbr)}</a>
+        {' '}avec {formatCHF(cheapest.monthlyTax)} par mois
+        {rank === 1 ? ' — c’est ce canton.' : ` (${formatCHF(vsCheapest, 0)} de moins qu’à ${name})`}
+      </li>
+      <li>
+        Canton le plus cher : <a href={`/fr/calculateur-impot-source/${frSlugOf(dearest.abbr)}/`}>{frName(dearest.abbr)}</a>
+        {' '}avec {formatCHF(dearest.monthlyTax)} par mois
+        {rank === rows.length ? ' — c’est ce canton.' : ` (${formatCHF(vsDearest, 0)} de plus qu’à ${name})`}
+      </li>
+      <li>
+        {name} : {formatCHF(self.monthlyTax)} par mois, soit {formatCHF(self.annualTax, 0)} par an.
+      </li>
+    </ul>
+    <p>
+      Tous les cantons côte à côte : <a href="/fr/comparatif-impot-source/">comparatif de l’impôt à la source</a>. Trop
+      payé ? La rectification du barème et la taxation ordinaire ultérieure auprès de l’administration fiscale de
+      {' '}{name} courent jusqu’au 31 mars de l’année suivante — la marche à suivre est décrite dans le guide
+      <a href="/fr/guide/imposition-source-ou-ordinaire/">imposition à la source ou ordinaire</a>.
+    </p>
+
     <h2>Questions fréquentes</h2>
     {faqs.map((f) => (
       <div class="mb-4">
@@ -100,7 +221,8 @@ const faqSchema = {
     <p>
       Impôt sur le revenu ordinaire dans le canton de {name} : <a href={`/fr/calculateur-impots/${frSlugOf(abbr)}/`}>calculateur d’impôts {name}</a>.
       Cotisations sociales sur le salaire : <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a>. Tous les cantons :
-      <a href="/fr/calculateur-impot-source/">calculateur impôt à la source</a>.
+      <a href="/fr/calculateur-impot-source/">calculateur impôt à la source</a>. Pour les expatriés :
+      <a href="/fr/guide/impot-a-la-source-expatries/">impôt à la source pour expatriés</a>.
     </p>
   </div>
 

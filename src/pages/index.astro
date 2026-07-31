@@ -20,6 +20,31 @@ const websiteJsonLd = {
   publisher: { '@id': `${SITE_URL}/#organization` },
 };
 
+const faqs = [
+  {
+    q: 'Sind die Rechner kostenlos und muss ich mich anmelden?',
+    a: 'Alle Rechner sind kostenlos und ohne Anmeldung nutzbar. Es gibt keine Registrierung, keine Werbung und keine Cookies. Ihre Eingaben verlassen Ihren Browser nicht — gerechnet wird lokal auf Ihrem Gerät, wir speichern keine Lohn- oder Steuerdaten.',
+  },
+  {
+    q: 'Wie genau sind die Ergebnisse?',
+    a: 'Die Tarife und Steuerfüsse stammen aus den offiziellen ESTV-Daten für das laufende Steuerjahr, die Sozialversicherungssätze aus den Verordnungen des Bundes. Die Ergebnisse sind damit rechnerisch korrekt, aber unverbindlich: Massgebend ist immer die Veranlagung der zuständigen Steuerbehörde beziehungsweise die Abrechnung Ihres Arbeitgebers.',
+  },
+  {
+    q: 'Für welches Steuerjahr gelten die Zahlen?',
+    a: `Alle Rechner arbeiten mit den Daten des Steuerjahrs ${SITE_YEAR}. Jede Datendatei trägt Quelle und Abrufdatum; auf der Seite Quellen sehen Sie für jeden Wert, woher er stammt und wann er zuletzt geprüft wurde.`,
+  },
+  {
+    q: 'Berücksichtigen die Steuerrechner meine Abzüge?',
+    a: 'Nein — Sie geben das steuerbare Einkommen ein, also den Betrag nach allen Abzügen. Wie sich eine zusätzliche Einzahlung in die Säule 3a auf Ihre Steuer auswirkt, zeigt Ihnen der Säule-3a-Rechner direkt in Franken.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+
 const tools = TOOLS;
 ---
 
@@ -27,7 +52,7 @@ const tools = TOOLS;
   title={`${t('home.title')} ${SITE_YEAR} | ${BRAND}`}
   description={t('home.metaDescription')}
   path="/"
-  jsonLd={[websiteJsonLd]}
+  jsonLd={[websiteJsonLd, faqSchema]}
 >
   <h1 class="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">{t('home.h1')}</h1>
   <p class="mb-10 max-w-2xl text-lg leading-relaxed text-slate-700">{t('home.intro')}</p>
@@ -60,11 +85,100 @@ const tools = TOOLS;
   </ul>
 
   <section class="prose-content mt-12 max-w-2xl">
-    <h2>Warum CalcSwiss?</h2>
+    <h2>Welcher Rechner beantwortet welche Frage?</h2>
     <p>
-      Jede Zahl auf dieser Website stammt aus einer offiziellen Quelle — ESTV, BFS, BAG oder den kantonalen
-      Steuerverwaltungen — und ist mit Quellenangabe und Stichdatum hinterlegt. Wie gerechnet wird, legen wir auf der
-      Seite <a href="/methodik/">Methodik</a> offen. Ohne Werbung, ohne Cookies, ohne Anmeldung.
+      Steuern und Lohn hängen in der Schweiz an unterschiedlichen Systemen: Die Sozialversicherungen sind national
+      geregelt, die Einkommenssteuer kantonal und kommunal, und wer keine Niederlassungsbewilligung C besitzt, zahlt
+      statt einer Steuererklärung die Quellensteuer direkt über den Lohn. Je nach Ausgangslage führt deshalb ein anderer
+      Rechner zur Antwort:
+    </p>
+    <ul>
+      <li>
+        <strong>«Was bleibt von meinem Lohn übrig?»</strong> — der
+        <a href="/brutto-netto-rechner/">Brutto-Netto-Rechner</a> schlüsselt AHV, IV, EO, ALV, NBU und BVG einzeln auf.
+      </li>
+      <li>
+        <strong>«Wie viel Steuern zahle ich in meiner Gemeinde?»</strong> — der
+        <a href="/steuervergleich/">Steuervergleich</a> rechnet Kantons-, Gemeinde- und Bundessteuer für alle 26 Kantone
+        und verlinkt auf die Detailseite jedes Kantons.
+      </li>
+      <li>
+        <strong>«Ich bin neu in der Schweiz und werde an der Quelle besteuert.»</strong> — der
+        <a href="/quellensteuer-rechner/">Quellensteuer-Rechner</a> arbeitet mit den kantonalen Tarifen nach Tarifcode,
+        Kinderzahl und Kirchensteuer; der <a href="/quellensteuer-vergleich/">Quellensteuer-Vergleich</a> stellt alle
+        Kantone nebeneinander.
+      </li>
+      <li>
+        <strong>«Lohnt sich eine Einzahlung in die Säule 3a?»</strong> — der
+        <a href="/saeule-3a-rechner/">Säule-3a-Rechner</a> zeigt die Steuerersparnis Ihrer Einzahlung in Franken.
+      </li>
+      <li>
+        <strong>«Ist dieses Stundenlohn-Angebot fair?»</strong> — der
+        <a href="/stundenlohn-rechner/">Stundenlohn-Rechner</a> rechnet Monats- und Stundenlohn ineinander um, inklusive
+        Ferienentschädigung und 13. Monatslohn.
+      </li>
+    </ul>
+
+    <h2>Woher die Zahlen stammen</h2>
+    <p>
+      Jede Zahl auf dieser Website stammt aus einer offiziellen Quelle und ist mit Quellenangabe und Abrufdatum
+      hinterlegt — es gibt auf CalcSwiss keinen Wert ohne Herkunft:
+    </p>
+    <ul>
+      <li>
+        <strong>Steuertarife und Steuerfüsse:</strong> Eidgenössische Steuerverwaltung (ESTV) sowie die kantonalen
+        Steuerverwaltungen. Für den Inhalt der Tarife sind die Kantone zuständig.
+      </li>
+      <li>
+        <strong>Quellensteuertarife:</strong> die kantonalen Tarifdateien des laufenden Steuerjahrs, nach Tarifcode
+        (A/B/C/H), Kinderzahl und Kirchensteuer aufgeschlüsselt.
+      </li>
+      <li>
+        <strong>Sozialversicherungsbeiträge:</strong> die Beitragssätze für AHV/IV/EO, ALV, Nichtberufsunfall und BVG
+        nach den Verordnungen des Bundes.
+      </li>
+      <li>
+        <strong>Gemeinden:</strong> die BFS-Nummer des Bundesamts für Statistik als eindeutiger Schlüssel für jede der
+        rund 2'100 Schweizer Gemeinden.
+      </li>
+    </ul>
+    <p>
+      Welche Datei welchen Wert liefert und wann sie zuletzt geprüft wurde, ist auf der Seite
+      <a href="/quellen/">Quellen</a> einzeln aufgeführt.
+    </p>
+
+    <h2>Wie wir rechnen — und was wir bewusst nicht rechnen</h2>
+    <p>
+      Transparenz heisst auch, die Grenzen zu benennen. Unsere Steuerrechner gehen vom <em>steuerbaren</em> Einkommen
+      aus, also vom Betrag nach allen Abzügen — sie ermitteln Ihre Abzüge nicht selbst, weil diese von der persönlichen
+      Situation abhängen. Die Ergebnisse verstehen sich <strong>ohne Kirchensteuer</strong> und ohne die in einigen
+      Kantonen erhobene Personalsteuer. Bei der Quellensteuer bilden wir die ordentlichen Tarife A/B/C/H ab; die
+      Sondertarife für Grenzgängerinnen und Grenzgänger aus Deutschland, Frankreich und Italien geben wir nicht wieder.
+    </p>
+    <p>
+      Alle Ergebnisse sind Richtwerte zur eigenen Orientierung und ersetzen keine Steuerberatung. Verbindlich ist die
+      Veranlagung der zuständigen Steuerbehörde, bei der Quellensteuer die Abrechnung Ihres Arbeitgebers. Die vollständige
+      Rechenlogik legen wir auf der Seite <a href="/methodik/">Methodik</a> offen.
+    </p>
+
+    <h2>Werbefrei und ohne Cookies</h2>
+    <p>
+      CalcSwiss setzt keine Cookies, bindet keine Werbenetzwerke ein und verlangt keine Anmeldung. Deshalb sehen Sie hier
+      auch kein Cookie-Banner. Ihre Eingaben — Lohn, Einkommen, Familiensituation — werden ausschliesslich in Ihrem
+      Browser verarbeitet und nie an einen Server übertragen. Mehr dazu im <a href="/datenschutz/">Datenschutz</a>.
+    </p>
+
+    <h2>Häufige Fragen</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Hintergrundwissen zu Lohn, Steuern und Vorsorge sammeln wir im <a href="/ratgeber/">Ratgeber</a>. Wer hinter
+      CalcSwiss steht, steht unter <a href="/ueber-uns/">Über uns</a>.
     </p>
   </section>
 </BaseLayout>

@@ -4,10 +4,13 @@ import {
   cantonalBaseTax,
   cityBaseTax,
   cantonTax,
+  cantonTaxAtMultiplier,
+  cantonMultipliers,
   compareCantons,
   ALL_CANTONS,
   evaluateFormula,
 } from '../src/lib/tax/engine';
+import statsData from '../src/data/tax/canton-stats-2026.json';
 
 /**
  * Pinned values are computed INDEPENDENTLY (Python implementation of the same
@@ -105,6 +108,42 @@ describe('comparison invariants (all 26 cantons)', () => {
     for (const abbr of ALL_CANTONS) {
       expect(cantonTax(0, abbr, 'single').totalTax).toBe(0);
     }
+  });
+});
+
+describe('cantonTaxAtMultiplier (municipal spread)', () => {
+  const stats = statsData.cantons as Record<string, { minCity: { pct: number }; maxCity: { pct: number } }>;
+
+  it('reproduces cantonTax exactly at the capital multiplier', () => {
+    for (const abbr of ALL_CANTONS) {
+      const { cityPct } = cantonMultipliers(abbr);
+      const at = cantonTaxAtMultiplier(100_000, abbr, 'single', cityPct);
+      close(at.totalTax, cantonTax(100_000, abbr, 'single').totalTax);
+    }
+  });
+
+  it('cheapest municipality never costs more than the most expensive one', () => {
+    for (const abbr of ALL_CANTONS) {
+      const s = stats[abbr]!;
+      const min = cantonTaxAtMultiplier(100_000, abbr, 'single', s.minCity.pct).totalTax;
+      const max = cantonTaxAtMultiplier(100_000, abbr, 'single', s.maxCity.pct).totalTax;
+      expect(max, abbr).toBeGreaterThanOrEqual(min - 0.01);
+    }
+  });
+
+  it('the capital lies inside its own canton municipal range', () => {
+    for (const abbr of ALL_CANTONS) {
+      const s = stats[abbr]!;
+      const { cityPct } = cantonMultipliers(abbr);
+      expect(cityPct, `${abbr} min`).toBeGreaterThanOrEqual(s.minCity.pct - 0.01);
+      expect(cityPct, `${abbr} max`).toBeLessThanOrEqual(s.maxCity.pct + 0.01);
+    }
+  });
+
+  it('a zero municipal multiplier drops the municipal share entirely', () => {
+    const r = cantonTaxAtMultiplier(100_000, 'ZH', 'single', 0);
+    expect(r.cityTax).toBe(0);
+    close(r.totalTax, r.cantonTax + r.federalTax);
   });
 });
 

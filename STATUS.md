@@ -73,6 +73,29 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-07-31 — Session 20: M16 — Substanz auf den 156 programmatischen Kantonsseiten (AdSense «Low value content»)
+
+- **Auslöser:** AdSense hat calcswiss.ch abgelehnt, Grund laut Sites-Panel: **«Inhalte mit geringem Wert»** (ads.txt war *genehmigt*, also kein technisches Problem). Parallel meldet GSC 186 URLs «Gefunden – zurzeit nicht indexiert», letzter Crawl «keiner».
+- **Diagnose (gemessen, nicht geraten):** Startseite nur **232 Wörter**; QST-Kantonsseiten **424 Wörter**. Über 5-Gramm-Shingles verglichen lagen die 156 Kantonsseiten bei **42–53 % eigenständigem Text**, Guide-Artikel dagegen bei **86 %**. Damit war klar: nicht die Tools, sondern die **65 % programmatischen Seiten** sind der Auslöser — und zwar für *beide* Probleme (AdSense und Indexierung) gleichzeitig.
+- **Startseiten ×3:** von 232/292/283 auf **810/1003/915 Wörter** — «Welcher Rechner für welche Frage» (verlinkt alle 6 Tools), Herkunft der Zahlen (ESTV/BFS/Bund), «Wie wir rechnen — und was wir bewusst nicht rechnen» (Grenzen offengelegt: steuerbares Einkommen, ohne Kirchensteuer/Personalsteuer, keine Grenzgängertarife), werbe-/cookiefrei, 4 FAQ + **FAQPage-JSON-LD neu auf allen drei Startseiten**.
+- **Neue Editorial-Ebene `cantonQstPractice{,Fr,En}.ts`:** je Kanton ein individuell geschriebener Praxis-Absatz **plus zweite FAQ**, 26 × 3 Sprachen = **78 Absätze + 78 FAQ**. Inhaltlich echt kantonsspezifisch (Wohn- vs. Arbeitskanton ZH/SZ/AG, Wochenaufenthalter BS, Saisonarbeit GR vs. VS, Liechtenstein-Pendler SG, Sitzabkommen internationaler Organisationen GE, Kirchensteuer-Sonderfall JU, einheitlicher Tarif trotz 334 Gemeinden BE).
+- **Neue berechnete Sektionen (alle Zahlen aus den Engines, kein Hardcoding):** QST-Kantonsseiten erhalten Tarifcode-Vergleich (A0/B0/B2/C0/C2/H1 bei CHF 8'000), Satzprogression (4k→16k) und die **nationale Rangposition** via `compareQst`; Einkommenssteuer-Kantonsseiten erhalten die **Gemeindespanne in Franken** (günstigste vs. teuerste Gemeinde des Kantons) sowie eine Progressionstabelle ledig/verheiratet (50k–200k).
+- **Neue Engine-Funktion `cantonTaxAtMultiplier()`** + 4 Tests: erlaubt die Steuerberechnung für einen beliebigen Gemeindesteuerfuss. Vorab verifiziert, dass der Steuerfuss jedes Hauptorts **in allen 26 Kantonen** innerhalb der Gemeindespanne des Kantons liegt (Skalen konsistent); Grenzen für SZ/VS (eigener Hauptort-Tarif) im Doc-Comment festgehalten.
+- **Wichtigste Lehre — Boilerplate schadet:** Ein erster Entwurf mit einem generischen «Tarifkorrektur & NOV»-Block (~190 Wörter, auf allen 78 Seiten identisch) hob die Wortzahl auf 1'068, senkte die Eigenständigkeit aber auf **44 %**. Nach Rückbau auf zwei interpolierte Sätze + Link auf den Ratgeber: **57 %** bei 804 Wörtern. Generische Erklärungen gehören in **einen** Artikel, nicht 78-fach dupliziert. Analog rotiert `RatgeberLinks` auf den Kantonsseiten jetzt **2 aus 7** Artikeln je Kanton (streut interne Links, statt einen Teaser 26-mal zu wiederholen); FR/EN-Kantonsseiten haben erstmals überhaupt einen Guide-Block.
+- **Ergebnis (Vorher→Nachher, identisch gemessen; Durchschnitt aller 26 Paare je Familie):**
+
+  | Seitenfamilie | Wörter | eigenständige 5-Gramme |
+  |---|---|---|
+  | `/steuerrechner/*` | 677 → **899** | 48 % → **56 %** |
+  | `/quellensteuer-rechner/*` | 424 → **804** | 47 % → **57 %** |
+  | `/fr/calculateur-impots/*` | 717 → **1000** | 52 % → **56 %** |
+  | `/fr/calculateur-impot-source/*` | 555 → **1014** | 42 % → **51 %** |
+  | `/en/tax-calculator/*` | 655 → **914** | 53 % → **57 %** |
+  | `/en/withholding-tax-calculator/*` | 487 → **885** | 44 % → **54 %** |
+
+- **Re-checked before push:** build clean (241 Seiten), Tests **102/102**, `check-links` green (240 Seiten, ≤3 Klicks, keine Broken Links), `audit-links` **clean** (keine Cross-Locale-Leaks, hreflang reziprok, keine fragile page, 80/80 je Locale), kein ß, `tsc --noEmit` sauber, Lighthouse **100×4** auf `/`, `/steuerrechner/zuerich/`, `/quellensteuer-rechner/zug/` (Startseite erst 82 im Kaltlauf, 3 Wiederholungen je 100 — Sandbox-Rauschen).
+- **Offen (Owner):** in AdSense erst nach dem Deploy «Überprüfung beantragen» klicken — der Reviewer sieht sonst die alte Version. Vorher prüfen, dass die neuen Seiten live sind.
+
 ### 2026-07-18 — Session 19: M15 — jede Tool-Seite als 5-teiliger Bildungsartikel (18 Seiten, DE/FR/EN)
 
 - **Auftrag des Owners** (Content-Architect-Brief): zu jedem Rechner einen erklärenden Artikel (600–800 Wörter) unter dem Rechner, mit fixer 5-Teil-Struktur. Umgesetzt für **alle 6 Tools × 3 Sprachen = 18 Seiten**.

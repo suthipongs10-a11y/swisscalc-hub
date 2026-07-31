@@ -6,6 +6,7 @@
  * from this canton's data; the intro and one FAQ are individually written per
  * canton (src/lib/cantonContentEn.ts).
  */
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import EnCantonCalculator from '../../../components/en/EnCantonCalculator.astro';
@@ -14,7 +15,7 @@ import statsData from '../../../data/tax/canton-stats-2026.json';
 import cantonalData from '../../../data/tax/cantonal-income-2026.json';
 import { BRAND, SITE_URL, SITE_YEAR, absoluteUrl } from '../../../lib/site';
 import { formatCHF, formatNumber } from '../../../lib/format';
-import { cantonTax, compareCantons, cantonMultipliers } from '../../../lib/tax/engine';
+import { cantonTax, cantonTaxAtMultiplier, compareCantons, cantonMultipliers } from '../../../lib/tax/engine';
 import { CANTON_CONTENT } from '../../../lib/cantonContent';
 import { CANTON_CONTENT_EN } from '../../../lib/cantonContentEn';
 import { enName, enSlugOf, enGenitive, enCapital, TARIF_LABELS_EN } from '../../../lib/tax/labels';
@@ -47,6 +48,31 @@ const capital = enCapital(ref.capital);
 const ranking = compareCantons(100_000, 'single');
 const rank = ranking.findIndex((r) => r.abbr === abbr) + 1;
 const cheapest = ranking[0]!;
+
+const REF_INCOME = 100_000;
+const atMin = cantonTaxAtMultiplier(REF_INCOME, abbr, 'single', stats.minCity.pct);
+const atMax = cantonTaxAtMultiplier(REF_INCOME, abbr, 'single', stats.maxCity.pct);
+const municipalSpread = atMax.totalTax - atMin.totalTax;
+
+const ladder = [50_000, 80_000, 100_000, 150_000, 200_000].map((i) => ({
+  income: i,
+  single: cantonTax(i, abbr, 'single'),
+  married: cantonTax(i, abbr, 'married'),
+}));
+const ladderFirst = ladder[0]!;
+const ladderLast = ladder[ladder.length - 1]!;
+const marriedRef = cantonTax(REF_INCOME, abbr, 'married');
+const marriageGap = ref.totalTax - marriedRef.totalTax;
+
+const GUIDE_POOL_EN = ['changing-canton-to-save-tax', 'swiss-tax-return-deadlines-deductions', 'marriage-and-taxes', 'pillar-3a-vs-3b', 'pension-fund-bvg-explained', 'understanding-swiss-payslip', 'staggered-pillar-3a-withdrawal'];
+const cantonIdx = cantonData.cantons.findIndex((c) => c.abbr === abbr);
+const guideIds = [
+  GUIDE_POOL_EN[cantonIdx % GUIDE_POOL_EN.length]!,
+  GUIDE_POOL_EN[(cantonIdx + 3) % GUIDE_POOL_EN.length]!,
+];
+
+const guideAll = await getCollection('ratgeberEn');
+const guideArticles = guideIds.map((id) => guideAll.find((a) => a.id === id)).filter((a) => a !== undefined);
 
 const cantonTarifs = (cantonalData.cantons as Record<string, { tableType: string }[]>)[abbr]!;
 const tarifLabel = TARIF_LABELS_EN[cantonTarifs[0]!.tableType] ?? cantonTarifs[0]!.tableType;
@@ -172,6 +198,76 @@ const compareRows = meta.compare.map((other) => {
       <a href={`/en/withholding-tax-calculator/${enSlugOf(abbr)}/`}>withholding tax in the canton {genitive}</a>.
     </p>
 
+    <h2>What the municipality changes in {name}</h2>
+    <p>
+      The cantonal tariff is the same everywhere — the municipal multiplier is not. At {formatCHF(REF_INCOME, 0)}
+      taxable income (single), that means in the canton of {name}:
+    </p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Municipality</th>
+          <th class="py-2 pl-2 text-right font-semibold">Multiplier</th>
+          <th class="py-2 pl-2 text-right font-semibold">Tax per year</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">{stats.minCity.name} (cheapest)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(stats.minCity.pct, 0)}%</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(atMin.totalTax, 0)}</td>
+        </tr>
+        <tr class="border-b border-slate-100">
+          <td class="py-2 pr-2">{capital} (capital)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(m.cityPct, 0)}%</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(ref.totalTax, 0)}</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-2">{stats.maxCity.name} (most expensive)</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatNumber(stats.maxCity.pct, 0)}%</td>
+          <td class="py-2 pl-2 text-right tabular-nums">{formatCHF(atMax.totalTax, 0)}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Between {stats.minCity.name} and {stats.maxCity.name} the gap reaches
+      {' '}<strong>{formatCHF(municipalSpread, 0)} a year</strong> on the same income — purely because of the
+      municipality of residence, inside the same canton. Over ten years that is {formatCHF(municipalSpread * 10, 0)}.
+    </p>
+
+    <h2>Tax burden by income in {name}</h2>
+    <p>Annual tax in {capital}, cantonal, municipal and federal tax combined, excluding church tax:</p>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-left">
+          <th class="py-2 pr-2 font-semibold">Taxable income</th>
+          <th class="py-2 pl-2 text-right font-semibold">Single</th>
+          <th class="py-2 pl-2 text-right font-semibold">Married</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ladder.map((e) => (
+          <tr class="border-b border-slate-100">
+            <td class="py-2 pr-2 tabular-nums">{formatCHF(e.income, 0)}</td>
+            <td class="py-2 pl-2 text-right tabular-nums">
+              {formatCHF(e.single.totalTax, 0)} ({(e.single.effectiveRate * 100).toFixed(1)}%)
+            </td>
+            <td class="py-2 pl-2 text-right tabular-nums">
+              {formatCHF(e.married.totalTax, 0)} ({(e.married.effectiveRate * 100).toFixed(1)}%)
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p>
+      Income quadruples from {formatCHF(ladderFirst.income, 0)} to {formatCHF(ladderLast.income, 0)}; tax in
+      {' '}{capital} rises from {formatCHF(ladderFirst.single.totalTax, 0)} to
+      {' '}{formatCHF(ladderLast.single.totalTax, 0)} — the effective rate from
+      {' '}{(ladderFirst.single.effectiveRate * 100).toFixed(1)}% to
+      {' '}{(ladderLast.single.effectiveRate * 100).toFixed(1)}%.
+      {marriageGap > 0 ? ` A married couple saves ${formatCHF(marriageGap, 0)} in ${capital} at this income.` : ''}
+    </p>
+
     <h2>Frequently asked questions</h2>
     {
       faqs.map((f) => (
@@ -201,6 +297,20 @@ const compareRows = meta.compare.map((other) => {
       </li>
     </ul>
   </section>
+
+  {guideArticles.length > 0 && (
+    <section aria-label="Guides on this topic" class="mt-14">
+      <h2 class="mb-4 text-2xl font-bold">Guides on this topic</h2>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {guideArticles.map((a) => (
+          <li class="rounded-lg border border-slate-200 p-5">
+            <a href={`/en/guide/${a!.id}/`} class="font-semibold text-blue-700 hover:underline">{a!.data.title}</a>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">{a!.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <div class="mt-10 max-w-2xl border-t border-slate-200 pt-4 text-sm text-slate-500">
     <p class="mb-1">

@@ -14,6 +14,31 @@ const websiteJsonLd = {
   publisher: { '@id': `${SITE_URL}/#organization` },
 };
 
+const faqs = [
+  {
+    q: 'Les calculateurs sont-ils gratuits et faut-il s’inscrire ?',
+    a: 'Tous les calculateurs sont gratuits et utilisables sans inscription. Aucun compte, aucune publicité, aucun cookie. Vos saisies ne quittent pas votre navigateur : le calcul se fait localement sur votre appareil et nous n’enregistrons aucune donnée de salaire ou d’impôt.',
+  },
+  {
+    q: 'Quelle est la précision des résultats ?',
+    a: 'Les barèmes et les coefficients d’impôt proviennent des données officielles de l’AFC pour l’année fiscale en cours, les taux de cotisations sociales des ordonnances fédérales. Les résultats sont donc exacts sur le plan du calcul, mais indicatifs : seule la taxation de l’autorité fiscale compétente — ou le décompte de votre employeur — fait foi.',
+  },
+  {
+    q: 'À quelle année fiscale les chiffres se rapportent-ils ?',
+    a: `Tous les calculateurs utilisent les données de l’année fiscale ${SITE_YEAR}. Chaque fichier de données porte sa source et sa date de consultation ; la page Sources indique pour chaque valeur d’où elle vient et quand elle a été vérifiée pour la dernière fois.`,
+  },
+  {
+    q: 'Les calculateurs tiennent-ils compte de mes déductions ?',
+    a: 'Non — vous saisissez le revenu imposable, c’est-à-dire le montant après toutes les déductions. Pour voir l’effet d’un versement supplémentaire au 3e pilier sur votre impôt, le calculateur 3e pilier vous l’indique directement en francs.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+
 const tools = [
   {
     href: '/fr/calculateur-salaire-brut-net/',
@@ -53,7 +78,7 @@ const tools = [
   description="Calculateurs gratuits d’impôts et de finances pour la Suisse : salaire brut-net, comparatif des impôts des 26 cantons, 3e pilier. Sans publicité, sans cookies."
   path={path}
   locale="fr"
-  jsonLd={[websiteJsonLd]}
+  jsonLd={[websiteJsonLd, faqSchema]}
 >
   <h1 class="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">Calculateurs d’impôts et de finances pour la Suisse</h1>
   <p class="mb-10 max-w-2xl text-lg leading-relaxed text-slate-700">
@@ -78,11 +103,104 @@ const tools = [
   </ul>
 
   <section class="prose-content mt-12 max-w-2xl">
-    <h2>Pourquoi CalcSwiss ?</h2>
+    <h2>Quel calculateur pour quelle question ?</h2>
     <p>
-      Chaque chiffre de ce site provient d’une source officielle — AFC, OFS, OFSP ou les administrations fiscales
-      cantonales — et est documenté avec sa source et sa date. Nos calculs sont fournis à titre indicatif ; seule la
-      taxation officielle fait foi. Sans publicité, sans cookies, sans inscription.
+      En Suisse, le salaire et les impôts relèvent de systèmes différents : les assurances sociales sont réglées au
+      niveau fédéral, l’impôt sur le revenu au niveau cantonal et communal, et les personnes sans permis d’établissement
+      C paient l’impôt à la source directement sur le salaire au lieu de remplir une déclaration. Selon votre situation,
+      c’est donc un autre calculateur qui répond :
+    </p>
+    <ul>
+      <li>
+        <strong>« Que reste-t-il de mon salaire ? »</strong> — le
+        <a href="/fr/calculateur-salaire-brut-net/">calculateur salaire brut-net</a> détaille AVS, AI, APG, AC, AANP et
+        LPP poste par poste.
+      </li>
+      <li>
+        <strong>« Combien d’impôts vais-je payer dans ma commune ? »</strong> — le
+        <a href="/fr/comparatif-impots-cantons/">comparatif des impôts</a> calcule l’impôt cantonal, communal et fédéral
+        pour les 26 cantons et renvoie vers la page détaillée de chacun.
+      </li>
+      <li>
+        <strong>« Je viens d’arriver et je suis imposé à la source. »</strong> — le
+        <a href="/fr/calculateur-impot-source/">calculateur impôt à la source</a> applique les barèmes cantonaux selon le
+        code (A/B/C/H), le nombre d’enfants et l’impôt ecclésiastique ; le
+        <a href="/fr/comparatif-impot-source/">comparatif de l’impôt à la source</a> place tous les cantons côte à côte.
+      </li>
+      <li>
+        <strong>« Un versement au 3e pilier est-il intéressant ? »</strong> — le
+        <a href="/fr/calculateur-3e-pilier/">calculateur 3e pilier</a> chiffre l’économie d’impôt en francs.
+      </li>
+      <li>
+        <strong>« Cette offre au salaire horaire est-elle correcte ? »</strong> — le
+        <a href="/fr/calculateur-salaire-horaire/">calculateur de salaire horaire</a> convertit dans les deux sens, avec
+        indemnité de vacances et 13e salaire.
+      </li>
+    </ul>
+
+    <h2>D’où viennent les chiffres</h2>
+    <p>
+      Chaque chiffre de ce site provient d’une source officielle et est documenté avec sa source et sa date de
+      consultation — il n’y a sur CalcSwiss aucune valeur sans origine :
+    </p>
+    <ul>
+      <li>
+        <strong>Barèmes et coefficients d’impôt :</strong> Administration fédérale des contributions (AFC) et
+        administrations fiscales cantonales. Le contenu des barèmes relève de la compétence des cantons.
+      </li>
+      <li>
+        <strong>Barèmes de l’impôt à la source :</strong> les fichiers cantonaux de l’année fiscale en cours, ventilés
+        par code de barème (A/B/C/H), nombre d’enfants et impôt ecclésiastique.
+      </li>
+      <li>
+        <strong>Cotisations sociales :</strong> les taux AVS/AI/APG, AC, accidents non professionnels et LPP selon les
+        ordonnances fédérales.
+      </li>
+      <li>
+        <strong>Communes :</strong> le numéro OFS de l’Office fédéral de la statistique comme clé unique pour chacune des
+        quelque 2'100 communes suisses.
+      </li>
+    </ul>
+    <p>
+      Le détail — quel fichier fournit quelle valeur et quand il a été vérifié — figure sur la page
+      <a href="/fr/sources/">Sources</a>.
+    </p>
+
+    <h2>Comment nous calculons — et ce que nous ne calculons pas</h2>
+    <p>
+      La transparence, c’est aussi nommer les limites. Nos calculateurs d’impôts partent du revenu <em>imposable</em>,
+      c’est-à-dire du montant après toutes les déductions : ils ne déterminent pas vos déductions eux-mêmes, car celles-ci
+      dépendent de votre situation personnelle. Les résultats s’entendent <strong>sans impôt ecclésiastique</strong> et
+      sans la taxe personnelle prélevée dans certains cantons. Pour l’impôt à la source, nous couvrons les barèmes
+      ordinaires A/B/C/H ; les barèmes spéciaux pour les frontaliers d’Allemagne, de France et d’Italie ne sont pas
+      reproduits.
+    </p>
+    <p>
+      Tous les résultats sont des valeurs indicatives destinées à votre propre orientation et ne remplacent pas un
+      conseil fiscal. Seule la taxation de l’autorité compétente fait foi — pour l’impôt à la source, le décompte de
+      votre employeur. La logique de calcul complète est exposée sur la page
+      <a href="/fr/methodologie/">Méthodologie</a>.
+    </p>
+
+    <h2>Sans publicité et sans cookies</h2>
+    <p>
+      CalcSwiss ne pose aucun cookie, n’intègre aucune régie publicitaire et n’exige aucune inscription. C’est pourquoi
+      vous ne voyez ici aucune bannière de consentement. Vos saisies — salaire, revenu, situation familiale — sont
+      traitées uniquement dans votre navigateur et ne sont jamais transmises à un serveur. Plus de détails dans la
+      <a href="/fr/protection-des-donnees/">protection des données</a>.
+    </p>
+
+    <h2>Questions fréquentes</h2>
+    {faqs.map((f) => (
+      <div class="mb-4">
+        <h3 class="mb-1 text-lg font-semibold text-slate-900">{f.q}</h3>
+        <p class="text-slate-700">{f.a}</p>
+      </div>
+    ))}
+
+    <p>
+      Nos articles de fond sur le salaire, les impôts et la prévoyance sont réunis dans le
+      <a href="/fr/guide/">guide</a>. Qui est derrière CalcSwiss : <a href="/fr/a-propos/">à propos</a>.
     </p>
   </section>
 </BaseLayout>
