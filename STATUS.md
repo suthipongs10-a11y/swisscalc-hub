@@ -95,6 +95,7 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 - **Re-checked before push:** build clean (241 Seiten), Tests **102/102**, `check-links` green (240 Seiten, ≤3 Klicks, keine Broken Links), `audit-links` **clean** (keine Cross-Locale-Leaks, hreflang reziprok, keine fragile page, 80/80 je Locale), kein ß, `tsc --noEmit` sauber, Lighthouse **100×4** auf `/`, `/steuerrechner/zuerich/`, `/quellensteuer-rechner/zug/` (Startseite erst 82 im Kaltlauf, 3 Wiederholungen je 100 — Sandbox-Rauschen).
 - **Offen (Owner):** in AdSense erst nach dem Deploy «Überprüfung beantragen» klicken — der Reviewer sieht sonst die alte Version. Vorher prüfen, dass die neuen Seiten live sind.
+- **Nachtrag (gleiche Session):** Trust-Seiten nachgezogen. Neues Build-Time-Register `src/lib/dataRegistry.ts` liest die `_meta`-Blöcke aller Datendateien; die drei `/quellen/`-Seiten rendern daraus eine **Datensatz-Tabelle** (8 Datensätze × Quelle/Jahr/Abrufdatum — kann nie vom tatsächlichen Datenstand abweichen) plus «Wie wir Daten aktualisieren». 156→370 (DE), 224→541 (FR), 194→456 (EN) Wörter. `ueber-uns`/`a-propos`/`about`: Betreiber **namentlich genannt** (E-E-A-T, YMYL) + Kontakt-E-Mail + Abschnitt zur Datenaktualität; 270→347/446/391 Wörter. Re-checked: build 241, Tests 102/102, Links/Audit clean, kein ß.
 
 ### 2026-07-18 — Session 19: M15 — jede Tool-Seite als 5-teiliger Bildungsartikel (18 Seiten, DE/FR/EN)
 

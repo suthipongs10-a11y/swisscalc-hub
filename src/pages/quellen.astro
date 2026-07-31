@@ -2,9 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { BRAND } from '../lib/site';
+import { DATASETS, QST_CANTON_COUNT, formatRetrieved } from '../lib/dataRegistry';
 
-// Sitewide sources index (SEO_SPEC §7). Grows as data files land in /src/data/.
-const sources = [
+// Sitewide sources index (SEO_SPEC §7). The dataset table below is generated
+// from the _meta blocks of the shipped data files — it cannot drift from the
+// numbers the calculators actually use.
+const institutions = [
   {
     name: 'Eidgenössische Steuerverwaltung (ESTV) — Steuerrechner und Steuerdaten',
     url: 'https://swisstaxcalculator.estv.admin.ch/',
@@ -31,24 +34,86 @@ const sources = [
     use: 'Open-Source-Referenzimplementation der Steuerberechnung auf Basis der ESTV-Daten; Validierungsreferenz für unsere Berechnungslogik',
   },
 ];
+
+// Localized labels for the dataset registry (ids from src/lib/dataRegistry.ts).
+const LABELS: Record<string, { name: string; feeds: string }> = {
+  social: {
+    name: 'Sozialversicherungsbeiträge (AHV/IV/EO, ALV, NBU, BVG)',
+    feeds: 'Brutto-Netto-Rechner, Stundenlohn-Rechner',
+  },
+  saeule3a: { name: 'Säule-3a-Maximalbeträge', feeds: 'Säule-3a-Rechner' },
+  hourly: { name: 'Lohnkonstanten (Ferienentschädigung, 13. Monatslohn)', feeds: 'Stundenlohn-Rechner' },
+  federal: { name: 'Tarife der direkten Bundessteuer', feeds: 'Steuervergleich, Kantonsseiten, Säule-3a-Rechner' },
+  cantonal: {
+    name: 'Kantonale Einkommenssteuertarife (einfache Steuer, 26 Kantone)',
+    feeds: 'Steuervergleich, Kantonsseiten, Säule-3a-Rechner',
+  },
+  multipliers: {
+    name: 'Steuerfüsse von Kantonen und Hauptorten',
+    feeds: 'Steuervergleich, Kantonsseiten',
+  },
+  stats: {
+    name: 'Gemeindesteuerfüsse: Spannweite je Kanton (alle Gemeinden)',
+    feeds: 'Kantonsseiten (günstigste/teuerste Gemeinde)',
+  },
+  qst: {
+    name: `Quellensteuertarife (${QST_CANTON_COUNT} Kantone, Tarifcodes A/B/C/H)`,
+    feeds: 'Quellensteuer-Rechner, Quellensteuer-Vergleich, QST-Kantonsseiten',
+  },
+};
 ---
 
 <BaseLayout
   title={`Quellen und Datengrundlagen | ${BRAND}`}
-  description="Alle Datenquellen von CalcSwiss im Überblick: ESTV, BFS, BAG und BSV — mit Verwendungszweck und Links zu den offiziellen Publikationen."
+  description="Jeder Datensatz hinter den CalcSwiss-Rechnern mit offizieller Quelle, Abrufdatum und Steuerjahr — ESTV, BFS, BAG und BSV, einzeln nachvollziehbar."
   path="/quellen/"
 >
   <Breadcrumbs crumbs={[{ name: 'Quellen' }]} />
-  <article class="prose-content max-w-2xl">
+  <article class="prose-content max-w-3xl">
     <h1 class="mb-6 text-3xl font-bold">Quellen und Datengrundlagen</h1>
     <p>
-      Alle Berechnungsparameter auf calcswiss.ch stammen aus offiziellen Quellen und werden mit Abrufdatum
-      versioniert. Diese Seite listet die Datengrundlagen; das Stichdatum der Parameter steht jeweils direkt beim
-      Rechner.
+      Auf calcswiss.ch gibt es keine Zahl ohne Herkunft: Jeder Berechnungsparameter liegt in einer versionierten
+      Datendatei, die ihre offizielle Quelle, das Abrufdatum und das Steuerjahr selbst dokumentiert. Die folgende
+      Tabelle wird direkt aus diesen Datendateien erzeugt — sie zeigt also exakt die Datenstände, mit denen die Rechner
+      auf dieser Website tatsächlich rechnen.
     </p>
+
+    <h2>Datensätze im Einsatz</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-slate-200 text-left">
+            <th class="py-2 pr-2 font-semibold">Datensatz</th>
+            <th class="py-2 px-2 font-semibold">Verwendet von</th>
+            <th class="py-2 px-2 text-right font-semibold">Jahr</th>
+            <th class="py-2 pl-2 text-right font-semibold">Abgerufen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {DATASETS.map((d) => (
+            <tr class="border-b border-slate-100 align-top">
+              <td class="py-2 pr-2">
+                <a href={d.source} rel="noopener">{LABELS[d.id]!.name}</a>
+              </td>
+              <td class="py-2 px-2 text-slate-600">{LABELS[d.id]!.feeds}</td>
+              <td class="py-2 px-2 text-right tabular-nums">{d.year}</td>
+              <td class="py-2 pl-2 text-right tabular-nums">{formatRetrieved(d.retrieved)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="text-sm text-slate-600">
+      Der Datensatzname verlinkt jeweils auf die offizielle Publikation. Die ESTV-Steuerdaten wurden über die
+      MIT-lizenzierte Referenzimplementation
+      <a href="https://github.com/devbrains-com/swisstaxcalculator" rel="noopener">devbrains/swisstaxcalculator</a>
+      bezogen, die auf demselben offiziellen Datensatz aufbaut.
+    </p>
+
+    <h2>Herausgebende Stellen</h2>
     <ul>
       {
-        sources.map((source) => (
+        institutions.map((source) => (
           <li>
             <a href={source.url} rel="noopener">
               {source.name}
@@ -59,6 +124,19 @@ const sources = [
         ))
       }
     </ul>
+
+    <h2>Wie wir Daten aktualisieren</h2>
+    <p>
+      Die Rechner rufen zur Laufzeit <strong>keine externen Schnittstellen</strong> auf. Alle Parameter werden zum
+      Build-Zeitpunkt aus den versionierten Datendateien eingebunden; Aktualisierungen erfolgen als nachvollziehbare
+      Daten-Updates mit neuem Abrufdatum. Ändert eine Behörde einen Wert — etwa die Säule-3a-Maximalbeträge oder die
+      Steuerfüsse eines neuen Steuerjahrs — wird die betreffende Datei erneuert und das Datum in der Tabelle oben
+      springt mit. Jede Rechnerseite nennt ihren Datenstand zusätzlich im Fussbereich.
+    </p>
+    <p>
+      Die Berechnungslogik selbst ist mit automatisierten Tests gegen publizierte offizielle Beispielwerte abgesichert;
+      wie gerechnet wird, steht auf der Seite <a href="/methodik/">Methodik</a>.
+    </p>
     <p>
       Die Berechnungen sind unverbindlich; massgebend ist die offizielle Veranlagung. Die ESTV, das BFS, das BAG und
       das BSV sind an dieser Website nicht beteiligt.

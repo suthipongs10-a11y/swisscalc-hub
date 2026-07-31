@@ -2,8 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { BRAND } from '../../lib/site';
+import { DATASETS, QST_CANTON_COUNT, formatRetrieved } from '../../lib/dataRegistry';
 
-const sources = [
+const institutions = [
   {
     name: 'Administration fédérale des contributions (AFC) — calculateur et données fiscales',
     url: 'https://swisstaxcalculator.estv.admin.ch/',
@@ -30,25 +31,86 @@ const sources = [
     use: 'Implémentation de référence open source du calcul fiscal fondée sur les données de l’AFC ; référence de validation de notre logique de calcul',
   },
 ];
+
+const LABELS: Record<string, { name: string; feeds: string }> = {
+  social: {
+    name: 'Cotisations sociales (AVS/AI/APG, AC, AANP, LPP)',
+    feeds: 'Calculateur brut-net, calculateur de salaire horaire',
+  },
+  saeule3a: { name: 'Montants maximaux du pilier 3a', feeds: 'Calculateur 3e pilier' },
+  hourly: { name: 'Constantes salariales (indemnité de vacances, 13e salaire)', feeds: 'Calculateur de salaire horaire' },
+  federal: { name: 'Barèmes de l’impôt fédéral direct', feeds: 'Comparatif des impôts, pages cantonales, calculateur 3e pilier' },
+  cantonal: {
+    name: 'Barèmes cantonaux de l’impôt sur le revenu (impôt simple, 26 cantons)',
+    feeds: 'Comparatif des impôts, pages cantonales, calculateur 3e pilier',
+  },
+  multipliers: {
+    name: 'Coefficients d’impôt des cantons et chefs-lieux',
+    feeds: 'Comparatif des impôts, pages cantonales',
+  },
+  stats: {
+    name: 'Coefficients communaux : fourchette par canton (toutes les communes)',
+    feeds: 'Pages cantonales (commune la moins chère / la plus chère)',
+  },
+  qst: {
+    name: `Barèmes de l’impôt à la source (${QST_CANTON_COUNT} cantons, codes A/B/C/H)`,
+    feeds: 'Calculateur impôt à la source, comparatif, pages cantonales',
+  },
+};
 ---
 
 <BaseLayout
   title={`Sources et bases de données | ${BRAND}`}
-  description="Toutes les sources de données de CalcSwiss en un coup d’œil : AFC, OFS, OFSP et OFAS — avec leur finalité et les liens vers les publications officielles."
+  description="Chaque jeu de données derrière les calculateurs CalcSwiss avec sa source officielle, sa date de consultation et son année fiscale — AFC, OFS, OFSP et OFAS."
   path="/fr/sources/"
   locale="fr"
 >
   <Breadcrumbs crumbs={[{ name: 'Sources' }]} locale="fr" />
-  <article class="prose-content max-w-2xl">
+  <article class="prose-content max-w-3xl">
     <h1 class="mb-6 text-3xl font-bold">Sources et bases de données</h1>
     <p>
-      Tous les paramètres de calcul de calcswiss.ch proviennent de sources officielles et sont versionnés avec leur
-      date de consultation. Cette page liste les bases de données ; la date de référence des paramètres figure
-      directement auprès de chaque calculateur.
+      Sur calcswiss.ch, aucun chiffre n’est sans origine : chaque paramètre de calcul réside dans un fichier de données
+      versionné qui documente lui-même sa source officielle, sa date de consultation et son année fiscale. Le tableau
+      ci-dessous est généré directement à partir de ces fichiers — il montre donc exactement les états de données avec
+      lesquels les calculateurs de ce site calculent réellement.
     </p>
+
+    <h2>Jeux de données utilisés</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-slate-200 text-left">
+            <th class="py-2 pr-2 font-semibold">Jeu de données</th>
+            <th class="py-2 px-2 font-semibold">Utilisé par</th>
+            <th class="py-2 px-2 text-right font-semibold">Année</th>
+            <th class="py-2 pl-2 text-right font-semibold">Consulté le</th>
+          </tr>
+        </thead>
+        <tbody>
+          {DATASETS.map((d) => (
+            <tr class="border-b border-slate-100 align-top">
+              <td class="py-2 pr-2">
+                <a href={d.source} rel="noopener">{LABELS[d.id]!.name}</a>
+              </td>
+              <td class="py-2 px-2 text-slate-600">{LABELS[d.id]!.feeds}</td>
+              <td class="py-2 px-2 text-right tabular-nums">{d.year}</td>
+              <td class="py-2 pl-2 text-right tabular-nums">{formatRetrieved(d.retrieved)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="text-sm text-slate-600">
+      Le nom de chaque jeu de données renvoie à la publication officielle. Les données fiscales de l’AFC ont été
+      obtenues via l’implémentation de référence sous licence MIT
+      <a href="https://github.com/devbrains-com/swisstaxcalculator" rel="noopener">devbrains/swisstaxcalculator</a>,
+      fondée sur le même jeu de données officiel.
+    </p>
+
+    <h2>Institutions éditrices</h2>
     <ul>
       {
-        sources.map((source) => (
+        institutions.map((source) => (
           <li>
             <a href={source.url} rel="noopener">
               {source.name}
@@ -59,6 +121,20 @@ const sources = [
         ))
       }
     </ul>
+
+    <h2>Comment nous mettons les données à jour</h2>
+    <p>
+      Les calculateurs n’appellent <strong>aucune interface externe</strong> à l’exécution. Tous les paramètres sont
+      intégrés au moment de la construction du site à partir des fichiers versionnés ; les mises à jour se font par des
+      actualisations traçables avec une nouvelle date de consultation. Lorsqu’une autorité modifie une valeur — les
+      montants maximaux du pilier 3a ou les coefficients d’une nouvelle année fiscale, par exemple — le fichier concerné
+      est renouvelé et la date du tableau ci-dessus change avec lui. Chaque page de calculateur indique en outre son
+      état de données en pied de page.
+    </p>
+    <p>
+      La logique de calcul elle-même est couverte par des tests automatisés contre des valeurs d’exemple officielles
+      publiées ; la méthode est exposée sur la page <a href="/fr/methodologie/">Méthodologie</a>.
+    </p>
     <p>
       Les calculs sont fournis à titre indicatif ; seule la taxation officielle fait foi. L’AFC, l’OFS, l’OFSP et
       l’OFAS ne sont pas associés à ce site.

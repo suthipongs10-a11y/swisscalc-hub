@@ -2,8 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { BRAND } from '../../lib/site';
+import { DATASETS, QST_CANTON_COUNT, formatRetrieved } from '../../lib/dataRegistry';
 
-const sources = [
+const institutions = [
   {
     name: 'Federal Tax Administration (FTA) — tax calculator and tax data',
     url: 'https://swisstaxcalculator.estv.admin.ch/',
@@ -30,25 +31,85 @@ const sources = [
     use: 'Open-source reference implementation of the tax calculation based on FTA data; validation reference for our calculation logic',
   },
 ];
+
+const LABELS: Record<string, { name: string; feeds: string }> = {
+  social: {
+    name: 'Social-insurance contributions (AHV/IV/EO, ALV, NBU, BVG)',
+    feeds: 'Salary calculator, hourly wage calculator',
+  },
+  saeule3a: { name: 'Pillar 3a maximum amounts', feeds: 'Pillar 3a calculator' },
+  hourly: { name: 'Payroll constants (vacation compensation, 13th month salary)', feeds: 'Hourly wage calculator' },
+  federal: { name: 'Direct federal tax tariffs', feeds: 'Tax comparison, canton pages, pillar 3a calculator' },
+  cantonal: {
+    name: 'Cantonal income-tax tariffs (base tax, 26 cantons)',
+    feeds: 'Tax comparison, canton pages, pillar 3a calculator',
+  },
+  multipliers: {
+    name: 'Tax multipliers of cantons and capitals',
+    feeds: 'Tax comparison, canton pages',
+  },
+  stats: {
+    name: 'Municipal multipliers: range per canton (all municipalities)',
+    feeds: 'Canton pages (cheapest/most expensive municipality)',
+  },
+  qst: {
+    name: `Withholding tax tariffs (${QST_CANTON_COUNT} cantons, codes A/B/C/H)`,
+    feeds: 'Withholding tax calculator, comparison, canton pages',
+  },
+};
 ---
 
 <BaseLayout
   title={`Sources and data | ${BRAND}`}
-  description="All of CalcSwiss's data sources at a glance: FTA, FSO, FOPH and FSIO — with their purpose and links to the official publications."
+  description="Every dataset behind the CalcSwiss calculators with its official source, retrieval date and tax year — FTA, FSO, FOPH and FSIO, individually traceable."
   path="/en/sources/"
   locale="en"
 >
   <Breadcrumbs crumbs={[{ name: 'Sources' }]} locale="en" />
-  <article class="prose-content max-w-2xl">
+  <article class="prose-content max-w-3xl">
     <h1 class="mb-6 text-3xl font-bold">Sources and data</h1>
     <p>
-      All calculation parameters on calcswiss.ch come from official sources and are versioned with their retrieval
-      date. This page lists the data foundations; the reference date of the parameters is shown directly with each
-      calculator.
+      No figure on calcswiss.ch is without an origin: every calculation parameter lives in a versioned data file that
+      documents its own official source, retrieval date and tax year. The table below is generated directly from those
+      data files — so it shows exactly the data the calculators on this site actually compute with.
     </p>
+
+    <h2>Datasets in use</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-slate-200 text-left">
+            <th class="py-2 pr-2 font-semibold">Dataset</th>
+            <th class="py-2 px-2 font-semibold">Used by</th>
+            <th class="py-2 px-2 text-right font-semibold">Year</th>
+            <th class="py-2 pl-2 text-right font-semibold">Retrieved</th>
+          </tr>
+        </thead>
+        <tbody>
+          {DATASETS.map((d) => (
+            <tr class="border-b border-slate-100 align-top">
+              <td class="py-2 pr-2">
+                <a href={d.source} rel="noopener">{LABELS[d.id]!.name}</a>
+              </td>
+              <td class="py-2 px-2 text-slate-600">{LABELS[d.id]!.feeds}</td>
+              <td class="py-2 px-2 text-right tabular-nums">{d.year}</td>
+              <td class="py-2 pl-2 text-right tabular-nums">{formatRetrieved(d.retrieved)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="text-sm text-slate-600">
+      Each dataset name links to the official publication. The FTA tax data was obtained via the MIT-licensed reference
+      implementation
+      <a href="https://github.com/devbrains-com/swisstaxcalculator" rel="noopener">devbrains/swisstaxcalculator</a>,
+      which builds on the same official dataset.
+    </p>
+
+    <h2>Publishing institutions</h2>
     <ul>
       {
-        sources.map((source) => (
+        institutions.map((source) => (
           <li>
             <a href={source.url} rel="noopener">
               {source.name}
@@ -59,9 +120,22 @@ const sources = [
         ))
       }
     </ul>
+
+    <h2>How we update the data</h2>
     <p>
-      The calculations are for guidance only; only the official assessment is binding. The FTA, FSO, FOPH and FSIO are
-      not involved in this website.
+      The calculators call <strong>no external APIs</strong> at runtime. All parameters are bundled at build time from
+      the versioned data files; updates happen as traceable data refreshes with a new retrieval date. When an authority
+      changes a value — the pillar 3a maximum amounts, say, or the multipliers of a new tax year — the affected file is
+      renewed and the date in the table above moves with it. Every calculator page additionally states its data
+      snapshot in the footer.
+    </p>
+    <p>
+      The calculation logic itself is covered by automated tests against published official example values; how we
+      calculate is documented on the <a href="/en/methodology/">methodology</a> page.
+    </p>
+    <p>
+      All calculations are indicative; the official assessment is binding. The FTA, FSO, FOPH and FSIO are not
+      affiliated with this website.
     </p>
   </article>
 </BaseLayout>
