@@ -73,6 +73,12 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-07-31 — Session 20b: pronetserm/ — zweite Website im Repo (โปรเน็ตเสริม.com, +65 Long-Tail-Seiten)
+
+- **Separates Projekt, separater Ordner:** Auf Owner-Wunsch wurde die bereits AdSense-genehmigte thailändische Website โปรเน็ตเสริม.com (site.zip) als eigenständiger Ordner `pronetserm/` importiert (ohne Editor-Artefakte) — eigenes Cloudflare-Pages-Projekt mit Root-Directory `pronetserm`, dokumentiert in `pronetserm/README-DEPLOY.md`. Betrifft die SwissCalc-Site nicht; alle 102 Tests weiterhin grün.
+- **+65 Long-Tail-Seiten, generiert aus den verbatim Paketdaten** (Preise/USSD-Codes ausschliesslich aus `data/packages.json`): 38 Detailseiten `/pro/` (eine je Paket, mit handgeschriebener Einordnung + paket-spezifischer FAQ aus `data/pro-notes.json`, berechnetem Preis-pro-Tag und Vergleichstabelle), 6 Budget-Hubs `/budget/`, 6 Speed-Hubs `/speed/`, 2 Carrier-Hubs `/dtac.html` `/true.html`, 12 neue Artikel, 1 Artikel-Index. Sitemap 20 → 85 URLs, keine Duplikate.
+- **Verifiziert:** 9'719 interne Links über 86 Seiten — 0 broken; 230 JSON-LD-Blöcke alle parsebar; Preis+Code jeder /pro/-Seite gegen packages.json geprüft (38/38 verbatim). 5-Gramm-Distinctness der neuen Familien (Ø 49–58 %) liegt auf/über dem Niveau der bereits genehmigten Bestandsseiten (37–48 % zwischen Geschwisterseiten); für 4G/5G-Zwillingspakete wurden pro Seite unterschiedlich geschriebene Entscheidungsabschnitte ergänzt.
+
 ### 2026-07-31 — Session 20: M16 — Substanz auf den 156 programmatischen Kantonsseiten (AdSense «Low value content»)
 
 - **Auslöser:** AdSense hat calcswiss.ch abgelehnt, Grund laut Sites-Panel: **«Inhalte mit geringem Wert»** (ads.txt war *genehmigt*, also kein technisches Problem). Parallel meldet GSC 186 URLs «Gefunden – zurzeit nicht indexiert», letzter Crawl «keiner».

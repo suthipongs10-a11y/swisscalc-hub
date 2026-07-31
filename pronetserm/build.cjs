@@ -16,6 +16,9 @@ const YEAR = '2026';
 const packages = require('./data/packages.json');
 const metaOld = require('./data/meta-old.json');
 const faqsOld = require('./data/faqs-old.json');
+const proNotes = require('./data/pro-notes.json');
+const hubNotes = require('./data/hub-notes.json');
+const EXTRA_URLS = []; // หน้าที่ generator ส่วน long-tail เพิ่ม — ถูกรวมเข้า sitemap ตอนท้าย
 const articlesDir = path.join(__dirname, 'data', 'articles');
 const articles = {};
 for (const f of fs.readdirSync(articlesDir)) {
@@ -239,14 +242,33 @@ const NAV = [
   {
     label: 'โปรเน็ตทรูดีแทค', href: '/true-dtac.html', children: [
       { label: 'รวมโปรทรูดีแทค', href: '/true-dtac.html' },
+      { label: 'เฉพาะดีแทค (dtac)', href: '/dtac.html' },
+      { label: 'เฉพาะทรู (TrueMove H)', href: '/true.html' },
       { label: 'โปรทรูดีแทค 7 วัน', href: '/true-dtac/7daypack.html' },
       { label: 'โปรทรูดีแทค 30 วัน', href: '/true-dtac/30daypack.html' },
+    ]
+  },
+  {
+    label: 'เลือกโปร', href: '/budget/under-30.html', children: [
+      { label: 'ไม่เกิน 30 บาท', href: '/budget/under-30.html' },
+      { label: '30–50 บาท', href: '/budget/30-50.html' },
+      { label: '50–100 บาท', href: '/budget/50-100.html' },
+      { label: '100–200 บาท', href: '/budget/100-200.html' },
+      { label: '200–500 บาท', href: '/budget/200-500.html' },
+      { label: '500 บาทขึ้นไป', href: '/budget/over-500.html' },
+      { label: 'โปรเน็ต 512 Kbps', href: '/speed/512kbps.html' },
+      { label: 'โปรเน็ต 1 Mbps', href: '/speed/1mbps.html' },
+      { label: 'โปรเน็ต 2 Mbps', href: '/speed/2mbps.html' },
+      { label: 'โปรเน็ต 4 Mbps', href: '/speed/4mbps.html' },
+      { label: 'โปรเน็ต 6 Mbps', href: '/speed/6mbps.html' },
+      { label: 'โปรเน็ต 10 Mbps', href: '/speed/10mbps.html' },
     ]
   },
   { label: 'เช็คเบอร์/เน็ต', href: '/check-number-balance.html' },
   { label: 'ติดต่อเรา', href: '/about.html', mobileOnly: false, hideDesktop: true },
   {
-    label: 'บทความ', href: '/articles/how-to-register.html', children: [
+    label: 'บทความ', href: '/articles/index.html', children: [
+      { label: 'บทความทั้งหมด', href: '/articles/index.html' },
       { label: 'วิธีสมัครโปรเน็ต & เบอร์โทรด่วน', href: '/articles/how-to-register.html' },
       { label: 'FAQ โปรเน็ต AIS', href: '/articles/faq-ais.html' },
       { label: 'มือถือที่รองรับ 5G', href: '/articles/5g-phones.html' },
@@ -276,6 +298,7 @@ function header() {
     group('โปรเน็ต AIS', 'dot-ais', navBy('โปรเน็ต AIS').children, 'sub-ais'),
     group('โปรเน็ตทรู/ดีแทค', 'dot-tmh', navBy('โปรเน็ตทรูดีแทค').children, 'sub-tmh'),
     `<li><a href="/compare-networks.html"${cur('/compare-networks.html')}>เปรียบเทียบทุกค่าย</a></li>`,
+    group('เลือกโปรตามงบ / ความเร็ว', null, navBy('เลือกโปร').children, null),
     `<li><a href="/faq.html"${cur('/faq.html')}>คำถามที่พบบ่อย (FAQ)</a></li>`,
     `<li><a href="/check-number-balance.html"${cur('/check-number-balance.html')}>วิธีเช็คเบอร์/เช็คเน็ต</a></li>`,
     group('บทความ', null, navBy('บทความ').children, null),
@@ -332,12 +355,17 @@ function footer() {
     <li><a href="/true-dtac.html">รวมโปรทรูดีแทค</a></li>
     <li><a href="/true-dtac/7daypack.html">โปรทรูดีแทค 7 วัน</a></li>
     <li><a href="/true-dtac/30daypack.html">โปรทรูดีแทค 30 วัน</a></li>
+    <li><a href="/dtac.html">เฉพาะดีแทค</a></li>
+    <li><a href="/true.html">เฉพาะทรู</a></li>
     <li><a href="/compare-networks.html">เปรียบเทียบโปรทุกค่าย</a></li>
+    <li><a href="/budget/under-30.html">เลือกโปรตามงบ</a></li>
+    <li><a href="/speed/4mbps.html">เลือกโปรตามความเร็ว</a></li>
     <li><a href="/check-number-balance.html">เช็คเบอร์/เช็คเน็ตคงเหลือ</a></li>
     <li><a href="/faq.html">คำถามที่พบบ่อย (FAQ)</a></li>
     <li><a href="/about.html">เกี่ยวกับเรา / ติดต่อเรา</a></li>
   </ul></div>
   <div><h3>บทความ</h3><ul>
+    <li><a href="/articles/index.html">บทความทั้งหมด</a></li>
     <li><a href="/articles/how-to-register.html">วิธีสมัครโปรเน็ต</a></li>
     <li><a href="/articles/faq-ais.html">FAQ โปรเน็ต AIS</a></li>
     <li><a href="/articles/5g-phones.html">มือถือที่รองรับ 5G</a></li>
@@ -365,6 +393,7 @@ function pkgRow(c, opts) {
 <td class="td-pkg-cell"><div class="td-pkg">
   <span class="badge-tile" aria-hidden="true">${I.wifi}<span class="tag">${badgeLabel(c)}</span></span>
   <div class="pkg-name">${esc(name)}${hot ? '<span class="badge-hot">ขายดี</span>' : ''}</div>
+  ${proNotes[c.code] ? `<a class="pkg-detail-link" href="/pro/${proNotes[c.code].slug}.html">รายละเอียดโปรนี้ →</a>` : ''}
 </div></td>
 <td class="td-specs">${specsList(c)}</td>
 <td class="td-price desktop-only"><span class="price-val">${esc(c.price)}<span class="baht">บาท</span></span>${c.taxIncluded ? '<span class="price-tax">ราคารวมภาษีแล้ว</span>' : ''}</td>
@@ -1003,11 +1032,39 @@ const articleArt = {
   'net-speed-explained': { tone: 'brand', big: 'Mbps', label: 'ความเร็วเน็ต & FUP คืออะไร', motif: SPEC_ICONS.speed, stat1: speedRangeOf(allPkUnique), stat2: 'เลือกสปีดให้ตรงการใช้งาน' },
   'ber-mongkol': { tone: 'brand', big: '9', label: 'เบอร์มงคลเสริมดวง', motif: ART_ICONS.star, stat1: 'ผลรวมเบอร์ & คู่เลขมงคล', stat2: 'พร้อมเครื่องมือวิเคราะห์ฟรี' },
 };
+const NEW_ARTICLE_META = {
+  'check-current-package': { img: '/img/Internet-speed-test.webp', related: [{ label: 'เช็คเบอร์/เช็คเน็ต', href: '/check-number-balance.html' }, { label: 'วิธียกเลิกโปรเสริม', href: '/articles/cancel-net-package.html' }, { label: 'โปรเน็ต AIS', href: '/ais.html' }] },
+  'cancel-net-package': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'เช็คโปรที่ใช้อยู่', href: '/articles/check-current-package.html' }, { label: 'FAQ รวมทุกค่าย', href: '/faq.html' }] },
+  'unlimited-vs-no-throttle': { img: '/img/difference-internet-speed.webp', related: [{ label: 'ความเร็วเน็ต & FUP', href: '/articles/net-speed-explained.html' }, { label: 'โปรเน็ต 4 Mbps', href: '/speed/4mbps.html' }, { label: 'เปรียบเทียบทุกค่าย', href: '/compare-networks.html' }] },
+  'fix-slow-mobile-internet': { img: '/img/Mobile-5G-Setting-Network.webp', related: [{ label: 'ความเร็วเน็ต & FUP', href: '/articles/net-speed-explained.html' }, { label: 'เช็คโปรที่ใช้อยู่', href: '/articles/check-current-package.html' }] },
+  'hotspot-tethering-guide': { img: '/img/5G-Network.webp', related: [{ label: 'โปรเน็ต 10 Mbps', href: '/speed/10mbps.html' }, { label: 'โปรเน็ต 6 Mbps', href: '/speed/6mbps.html' }, { label: 'เลือกโปรตามการใช้งาน', href: '/articles/choose-pack-by-usage.html' }] },
+  'topup-prepaid-methods': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'วิธีสมัครโปรเน็ต', href: '/articles/how-to-register.html' }, { label: 'โปรถูกไม่เกิน 30 บาท', href: '/budget/under-30.html' }] },
+  'choose-pack-by-usage': { img: '/img/difference-internet-speed.webp', related: [{ label: 'โปรเน็ตตามงบ', href: '/budget/30-50.html' }, { label: 'โปรเน็ตตามความเร็ว', href: '/speed/4mbps.html' }, { label: 'เปรียบเทียบทุกค่าย', href: '/compare-networks.html' }] },
+  'esim-prepaid-thailand': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'เลือกซิมเติมเงิน', href: '/articles/sim-cards.html' }, { label: 'มือถือที่รองรับ 5G', href: '/articles/5g-phones.html' }] },
+  'move-carrier-keep-number': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'เลือกซิมเติมเงิน', href: '/articles/sim-cards.html' }, { label: 'เปรียบเทียบทุกค่าย', href: '/compare-networks.html' }] },
+  'prepaid-vs-postpaid': { img: '/img/AIS-5G.webp', related: [{ label: 'เลือกซิมเติมเงิน', href: '/articles/sim-cards.html' }, { label: 'โปรรายเดือน 500 บาทขึ้นไป', href: '/budget/over-500.html' }] },
+  'save-mobile-data-tips': { img: '/img/Internet-speed-test.webp', related: [{ label: 'โปรถูกไม่เกิน 30 บาท', href: '/budget/under-30.html' }, { label: 'ความเร็วเน็ต & FUP', href: '/articles/net-speed-explained.html' }] },
+  'vat-price-explained': { img: '/img/AIS-5G-Unlimited.webp', related: [{ label: 'วิธีเติมเงินทุกช่องทาง', href: '/articles/topup-prepaid-methods.html' }, { label: 'โปรทรูดีแทค', href: '/true-dtac.html' }] },
+};
+const NEW_ARTICLE_ART = {
+  'check-current-package': { tone: 'brand', big: 'เช็ค', label: 'เช็คโปรเน็ตที่ใช้อยู่ ทุกค่าย', motif: I.search, stat1: 'AIS · ทรู · ดีแทค', stat2: 'รหัสกดเช็คฟรี ไม่เสียเงิน' },
+  'cancel-net-package': { tone: 'brand', big: 'ยกเลิก', label: 'ยกเลิกโปรเสริม & กันเงินหาย', motif: I.doc, stat1: 'ทำเองได้ทุกค่าย', stat2: 'ผ่านรหัสกด / แอป / Call Center' },
+  'unlimited-vs-no-throttle': { tone: 'brand', big: 'FUP', label: 'ไม่อั้น vs ไม่ลดสปีด', motif: SPEC_ICONS.speed, stat1: 'สองคำนี้ไม่เหมือนกัน', stat2: 'อ่านก่อนเลือกโปรถัดไป' },
+  'fix-slow-mobile-internet': { tone: 'brand', big: 'FIX', label: 'เน็ตช้า แก้ได้เป็นขั้นตอน', motif: I.phone, stat1: '10 วิธีไล่เช็คเอง', stat2: 'จากง่ายไปยาก ใช้ได้ทุกค่าย' },
+  'hotspot-tethering-guide': { tone: 'brand', big: 'WiFi', label: 'แชร์ฮอตสปอตอย่างคุ้ม', motif: I.wifi, stat1: 'สปีดที่เหมาะ 4–10 Mbps', stat2: 'พร้อมวิธีประหยัดแบตและเน็ต' },
+  'topup-prepaid-methods': { tone: 'brand', big: 'เติม', label: 'เติมเงินซิมเติมเงินทุกช่องทาง', motif: SPEC_ICONS.tax, stat1: 'แอป · ตู้ · ร้านสะดวกซื้อ', stat2: 'พร้อมข้อควรระวังก่อนสมัครโปร' },
+  'choose-pack-by-usage': { tone: 'brand', big: 'เลือก', label: 'เลือกโปรตามการใช้งานจริง', motif: SPEC_ICONS.data, stat1: 'ดูหนัง เกม ทำงาน โซเชียล', stat2: 'จับคู่สปีด-รอบเวลาให้ตรง' },
+  'esim-prepaid-thailand': { tone: 'brand', big: 'eSIM', label: 'eSIM กับซิมเติมเงิน', motif: I.sim, stat1: 'ต่างจากซิมการ์ดยังไง', stat2: 'ใครควรใช้ ใครยังไม่จำเป็น' },
+  'move-carrier-keep-number': { tone: 'brand', big: 'ย้าย', label: 'ย้ายค่ายเบอร์เดิม', motif: I.phone, stat1: 'ขั้นตอนตามจริงทีละข้อ', stat2: 'สิ่งที่ต้องเช็คก่อนย้าย' },
+  'prepaid-vs-postpaid': { tone: 'brand', big: 'VS', label: 'เติมเงิน vs รายเดือน', motif: SPEC_ICONS.call, stat1: 'ข้อดี-ข้อเสียตรงๆ', stat2: 'เลือกให้ตรงพฤติกรรมใช้จริง' },
+  'save-mobile-data-tips': { tone: 'brand', big: 'SAVE', label: 'ประหยัดเน็ตมือถือ', motif: SPEC_ICONS.data, stat1: 'ตั้งค่าครั้งเดียว เห็นผลทันที', stat2: 'ยืดอายุโปรได้จริง' },
+  'vat-price-explained': { tone: 'brand', big: 'VAT', label: 'ทำไมราคาโปรมีเศษสตางค์', motif: SPEC_ICONS.tax, stat1: 'VAT 7% คิดยังไง', stat2: 'เตรียมยอดเงินให้พอก่อนกด' },
+};
 for (const slug of Object.keys(articles)) {
   const a = articles[slug];
-  const extra = articleMetaExtra[slug];
+  const extra = articleMetaExtra[slug] || NEW_ARTICLE_META[slug];
   const urlPath = `/articles/${slug}.html`;
-  const bc = [{ label: 'หน้าแรก', href: '/' }, { label: 'บทความ', href: '/articles/how-to-register.html' }, { label: a.h1, href: urlPath }];
+  const bc = [{ label: 'หน้าแรก', href: '/' }, { label: 'บทความ', href: '/articles/index.html' }, { label: a.h1, href: urlPath }];
   const ld = [breadcrumbLd(bc), {
     '@context': 'https://schema.org', '@type': 'Article',
     headline: a.h1, inLanguage: 'th',
@@ -1033,7 +1090,7 @@ for (const slug of Object.keys(articles)) {
   html += `
 <section class="section mt-0" style="padding-top:14px"><div class="container">
 <article class="article-page">
-<div class="article-art" aria-hidden="true">${pageArt(articleArt[slug])}</div>
+<div class="article-art" aria-hidden="true">${pageArt(articleArt[slug] || NEW_ARTICLE_ART[slug])}</div>
 <h1>${esc(a.h1)}</h1>
 <p class="a-meta">${esc(a.lead || '')}</p>
 <div class="article-body">
@@ -1045,6 +1102,8 @@ ${body}
   html += relatedLinks(extra.related, 'อ่านต่อ / ดูโปรที่เกี่ยวข้อง');
   html += footer();
   write(`articles/${slug}.html`, html);
+  // บทความใหม่ (ไม่อยู่ในลิสต์ sitemap เดิม) — เพิ่มเข้า sitemap ผ่าน EXTRA_URLS
+  if (!articleMetaExtra[slug]) EXTRA_URLS.push(urlPath);
 }
 
 /* ======================================================================
@@ -1101,6 +1160,350 @@ ${artBlock({ tone: 'brand', big: 'TKShop', label: 'ตัวแทนจำห�
   write('about.html', html);
 })();
 
+
+/* ======================================================================
+ * LONG-TAIL v2: หน้า /pro/ รายแพ็กเกจ (38), /budget/ (6), /speed/ (6),
+ * หน้าค่ายเดี่ยว /dtac /true, และดัชนีบทความ /articles/index.html
+ * กติกาเดิมของเว็บ: ทุกราคา/รหัสมาจาก data/packages.json เท่านั้น
+ * ==================================================================== */
+(function buildLongtail() {
+  const DUR_DAYS = { '1d': 1, '2d': 2, '3d': 3, '7d': 7, '30d': 30 };
+  const durDays = c => DUR_DAYS[durKey(c.durationRaw)] || 1;
+  const perDay = c => priceNum(c.price) / durDays(c);
+  const fmtBaht = n => (Math.round(n * 100) / 100).toLocaleString('en-US', { maximumFractionDigits: 2 });
+  const speedTxt = c => { const s = speedOf(c); return s ? `${s.val} ${s.unit}` : 'ตามแพ็กเกจ'; };
+  const speedKb = c => { const s = speedOf(c); return s ? (s.unit === 'Kbps' ? parseFloat(s.val) : parseFloat(s.val) * 1000) : 0; };
+  const isNoThrottle = c => c.features.some(f => /ไม่ลดสปีด|ไม่อั้น/.test(f));
+  const netGen = c => (c.features.some(f => /5G/.test(f)) ? '5G' : c.features.some(f => /4G/.test(f)) ? '4G' : '4G/5G ตามพื้นที่');
+  const is5G = c => c.features.some(f => /5G/.test(f));
+  const carrierTH = { ais: 'AIS', true: 'ทรู', dtac: 'ดีแทค' };
+  const carrierHubOf = { ais: { label: 'โปรเน็ต AIS', href: '/ais.html' }, true: { label: 'โปรเน็ตทรู', href: '/true.html' }, dtac: { label: 'โปรเน็ตดีแทค', href: '/dtac.html' } };
+  const proHref = c => `/pro/${proNotes[c.code].slug}.html`;
+  const proLabel = c => `${carrierTH[c.carrier]} ${speedTxt(c)} ${c.durationRaw}`;
+  const checkCodeOf = { ais: 'กด *121*32# โทรออก', true: 'กด *900# โทรออก', dtac: 'กด *101*1# โทรออก' };
+  const ALL = allPkUnique;
+
+  const BUCKETS = [
+    { key: 'under-30', file: 'budget/under-30.html', label: 'ไม่เกิน 30 บาท', test: p => p <= 30 },
+    { key: '30-50', file: 'budget/30-50.html', label: '30–50 บาท', test: p => p > 30 && p <= 50 },
+    { key: '50-100', file: 'budget/50-100.html', label: '50–100 บาท', test: p => p > 50 && p <= 100 },
+    { key: '100-200', file: 'budget/100-200.html', label: '100–200 บาท', test: p => p > 100 && p <= 200 },
+    { key: '200-500', file: 'budget/200-500.html', label: '200–500 บาท', test: p => p > 200 && p <= 500 },
+    { key: 'over-500', file: 'budget/over-500.html', label: '500 บาทขึ้นไป', test: p => p > 500 },
+  ];
+  const bucketOf = c => BUCKETS.find(b => b.test(priceNum(c.price)));
+  const SPEEDS = [
+    { key: '512kbps', file: 'speed/512kbps.html', label: '512 Kbps', kb: 512 },
+    { key: '1mbps', file: 'speed/1mbps.html', label: '1 Mbps', kb: 1000 },
+    { key: '2mbps', file: 'speed/2mbps.html', label: '2 Mbps', kb: 2000 },
+    { key: '4mbps', file: 'speed/4mbps.html', label: '4 Mbps', kb: 4000 },
+    { key: '6mbps', file: 'speed/6mbps.html', label: '6 Mbps', kb: 6000 },
+    { key: '10mbps', file: 'speed/10mbps.html', label: '10 Mbps', kb: 10000 },
+  ];
+  const speedHubOf = c => SPEEDS.find(sp => sp.kb === speedKb(c));
+
+  const durPageOf = c => {
+    const k = durKey(c.durationRaw);
+    if (c.carrier === 'ais') return { label: `โปรเน็ต AIS ${c.durationRaw}`, href: `/ais/${k.replace('d', '')}daypack.html` };
+    if (k === '7d') return { label: 'โปรทรูดีแทค 7 วัน', href: '/true-dtac/7daypack.html' };
+    if (k === '30d') return { label: 'โปรทรูดีแทค 30 วัน', href: '/true-dtac/30daypack.html' };
+    return { label: 'รวมโปรทรูดีแทค', href: '/true-dtac.html' };
+  };
+
+  /* ---------- ทางเลือกใกล้เคียง (คำนวณต่อแพ็กเกจ — ต่างกันทุกหน้า) ---------- */
+  function altRows(c) {
+    const rows = [];
+    const push = (o, why) => { if (o.code !== c.code && !rows.some(r => r.c.code === o.code)) rows.push({ c: o, why }); };
+    ALL.filter(o => o.carrier === c.carrier && durKey(o.durationRaw) === durKey(c.durationRaw))
+      .sort((a, b) => speedKb(a) - speedKb(b))
+      .forEach(o => push(o, speedKb(o) > speedKb(c) ? 'แรงกว่า' : speedKb(o) < speedKb(c) ? 'ประหยัดกว่า' :
+        priceNum(o.price) < priceNum(c.price) ? 'สปีดเท่ากัน ถูกกว่า' : 'สปีดเท่ากัน คนละรุ่น'));
+    ALL.filter(o => o.carrier === c.carrier && speedKb(o) === speedKb(c) && durKey(o.durationRaw) !== durKey(c.durationRaw))
+      .sort((a, b) => durDays(a) - durDays(b))
+      .forEach(o => push(o, durDays(o) > durDays(c) ? 'รอบยาวกว่า เฉลี่ยต่อวันถูกลง' : 'รอบสั้นกว่า ลองก่อนได้'));
+    ALL.filter(o => o.carrier !== c.carrier && speedKb(o) === speedKb(c) && durKey(o.durationRaw) === durKey(c.durationRaw))
+      .forEach(o => push(o, `ตัวเทียบฝั่ง${carrierTH[o.carrier]}`));
+    return rows.slice(0, 6);
+  }
+
+  /* ================= 38 หน้า /pro/ ================= */
+  for (const c of ALL) {
+    const meta = proNotes[c.code];
+    if (!meta) throw new Error('missing pro note for ' + c.code);
+    const urlPath = proHref(c);
+    const cName = carrierTH[c.carrier];
+    const spTxt = speedTxt(c);
+    const noTh = isNoThrottle(c);
+    const pd = perDay(c);
+    const hub = carrierHubOf[c.carrier];
+    const h1 = `โปรเน็ต${cName} ${spTxt} ${c.durationRaw} ${c.price} บาท${noTh ? ' ไม่ลดสปีด' : ''}`;
+    const title = trimTitle(`โปรเน็ต${cName} ${spTxt} ${c.durationRaw} ${c.price} บาท | ${SITE_NAME}`);
+    const description = trimDesc(`โปรเน็ต${cName} ความเร็ว ${spTxt} นาน ${c.durationRaw} ราคา ${c.price} บาท (เฉลี่ยวันละ ${fmtBaht(pd)} บาท) สมัครกด ${c.code} — สเปกเต็ม ตารางเทียบทางเลือกใกล้เคียง และวิธีเช็คสถานะโปร`);
+    const bc = [{ label: 'หน้าแรก', href: '/' }, hub, { label: `${spTxt} ${c.durationRaw}`, href: urlPath }];
+    const faqs = [
+      {
+        q: `โปรเน็ต${cName} ${spTxt} ${c.durationRaw} ราคาเท่าไหร่ สมัครยังไง`,
+        a: `ราคา ${c.price} บาท${c.taxIncluded ? ' (รวมภาษีมูลค่าเพิ่มแล้ว)' : ''} เฉลี่ยวันละประมาณ ${fmtBaht(pd)} บาท สมัครโดยกด ${c.code} แล้วโทรออกจากซิม${cName}ที่ต้องการสมัคร ระบบจะส่ง SMS ยืนยันเมื่อสมัครสำเร็จ`,
+      },
+      {
+        q: `ใช้ ${spTxt} ครบ ${c.durationRaw} แล้ว ต่อโปรเดิมหรือเปลี่ยนตัวดี`,
+        a: (() => {
+          const alt = altRows(c)[0];
+          const base = `เมื่อครบ${c.durationRaw} สิทธิ์ ${spTxt} จะสิ้นสุดและเน็ตกลับไปคิดตามโปรหลักของซิม ต่อรอบใหม่ได้ด้วยรหัสเดิม ${c.code} (เช็คสถานะก่อน: ${checkCodeOf[c.carrier]})`;
+          return alt
+            ? `${base} หรือถ้ารอบนี้รู้สึกว่ายังไม่ตรงการใช้งาน ตัวเทียบที่ใกล้ที่สุดคือ ${proLabel(alt.c)} ราคา ${alt.c.price} บาท (${alt.why})`
+            : base;
+        })(),
+      },
+      meta.faq,
+    ];
+    // หน้าแฝด 4G/5G: สปีด+รอบ+ค่ายเท่ากัน ต่างที่เทคโนโลยีเครือข่าย — เขียนเนื้อหาช่วยตัดสินใจคนละมุมต่อฝั่ง
+    const twin = ALL.find(o => o.code !== c.code && o.carrier === c.carrier
+      && speedKb(o) === speedKb(c) && durKey(o.durationRaw) === durKey(c.durationRaw));
+    const twinDiff = twin ? Math.abs(priceNum(c.price) - priceNum(twin.price)) : 0;
+    const twinMixedGen = twin && is5G(c) !== is5G(twin);
+    const twinBlock = !twin ? '' : !twinMixedGen ? (priceNum(c.price) <= priceNum(twin.price) ? `
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>มีอีกรุ่นสเปกใกล้กัน — ตัวนี้ถูกกว่าตรงไหน</h2></div>
+<div class="article-page" style="margin:0 auto"><div class="article-body">
+<p>ในตาราง${carrierTH[c.carrier]}มี ${esc(spTxt)} รอบ${esc(c.durationRaw)}อยู่สองรุ่น และหน้านี้คือตัวที่ราคาเบากว่า (ประหยัดกว่ากัน ${fmtBaht(twinDiff)} บาทต่อรอบ) ความเร็วสูงสุดเท่ากัน จุดที่สองรุ่นต่างคือชุดเงื่อนไขแพ็กเกจ — เทียบรายละเอียดบรรทัดต่อบรรทัดกับ<a href="${proHref(twin)}">อีกรุ่น (${esc(twin.price)} บาท)</a>ก่อนกด ถ้าเงื่อนไขที่ต่างไม่เกี่ยวกับการใช้งานของคุณ เลือกตัวถูกกว่าได้เลย</p>
+</div></div>
+</div></section>` : `
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>มีรุ่นถูกกว่าสเปกใกล้กัน — ตัวนี้ให้อะไรเพิ่ม</h2></div>
+<div class="article-page" style="margin:0 auto"><div class="article-body">
+<p>${carrierTH[c.carrier]}มีอีกรุ่นที่ความเร็ว ${esc(spTxt)} รอบ${esc(c.durationRaw)}เหมือนกันแต่ราคาต่ำกว่า ${fmtBaht(twinDiff)} บาท — <a href="${proHref(twin)}">ดูรุ่นนั้นที่นี่ (${esc(twin.price)} บาท)</a> เหตุผลที่บางคนยังเลือกหน้านี้อยู่ที่รายละเอียดแพ็กเกจซึ่งไม่เหมือนกันทั้งชุด อ่านรายละเอียดในตารางสเปกด้านบนของทั้งสองหน้าเทียบกัน แล้วเลือกจากเงื่อนไขที่ตรงกับการใช้งานจริงของคุณ ไม่ใช่จากราคาเพียงอย่างเดียว</p>
+</div></div>
+</div></section>`) : (is5G(c) ? `
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>รุ่น 5G ตัวนี้ ต่างจากรุ่น 4G ยังไง</h2></div>
+<div class="article-page" style="margin:0 auto"><div class="article-body">
+<p>แพ็กเกจนี้วิ่งบนเครือข่าย 5G ซึ่งให้ค่าความหน่วง (ping) ต่ำกว่าและความเร็วที่เสถียรกว่าในพื้นที่ครอบคลุม — ผลจับต้องได้ชัดที่สุดกับเกมออนไลน์ วิดีโอคอล และการอัปโหลด ส่วนต่างที่จ่ายเพิ่มจากรุ่น 4G สเปกเดียวกันคือ ${fmtBaht(twinDiff)} บาทต่อรอบ สองเงื่อนไขที่ควรผ่านก่อนเลือกฝั่งนี้: มือถือรองรับ 5G (<a href="/articles/5g-phones.html">เช็ครุ่นที่รองรับ</a>) และพื้นที่ใช้งานประจำมีสัญญาณ 5G จริง ถ้าไม่ผ่านข้อใดข้อหนึ่ง เงินที่เพิ่มจะไม่ได้อะไรกลับมา — ดู<a href="${proHref(twin)}">รุ่น 4G สเปกเดียวกัน</a>ประกอบ</p>
+</div></div>
+</div></section>` : `
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>ทำไมบางคนเลือกตัว 4G นี้ แทนรุ่น 5G</h2></div>
+<div class="article-page" style="margin:0 auto"><div class="article-body">
+<p>เหตุผลตรงไปตรงมา: ความเร็วสูงสุดเท่ากันแต่ประหยัดกว่า ${fmtBaht(twinDiff)} บาทต่อรอบ — สำหรับเครื่องที่ไม่รองรับ 5G หรือพื้นที่ที่คลื่น 5G ยังมาไม่ถึง ตัวนี้ให้ผลใช้งานแทบไม่ต่างจากรุ่นแพงกว่า เพราะสปีดสูงสุดถูกกำหนดที่ ${esc(spTxt)} เท่ากันทั้งคู่ ใครไม่แน่ใจว่าพื้นที่ตัวเองสัญญาณ 5G แรงแค่ไหน เริ่มจากตัวนี้ก่อนแล้วค่อยอัปเป็น<a href="${proHref(twin)}">รุ่น 5G</a>รอบถัดไปก็ไม่เสียอะไร</p>
+</div></div>
+</div></section>`);
+
+    const alts = altRows(c);
+    const altTable = alts.length ? `
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>เทียบกับทางเลือกใกล้เคียง</h2><p>คัดจากตารางโปรทั้งหมดในเว็บ — ค่ายเดียวกันรอบเดียวกัน, สปีดเดียวกันรอบอื่น และตัวเทียบข้ามค่าย</p></div>
+<div class="table-wrap"><table class="cmp-table">
+<thead><tr><th scope="col">แพ็กเกจ</th><th scope="col">ราคา</th><th scope="col">เฉลี่ย/วัน</th><th scope="col">จุดต่างจากโปรนี้</th></tr></thead>
+<tbody>
+${alts.map(({ c: o, why }) => `<tr><th scope="row"><a href="${proHref(o)}">${esc(proLabel(o))}</a></th><td>${esc(o.price)} บาท</td><td>${fmtBaht(perDay(o))} บาท</td><td>${esc(why)}</td></tr>`).join('\n')}
+</tbody></table></div>
+</div></section>` : '';
+    const ld = [breadcrumbLd(bc), ...productLd([c], urlPath), faqLd(faqs)];
+    let html = head({ title, description, canonicalPath: urlPath, ogImage: c.carrier === 'ais' ? '/img/AIS-5G.webp' : '/img/true-dtac-unlimited.webp', ldBlocks: ld });
+    html += header();
+    html += breadcrumb(bc);
+    html += `
+<div class="container page-head"><h1>${esc(h1)}</h1><p class="pkg-updated">อัปเดตล่าสุด ${UPDATED_TH} · ${c.taxIncluded ? 'ราคารวมภาษีแล้ว · ' : ''}กดรหัสสมัครได้ทันที</p></div>
+${artBlock({ tone: c.carrier === 'ais' ? 'ais' : 'tmh', big: spTxt.replace(' ', ''), label: `${cName} · ${c.durationRaw}${noTh ? ' · ไม่ลดสปีด' : ''}`, motif: SPEC_ICONS.speed, stat1: `${c.price} บาท`, stat2: `เฉลี่ยวันละ ${fmtBaht(pd)} บาท` })}
+<section class="section mt-0" style="padding-top:8px"><div class="container"><div class="pkg-card">
+${pkgTable([c], { id: 'tbl-pro' })}
+</div></div></section>
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>โปรนี้เหมาะกับใคร</h2></div>
+<div class="article-page" style="margin:0 auto"><div class="article-body"><p>${esc(meta.note)}</p></div></div>
+</div></section>
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>สรุปสเปกและความคุ้มค่า</h2></div>
+<div class="table-wrap"><table class="cmp-table">
+<thead><tr><th scope="col">หัวข้อ</th><th scope="col">รายละเอียด</th></tr></thead>
+<tbody>
+<tr><th scope="row">ราคา</th><td>${esc(c.price)} บาท${c.taxIncluded ? ' (รวม VAT 7% แล้ว)' : ''}</td></tr>
+<tr><th scope="row">เฉลี่ยต่อวัน</th><td class="win">${fmtBaht(pd)} บาท/วัน</td></tr>
+<tr><th scope="row">ความเร็วสูงสุด</th><td>${esc(spTxt)}${noTh ? ' — ใช้ต่อเนื่องที่สปีดนี้ (ไม่ลดสปีด/ไม่อั้นตามเงื่อนไขแพ็กเกจ)' : ''}</td></tr>
+<tr><th scope="row">ระยะเวลา</th><td>${esc(c.durationRaw)}</td></tr>
+<tr><th scope="row">เครือข่าย</th><td>${netGen(c)} (${carrierName[c.carrier]})</td></tr>
+<tr><th scope="row">รายละเอียดจากแพ็กเกจ</th><td>${c.features.map(esc).join(' · ')}</td></tr>
+<tr><th scope="row">รหัสสมัคร</th><td><strong>${esc(c.code)}</strong> — กดแล้วโทรออก รอ SMS ยืนยัน</td></tr>
+<tr><th scope="row">เช็คสถานะโปร</th><td>${checkCodeOf[c.carrier]} (ฟรี)</td></tr>
+</tbody></table></div>
+</div></section>
+${twinBlock}
+${altTable}`;
+    html += faqSection(faqs, { title: 'คำถามที่พบบ่อยเกี่ยวกับโปรนี้' });
+    html += relatedLinks([
+      hub,
+      durPageOf(c),
+      { label: `โปรเน็ตงบ${bucketOf(c).label}`, href: '/' + bucketOf(c).file },
+      ...(speedHubOf(c) ? [{ label: `โปรเน็ต ${speedHubOf(c).label} ทุกค่าย`, href: '/' + speedHubOf(c).file }] : []),
+      { label: 'เปรียบเทียบทุกค่าย', href: '/compare-networks.html' },
+    ]);
+    html += footer();
+    write(urlPath.slice(1), html);
+    EXTRA_URLS.push(urlPath);
+  }
+
+  /* ================= 6 หน้า /budget/ ================= */
+  for (const b of BUCKETS) {
+    const noteData = hubNotes.budget[b.key];
+    const cards = ALL.filter(c => b.test(priceNum(c.price))).sort((x, y) => priceNum(x.price) - priceNum(y.price));
+    if (!cards.length) continue;
+    const best = [...cards].sort((x, y) => perDay(x) - perDay(y))[0];
+    const urlPath = '/' + b.file;
+    const bc = [{ label: 'หน้าแรก', href: '/' }, { label: 'เลือกโปรตามงบ', href: '/budget/under-30.html' }, { label: b.label, href: urlPath }];
+    const faqs = noteData.faq;
+    const ld = [breadcrumbLd(bc), ...productLd(cards, urlPath), faqLd(faqs)];
+    let html = head({
+      title: trimTitle(`${noteData.h1} (${cards.length} โปร ทุกค่าย) | ${SITE_NAME}`),
+      description: trimDesc(`รวมโปรเน็ต AIS ทรู ดีแทค ช่วงราคา${b.label} ทั้งหมด ${cards.length} แพ็กเกจ เริ่มต้น ${minPriceOf(cards)} บาท เรียงจากถูกไปแพง พร้อมรหัสสมัครกดได้ทันทีและตัวคุ้มสุดต่อวัน`),
+      canonicalPath: urlPath, ogImage: '/img/Simcard-AIS-True-Dtac.webp', ldBlocks: ld,
+    });
+    html += header();
+    html += breadcrumb(bc);
+    html += `
+<div class="container page-head"><h1>${esc(noteData.h1)}</h1><p class="pkg-updated">อัปเดตล่าสุด ${UPDATED_TH} · ${cards.length} โปรจากทุกค่าย เรียงราคาถูก → แพง</p></div>
+${artBlock({ tone: 'mix', big: b.label.replace(' บาท', '฿'), label: `โปรเน็ตทุกค่ายในงบ${b.label}`, motif: SPEC_ICONS.tax, stat1: `${cards.length} โปร`, stat2: `สปีด ${speedRangeOf(cards)}` })}
+<section class="section mt-0" style="padding-top:8px"><div class="container">
+<div class="article-page" style="margin:0 auto 18px"><div class="article-body"><p>${esc(noteData.intro)}</p></div></div>
+<div class="pkg-card">
+${pkgTable(cards, { id: 'tbl-budget' })}
+</div>
+<p style="text-align:center;margin-top:14px;color:var(--muted);font-size:14.5px">ตัวคุ้มสุดต่อวันในงบนี้: <a href="${proHref(best)}" style="color:var(--cat-blue);font-weight:700">${esc(proLabel(best))}</a> เฉลี่ย ${fmtBaht(perDay(best))} บาท/วัน</p>
+</div></section>`;
+    html += faqSection(faqs, { title: `คำถามที่พบบ่อย — งบ${b.label}` });
+    const i = BUCKETS.indexOf(b);
+    html += relatedLinks([
+      ...(i > 0 ? [{ label: `งบ${BUCKETS[i - 1].label}`, href: '/' + BUCKETS[i - 1].file }] : []),
+      ...(i < BUCKETS.length - 1 ? [{ label: `งบ${BUCKETS[i + 1].label}`, href: '/' + BUCKETS[i + 1].file }] : []),
+      { label: 'เลือกโปรตามความเร็ว', href: '/speed/4mbps.html' },
+      { label: 'เปรียบเทียบทุกค่าย', href: '/compare-networks.html' },
+    ], 'ดูช่วงงบอื่น');
+    html += footer();
+    write(b.file, html);
+    EXTRA_URLS.push(urlPath);
+  }
+
+  /* ================= 6 หน้า /speed/ ================= */
+  for (const sp of SPEEDS) {
+    const noteData = hubNotes.speed[sp.key];
+    const cards = ALL.filter(c => speedKb(c) === sp.kb).sort((x, y) => perDay(x) - perDay(y));
+    if (!cards.length) continue;
+    const urlPath = '/' + sp.file;
+    const carriers = [...new Set(cards.map(c => carrierTH[c.carrier]))];
+    const bc = [{ label: 'หน้าแรก', href: '/' }, { label: 'เลือกโปรตามความเร็ว', href: '/speed/4mbps.html' }, { label: sp.label, href: urlPath }];
+    const faqs = noteData.faq;
+    const ld = [breadcrumbLd(bc), ...productLd(cards, urlPath), faqLd(faqs)];
+    let html = head({
+      title: trimTitle(`${noteData.h1} (${cards.length} โปร) | ${SITE_NAME}`),
+      description: trimDesc(`รวมโปรเน็ตความเร็ว ${sp.label} ทุกค่าย (${carriers.join(' / ')}) ${cards.length} แพ็กเกจ ตั้งแต่รายวันถึงรายเดือน เรียงตามราคาเฉลี่ยต่อวัน พร้อมรหัสสมัครกดได้ทันที`),
+      canonicalPath: urlPath, ogImage: '/img/Internet-speed-test.webp', ldBlocks: ld,
+    });
+    html += header();
+    html += breadcrumb(bc);
+    html += `
+<div class="container page-head"><h1>${esc(noteData.h1)}</h1><p class="pkg-updated">อัปเดตล่าสุด ${UPDATED_TH} · ${cards.length} โปร (${carriers.join(' · ')}) เรียงตามราคาเฉลี่ยต่อวัน</p></div>
+${artBlock({ tone: 'mix', big: sp.label.replace(' ', ''), label: noteData.h1, motif: SPEC_ICONS.speed, stat1: `${cards.length} โปร`, stat2: `เริ่ม ${minPriceOf(cards)} บาท` })}
+<section class="section mt-0" style="padding-top:8px"><div class="container">
+<div class="article-page" style="margin:0 auto 18px"><div class="article-body"><p>${esc(noteData.intro)}</p></div></div>
+<div class="pkg-card">
+${pkgTable(cards, { id: 'tbl-speed' })}
+</div>
+</div></section>
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>ราคาเฉลี่ยต่อวันของโปร ${esc(sp.label)}</h2><p>รอบยาวเฉลี่ยถูกลง — ตารางนี้ช่วยเลือก"รอบเวลา" หลังจากตัดสินใจสปีดแล้ว</p></div>
+<div class="table-wrap"><table class="cmp-table">
+<thead><tr><th scope="col">แพ็กเกจ</th><th scope="col">ระยะเวลา</th><th scope="col">ราคา</th><th scope="col">เฉลี่ย/วัน</th></tr></thead>
+<tbody>
+${cards.map(c => `<tr><th scope="row"><a href="${proHref(c)}">${esc(proLabel(c))}</a></th><td>${esc(c.durationRaw)}</td><td>${esc(c.price)} บาท</td><td class="win">${fmtBaht(perDay(c))} บาท</td></tr>`).join('\n')}
+</tbody></table></div>
+</div></section>`;
+    html += faqSection(faqs, { title: `คำถามที่พบบ่อย — โปรเน็ต ${sp.label}` });
+    const i = SPEEDS.indexOf(sp);
+    html += relatedLinks([
+      ...(i > 0 ? [{ label: `โปรเน็ต ${SPEEDS[i - 1].label}`, href: '/' + SPEEDS[i - 1].file }] : []),
+      ...(i < SPEEDS.length - 1 ? [{ label: `โปรเน็ต ${SPEEDS[i + 1].label}`, href: '/' + SPEEDS[i + 1].file }] : []),
+      { label: 'เลือกโปรตามงบ', href: '/budget/under-30.html' },
+      { label: 'ความเร็วเน็ต & FUP คืออะไร', href: '/articles/net-speed-explained.html' },
+    ], 'ดูความเร็วอื่น');
+    html += footer();
+    write(sp.file, html);
+    EXTRA_URLS.push(urlPath);
+  }
+
+  /* ================= หน้าค่ายเดี่ยว /dtac.html /true.html ================= */
+  for (const cr of ['dtac', 'true']) {
+    const noteData = hubNotes.carrier[cr];
+    const cards = ALL.filter(c => c.carrier === cr);
+    const urlPath = `/${cr}.html`;
+    const groups = ['1d', '2d', '3d', '7d', '30d']
+      .map(k => ({ k, list: cards.filter(c => durKey(c.durationRaw) === k) }))
+      .filter(g => g.list.length);
+    const durLabel = { '1d': 'รายวัน / 24 ชั่วโมง', '2d': '2 วัน', '3d': '3 วัน', '7d': '7 วัน', '30d': '30 วัน' };
+    const bc = [{ label: 'หน้าแรก', href: '/' }, { label: 'โปรเน็ตทรูดีแทค', href: '/true-dtac.html' }, { label: noteData.h1, href: urlPath }];
+    const faqs = noteData.faq;
+    const ld = [breadcrumbLd(bc), ...productLd(cards, urlPath), faqLd(faqs)];
+    let html = head({
+      title: trimTitle(`${noteData.h1} ${YEAR} | ${SITE_NAME}`),
+      description: trimDesc(`${noteData.h1} — ${cards.length} แพ็กเกจ สปีด ${speedRangeOf(cards)} เริ่มต้น ${minPriceOf(cards)} บาท แยกตามระยะเวลา พร้อมรหัสสมัครกดได้ทันที ราคารวม VAT`),
+      canonicalPath: urlPath, ogImage: '/img/true-dtac-unlimited.webp', ldBlocks: ld,
+    });
+    html += header();
+    html += breadcrumb(bc);
+    html += `
+<div class="container page-head"><h1>${esc(noteData.h1)}</h1><p class="pkg-updated">อัปเดตล่าสุด ${UPDATED_TH} · ${cards.length} โปร · สปีด ${speedRangeOf(cards)}</p></div>
+${artBlock({ tone: 'tmh', big: cr === 'dtac' ? 'dtac' : 'true', label: noteData.h1, motif: I.wifi, stat1: `${cards.length} โปร`, stat2: `เริ่ม ${minPriceOf(cards)} บาท` })}
+<section class="section mt-0" style="padding-top:8px"><div class="container">
+<div class="article-page" style="margin:0 auto 18px"><div class="article-body"><p>${esc(noteData.intro)}</p></div></div>
+${groups.map(g => `<div class="pkg-card" style="margin-bottom:22px">
+  <div class="pkg-card-head"><div><h2>${esc(carrierTH[cr])} ${esc(durLabel[g.k])}</h2></div></div>
+  ${pkgTable(g.list, { id: `tbl-${cr}-${g.k}` })}
+</div>`).join('\n')}
+</div></section>`;
+    html += howToSteps();
+    html += faqSection(faqs, { title: `คำถามที่พบบ่อย — ${noteData.h1}` });
+    html += relatedLinks([
+      { label: 'รวมโปรทรูดีแทค', href: '/true-dtac.html' },
+      { label: cr === 'dtac' ? 'เฉพาะทรู (TrueMove H)' : 'เฉพาะดีแทค (dtac)', href: cr === 'dtac' ? '/true.html' : '/dtac.html' },
+      { label: 'โปรเน็ต AIS', href: '/ais.html' },
+      { label: 'เปรียบเทียบทุกค่าย', href: '/compare-networks.html' },
+    ]);
+    html += footer();
+    write(`${cr}.html`, html);
+    EXTRA_URLS.push(urlPath);
+  }
+
+  /* ================= ดัชนีบทความ /articles/index.html ================= */
+  (function buildArticlesIndex() {
+    const urlPath = '/articles/index.html';
+    const bc = [{ label: 'หน้าแรก', href: '/' }, { label: 'บทความ', href: urlPath }];
+    const list = Object.values(articles).sort((a, b) => a.h1.localeCompare(b.h1, 'th'));
+    const ld = [breadcrumbLd(bc)];
+    let html = head({
+      title: trimTitle(`บทความทั้งหมด (${list.length} เรื่อง) — คู่มือโปรเน็ต & ซิมเติมเงิน | ${SITE_NAME}`),
+      description: trimDesc(`รวมบทความคู่มือ ${list.length} เรื่อง: วิธีสมัคร/เช็ค/ยกเลิกโปรเน็ต ความเร็วและ FUP การเลือกซิมและโปรให้ตรงการใช้งาน — อ่านฟรีทั้งหมด อัปเดต ${YEAR}`),
+      canonicalPath: urlPath, ogImage: '/img/Simcard-AIS-True-Dtac.webp', ldBlocks: ld,
+    });
+    html += header();
+    html += breadcrumb(bc);
+    html += `
+<div class="container page-head"><h1>บทความทั้งหมด</h1><p class="pkg-updated">${list.length} เรื่อง · อัปเดตล่าสุด ${UPDATED_TH}</p></div>
+${artBlock({ tone: 'brand', big: String(list.length), label: 'คู่มือโปรเน็ตและซิมเติมเงิน', motif: I.doc, stat1: 'อ่านฟรีทุกเรื่อง', stat2: 'เขียนจากข้อมูลโปรจริงในเว็บ' })}
+<section class="section mt-0" style="padding-top:8px"><div class="container">
+<div class="why-grid">
+${list.map(a => `<div class="why-card"><h3 style="margin-bottom:6px"><a href="/articles/${a.slug}.html" style="color:var(--cat-blue)">${esc(a.h1)}</a></h3><p>${esc((a.lead || a.oldMetaDescription || '').slice(0, 140))}</p></div>`).join('\n')}
+</div>
+</div></section>`;
+    html += relatedLinks([
+      { label: 'โปรเน็ต AIS', href: '/ais.html' },
+      { label: 'โปรเน็ตทรูดีแทค', href: '/true-dtac.html' },
+      { label: 'เปรียบเทียบทุกค่าย', href: '/compare-networks.html' },
+      { label: 'FAQ', href: '/faq.html' },
+    ], 'ไปหน้าโปรเน็ต');
+    html += footer();
+    write('articles/index.html', html);
+    EXTRA_URLS.push(urlPath);
+  })();
+})();
+
 /* ======================================================================
  * 404, sitemap.xml, robots.txt
  * ==================================================================== */
@@ -1127,6 +1530,7 @@ ${artBlock({ tone: 'brand', big: 'TKShop', label: 'ตัวแทนจำห�
     '/true-dtac.html', '/true-dtac/7daypack.html', '/true-dtac/30daypack.html',
     '/compare-networks.html', '/faq.html', '/check-number-balance.html', '/about.html',
     '/articles/how-to-register.html', '/articles/faq-ais.html', '/articles/5g-phones.html', '/articles/sim-cards.html', '/articles/net-speed-explained.html', '/articles/ber-mongkol.html',
+    ...EXTRA_URLS,
   ];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

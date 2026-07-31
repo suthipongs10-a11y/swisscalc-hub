@@ -650,3 +650,7 @@ table.pkg-table { width: 100%; border-collapse: collapse; min-width: 640px; }
 .hidden-row { display: none !important; }
 .mt-0 { margin-top: 0; }
 .section-gap { height: 8px; }
+
+/* long-tail v2: ลิงก์รายละเอียดใต้ชื่อโปรในตาราง */
+.pkg-detail-link{display:inline-block;margin-top:4px;font-size:13px;font-weight:600;color:var(--cat-blue)}
+.pkg-detail-link:hover{text-decoration:underline}
