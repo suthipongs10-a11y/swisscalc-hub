@@ -1179,6 +1179,7 @@ ${artBlock({ tone: 'brand', big: 'TKShop', label: 'ตัวแทนจำห�
   const carrierTH = { ais: 'AIS', true: 'ทรู', dtac: 'ดีแทค' };
   const carrierHubOf = { ais: { label: 'โปรเน็ต AIS', href: '/ais.html' }, true: { label: 'โปรเน็ตทรู', href: '/true.html' }, dtac: { label: 'โปรเน็ตดีแทค', href: '/dtac.html' } };
   const proHref = c => `/pro/${proNotes[c.code].slug}.html`;
+  const proBrand = c => (c.carrier === 'ais' ? 'โปรเน็ต AIS' : `โปรเน็ต${carrierTH[c.carrier]}`);
   const proLabel = c => `${carrierTH[c.carrier]} ${speedTxt(c)} ${c.durationRaw}`;
   const checkCodeOf = { ais: 'กด *121*32# โทรออก', true: 'กด *900# โทรออก', dtac: 'กด *101*1# โทรออก' };
   const ALL = allPkUnique;
@@ -1236,13 +1237,13 @@ ${artBlock({ tone: 'brand', big: 'TKShop', label: 'ตัวแทนจำห�
     const noTh = isNoThrottle(c);
     const pd = perDay(c);
     const hub = carrierHubOf[c.carrier];
-    const h1 = `โปรเน็ต${cName} ${spTxt} ${c.durationRaw} ${c.price} บาท${noTh ? ' ไม่ลดสปีด' : ''}`;
-    const title = trimTitle(`โปรเน็ต${cName} ${spTxt} ${c.durationRaw} ${c.price} บาท | ${SITE_NAME}`);
-    const description = trimDesc(`โปรเน็ต${cName} ความเร็ว ${spTxt} นาน ${c.durationRaw} ราคา ${c.price} บาท (เฉลี่ยวันละ ${fmtBaht(pd)} บาท) สมัครกด ${c.code} — สเปกเต็ม ตารางเทียบทางเลือกใกล้เคียง และวิธีเช็คสถานะโปร`);
+    const h1 = `${proBrand(c)} ${spTxt} ${c.durationRaw} ${c.price} บาท${noTh ? ' ไม่ลดสปีด' : ''}`;
+    const title = trimTitle(`${proBrand(c)} ${spTxt} ${c.durationRaw} ${c.price} บาท | ${SITE_NAME}`);
+    const description = trimDesc(`${proBrand(c)} ความเร็ว ${spTxt} นาน ${c.durationRaw} ราคา ${c.price} บาท (เฉลี่ยวันละ ${fmtBaht(pd)} บาท) สมัครกด ${c.code} — สเปกเต็ม ตารางเทียบทางเลือกใกล้เคียง และวิธีเช็คสถานะโปร`);
     const bc = [{ label: 'หน้าแรก', href: '/' }, hub, { label: `${spTxt} ${c.durationRaw}`, href: urlPath }];
     const faqs = [
       {
-        q: `โปรเน็ต${cName} ${spTxt} ${c.durationRaw} ราคาเท่าไหร่ สมัครยังไง`,
+        q: `${proBrand(c)} ${spTxt} ${c.durationRaw} ราคาเท่าไหร่ สมัครยังไง`,
         a: `ราคา ${c.price} บาท${c.taxIncluded ? ' (รวมภาษีมูลค่าเพิ่มแล้ว)' : ''} เฉลี่ยวันละประมาณ ${fmtBaht(pd)} บาท สมัครโดยกด ${c.code} แล้วโทรออกจากซิม${cName}ที่ต้องการสมัคร ระบบจะส่ง SMS ยืนยันเมื่อสมัครสำเร็จ`,
       },
       {
