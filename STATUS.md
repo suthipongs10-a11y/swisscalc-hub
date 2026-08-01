@@ -73,6 +73,10 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-08-01 — Session 20d: Keyword-Research für pronetserm (Zukunftsplan, nichts gebaut)
+
+- `docs/pronetserm-keyword-research.md`: ~45 Long-Tail-Keywords in 6 Clustern (SIM-Services, eSIM, Kommunikationstechnologie, Geräte/Router, Troubleshooting, Adjacent) mit Volumen-**Tiers als Schätzung** (Sandbox erreicht Keyword Planner nicht — Verifikations-Workflow im Dokument), vorgeschlagenen Slugs, Kollisions-Check gegen bestehende Seiten und Batch-Plan PN-6–PN-9. Bewusst auf dem Hauptbranch unter `docs/` abgelegt (der `pronetserm`-Branch wird 1:1 öffentlich deployt — Keyword-Pläne gehören nicht auf die Live-Site). Ausserdem `ads.txt` (AdSense pub-ID des Owners) auf den `pronetserm`-Branch gepusht.
+
 ### 2026-07-31 — Session 20c: pronetserm auf eigenen Branch ausgelagert (Cloudflare-Pages-Fix)
 
 - **Auslöser:** Das Cloudflare-Pages-Projekt «pronetserm» lieferte Error 522 — auf `*.pages.dev` heisst das: kein erfolgreiches Production-Deployment vorhanden; die Root-Directory-Konfiguration im Unterordner-Setup war fehleranfällig. Der Owner wollte die beiden Websites ohnehin strikt getrennt haben («คนละ Branch หรือคนละส่วน»).
