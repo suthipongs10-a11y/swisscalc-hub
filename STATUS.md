@@ -73,6 +73,14 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-08-11 — Session 21: GSC-getriebene On-Page-Runde (Stufe 1: ohne Backlinks abholbar)
+
+- **Grundlage:** erster GSC-Performance-Export (3 Monate, ~10 Klicks / ~3'400 Impressionen). Befund: QST- und Steuerrechner-Seiten kleiner Kantone ranken bereits auf Seite 1 (UR 8.3, SZ 8.8, BL 11.2, FR/JU/GL/AR 7.7–10.2), `/en/hourly-wage-calculator/` ist mit Pos. 7.0 bei 134 Impressionen die beste Volumen×Position-Kombination — aber 0 Klicks. Die grossen Money-Pages (3a: 493 Imp. bei Pos. 78!) brauchen Backlinks, nicht mehr Text. Analyse-Rohdaten im Scratchpad, Massnahmen-Ranking im Chat vom 11.08.
+- **EN Hourly-Wage CTR-Fix:** Title neu `Hourly Wage Calculator Switzerland 2026 | CalcSwiss` (vorher generisch ohne Jahr), Description mit konkretem Rechenbeispiel (CHF 6,500 → 35.71/h) + «Free, no sign-up», H1 mit Jahr, WebApplication-Name angepasst.
+- **Startseite: Block «Häufig gesuchte Kantonsseiten»** — 13 Chip-Links mit keyword-genauen Ankern («Quellensteuer Uri 2026», «Steuerrechner Aargau 2026» …) auf genau die Seiten, die laut GSC auf Seite 1 stehen; Liste ist im Quellcode als GSC-gepflegt kommentiert.
+- **Aargau-Ausbau** (247 Imp., meiste Nachfrage der Kantonsseiten): Einkommens-Leiter nur für AG von 5 auf **13 Stufen (CHF 30k–300k)** verdichtet, H2 neu exakt «Steuertabelle Aargau 2026» (Query auf Pos. 10), neue vierte FAQ zur Steuertabelle (auch im FAQPage-JSON-LD), handgeschriebener Absatz zur Interpolations-Ablösung; der Vervierfachungs-Satz aller 26 DE-Seiten wurde faktorneutral umformuliert (war mit der dichteren Leiter falsch geworden).
+- **Audit vor Push:** Tests 102/102, Build 241 Seiten, 50 automatisierte HTML-Checks (Links, Titles, JSON-LD-Parsing, Kontrollseite ZH unverändert), AG-Tabelle monotonie- und engine-konsistenzgeprüft, Chromium ohne Konsolenfehler, Screenshots, Lighthouse **100×4** auf allen drei geänderten Seiten (ein a11y-Fund — Links nur farblich unterscheidbar — noch vor dem Push behoben).
+
 ### 2026-08-01 — Session 20d: Keyword-Research für pronetserm (Zukunftsplan, nichts gebaut)
 
 - `docs/pronetserm-keyword-research.md`: ~45 Long-Tail-Keywords in 6 Clustern (SIM-Services, eSIM, Kommunikationstechnologie, Geräte/Router, Troubleshooting, Adjacent) mit Volumen-**Tiers als Schätzung** (Sandbox erreicht Keyword Planner nicht — Verifikations-Workflow im Dokument), vorgeschlagenen Slugs, Kollisions-Check gegen bestehende Seiten und Batch-Plan PN-6–PN-9. Bewusst auf dem Hauptbranch unter `docs/` abgelegt (der `pronetserm`-Branch wird 1:1 öffentlich deployt — Keyword-Pläne gehören nicht auf die Live-Site). Ausserdem `ads.txt` (AdSense pub-ID des Owners) auf den `pronetserm`-Branch gepusht.

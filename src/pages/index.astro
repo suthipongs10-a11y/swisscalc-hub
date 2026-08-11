@@ -46,6 +46,25 @@ const faqSchema = {
 };
 
 const tools = TOOLS;
+
+/* Canton detail pages that already rank on Google page 1 (Search Console) —
+   keyword-matching anchors from the homepage push internal weight to the
+   pages where clicks are closest. Revisit the list with each GSC export. */
+const popularCantonPages = [
+  { href: '/quellensteuer-rechner/uri/', label: `Quellensteuer Uri ${SITE_YEAR}` },
+  { href: '/quellensteuer-rechner/schwyz/', label: `Quellensteuer Schwyz ${SITE_YEAR}` },
+  { href: '/quellensteuer-rechner/basel-landschaft/', label: `Quellensteuer Basel-Landschaft ${SITE_YEAR}` },
+  { href: '/quellensteuer-rechner/freiburg/', label: `Quellensteuer Freiburg ${SITE_YEAR}` },
+  { href: '/quellensteuer-rechner/glarus/', label: `Quellensteuer Glarus ${SITE_YEAR}` },
+  { href: '/quellensteuer-rechner/appenzell-ausserrhoden/', label: `Quellensteuer Appenzell Ausserrhoden ${SITE_YEAR}` },
+  { href: '/quellensteuer-rechner/jura/', label: `Quellensteuer Jura ${SITE_YEAR}` },
+  { href: '/steuerrechner/aargau/', label: `Steuerrechner Aargau ${SITE_YEAR}` },
+  { href: '/steuerrechner/graubuenden/', label: `Steuerfüsse Graubünden ${SITE_YEAR}` },
+  { href: '/steuerrechner/uri/', label: 'Steuerrechner Uri' },
+  { href: '/steuerrechner/glarus/', label: 'Steuerrechner Glarus' },
+  { href: '/steuerrechner/obwalden/', label: 'Steuerrechner Obwalden' },
+  { href: '/steuerrechner/schaffhausen/', label: 'Steuerrechner Schaffhausen' },
+];
 ---
 
 <BaseLayout
@@ -83,6 +102,31 @@ const tools = TOOLS;
       ))
     }
   </ul>
+
+  <section class="mt-12">
+    <h2 class="mb-2 text-2xl font-bold">Häufig gesuchte Kantonsseiten</h2>
+    <p class="mb-4 max-w-2xl text-slate-600">
+      Direkt zu den Detailseiten mit Tariftabellen, Steuerfüssen und Beispielrechnungen für das Steuerjahr {SITE_YEAR}:
+    </p>
+    <ul class="flex max-w-3xl flex-wrap gap-2 text-sm">
+      {
+        popularCantonPages.map((p) => (
+          <li>
+            <a
+              href={p.href}
+              class="inline-block rounded-full border border-slate-200 px-3 py-1.5 text-blue-700 hover:border-blue-300 hover:bg-blue-50"
+            >
+              {p.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mt-3 max-w-2xl text-sm text-slate-500">
+      Alle 26 Kantone finden Sie im <a href="/steuervergleich/" class="text-blue-700 underline">Steuervergleich</a>
+      {' '}und im <a href="/quellensteuer-rechner/" class="text-blue-700 underline">Quellensteuer-Rechner</a>.
+    </p>
+  </section>
 
   <section class="prose-content mt-12 max-w-2xl">
     <h2>Welcher Rechner beantwortet welche Frage?</h2>

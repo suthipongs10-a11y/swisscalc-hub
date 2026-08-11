@@ -72,6 +72,14 @@ const faqs = [
     q: `Wie setzt sich die Steuer in ${ref.capital} zusammen?`,
     a: `Auf die einfache Staatssteuer nach ${abbr}-Tarif (${tarifLabel}) wendet der Kanton einen Steuerfuss von ${formatNumber(m.cantonPct, 0)}% an, die Gemeinde ${ref.capital} ${formatNumber(m.cityPct, 0)}%. Dazu kommt die direkte Bundessteuer nach einheitlichem Bundestarif.`,
   },
+  ...(abbr === 'AG'
+    ? [
+        {
+          q: `Wo finde ich die Steuertabelle für den Aargau ${SITE_YEAR}?`,
+          a: `Die Tabelle auf dieser Seite zeigt die berechnete Gesamtbelastung (Kantons-, Gemeinde- und Bundessteuer) in Aarau für 13 Einkommensstufen von CHF 30'000 bis CHF 300'000, alleinstehend und verheiratet — gerechnet mit den offiziellen ESTV-Tarifen ${SITE_YEAR}. Die verbindlichen Tarifdokumente publiziert die Steuerverwaltung des Kantons Aargau; für jede andere Gemeinde verschiebt sich der Gemeindeanteil entsprechend ihrem Steuerfuss.`,
+        },
+      ]
+    : []),
   editorial.faq,
 ];
 
@@ -102,8 +110,15 @@ const atMin = cantonTaxAtMultiplier(REF_INCOME, abbr, 'single', stats.minCity.pc
 const atMax = cantonTaxAtMultiplier(REF_INCOME, abbr, 'single', stats.maxCity.pct);
 const municipalSpread = atMax.totalTax - atMin.totalTax;
 
-/* --- How the burden grows with income, in this canton --- */
-const ladder = [50_000, 80_000, 100_000, 150_000, 200_000].map((i) => ({
+/* --- How the burden grows with income, in this canton ---
+   Aargau gets a denser 13-step table: Search Console shows page-1 demand for
+   «Steuertabelle Aargau» there, and a real Steuertabelle needs finer steps.
+   Values come from the same engine either way. */
+const ladderSteps =
+  abbr === 'AG'
+    ? [30_000, 40_000, 50_000, 60_000, 70_000, 80_000, 90_000, 100_000, 120_000, 150_000, 200_000, 250_000, 300_000]
+    : [50_000, 80_000, 100_000, 150_000, 200_000];
+const ladder = ladderSteps.map((i) => ({
   income: i,
   single: cantonTax(i, abbr, 'single'),
   married: cantonTax(i, abbr, 'married'),
@@ -250,7 +265,7 @@ const compareRows = editorial.compare.map((other) => {
       Hauptort {ref.capital}; für eine andere Gemeinde verschiebt sich der Gemeindeanteil entsprechend ihrem Steuerfuss.
     </p>
 
-    <h2>Steuerbelastung nach Einkommen in {name}</h2>
+    <h2>{abbr === 'AG' ? `Steuertabelle Aargau ${SITE_YEAR}` : `Steuerbelastung nach Einkommen in ${name}`}</h2>
     <p>Steuer pro Jahr in {ref.capital}, Kantons-, Gemeinde- und Bundessteuer zusammen, ohne Kirchensteuer:</p>
     <table class="w-full text-sm">
       <thead>
@@ -275,8 +290,8 @@ const compareRows = editorial.compare.map((other) => {
       </tbody>
     </table>
     <p>
-      Das Einkommen vervierfacht sich von {formatCHF(ladderFirst.income, 0)} auf {formatCHF(ladderLast.income, 0)}, die
-      Steuer in {ref.capital} steigt dabei von {formatCHF(ladderFirst.single.totalTax, 0)} auf
+      Das Einkommen steigt von {formatCHF(ladderFirst.income, 0)} auf {formatCHF(ladderLast.income, 0)}, die
+      Steuer in {ref.capital} dabei von {formatCHF(ladderFirst.single.totalTax, 0)} auf
       {' '}{formatCHF(ladderLast.single.totalTax, 0)} — der effektive Satz von
       {' '}{(ladderFirst.single.effectiveRate * 100).toFixed(1)}% auf
       {' '}{(ladderLast.single.effectiveRate * 100).toFixed(1)}%.
@@ -284,6 +299,18 @@ const compareRows = editorial.compare.map((other) => {
         ? ` Ein Ehepaar spart in ${ref.capital} bei diesem Einkommen ${formatCHF(marriageGap, 0)}.`
         : ''}
     </p>
+    {
+      abbr === 'AG' && (
+        <p>
+          Die Tabelle ersetzt die frühere gedruckte Steuertabelle: Statt Werte zwischen zwei Zeilen zu interpolieren,
+          rechnet der Rechner oben auf dieser Seite jeden Frankenbetrag exakt — mit denselben Aargauer Tarifen
+          {' '}{SITE_YEAR}. Wer den Steuersatz seiner Gemeinde kennt, liest an der Spanne zwischen
+          {' '}{stats.minCity.name} und {stats.maxCity.name} im Abschnitt darüber ab, wie weit die eigene Gemeinde vom
+          Hauptort Aarau abweicht. Für den Umzugsvergleich über die Kantonsgrenze hinaus:
+          {' '}<a href="/steuervergleich/">Steuervergleich aller 26 Kantone</a>.
+        </p>
+      )
+    }
 
     <h2>Häufige Fragen</h2>
     {

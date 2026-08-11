@@ -10,8 +10,8 @@ import { convertWage } from '../../lib/hourly/engine';
 const hwEx = convertWage({ direction: 'toHourly', amount: 6500, hoursPerWeek: 42, vacationWeeks: 4, thirteenth: false });
 
 const path = '/en/hourly-wage-calculator/';
-const title = `Swiss hourly wage calculator | ${BRAND}`;
-const description = `Convert hourly and monthly pay in Switzerland: with vacation compensation (8.33/10.64/13.04%), 13th month salary and your weekly hours — per Swiss payroll practice.`;
+const title = `Hourly Wage Calculator Switzerland ${SITE_YEAR} | ${BRAND}`;
+const description = `Convert monthly salary to hourly wage and back: CHF 6,500 at 42 h/week = CHF 35.71/h. Vacation pay (8.33–13.04%) and 13th month included, per Swiss payroll practice. Free, no sign-up.`;
 
 const faqs = [
   {
@@ -39,7 +39,7 @@ const faqs = [
 const webApp = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'Swiss hourly wage calculator',
+  name: 'Hourly wage calculator Switzerland',
   url: absoluteUrl(path),
   applicationCategory: 'FinanceApplication',
   operatingSystem: 'Web',
@@ -57,7 +57,7 @@ const faqSchema = {
 <BaseLayout title={title} description={description} path={path} locale="en" jsonLd={[webApp, faqSchema]}>
   <Breadcrumbs crumbs={[{ name: 'Hourly wage calculator' }]} locale="en" />
 
-  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Swiss hourly wage calculator</h1>
+  <h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">Hourly wage calculator Switzerland {SITE_YEAR}</h1>
   <p class="mb-8 max-w-2xl text-lg text-slate-700">
     Convert a monthly salary into an hourly wage — or the other way round. With vacation compensation, 13th month
     salary and your weekly working hours, per Swiss payroll practice.
