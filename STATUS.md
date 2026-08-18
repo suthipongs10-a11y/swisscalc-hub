@@ -73,6 +73,10 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-08-18 — Session 22: Backlink-Deep-Research (Plan, nichts gebaut)
+
+- `docs/backlink-plan.md`: recherchierter 90-Tage-Backlink-Plan (weisse Weste, kein Linkkauf) in 4 Stufen: **A** sofort machbar (ESTV-Brief senden, 6 kostenlose Schweizer Verzeichnisse, 2 GitHub-awesome-Listen, Brand-Profile), **B** Community-Teilnahme (englishforum.ch, r/SwissPersonalFinance + r/askswitzerland, Poor-Swiss-Forum — Konten erst 2–3 Wochen aufwärmen, Offenlegung «I built this», Link-Quote ≤ 1:9), **C** Outreach (Top-Ziel: thepoorswiss.com «Best Money Calculators»-Roundup; Blog-Prospektlisten, Relocation-/Expat-Ressourcenseiten, Konkurrenz-Backlink-Mining via Ahrefs-Gratis-Checker), **D** Data-PR (Steuervergleichs-Storys, Source of Sources/Qwoted statt HARO, Startupticker, Product Hunt; Saison-Hook Sept: BAG-Prämien + 3a-Endspurt). Ziel-Mapping aus GSC: `/saeule-3a-rechner/` (Pos. 79 — nur noch per Links beweglich) und QST-EN-Seiten zuerst. Mit Anchor-Matrix, Verbotsliste (kein gutefrage-Selbstpromo, keine Wikipedia-Weblinks), KPI (0 → 10+ Referring Domains in 90 Tagen) und 4 fertigen Vorlagen (2× Outreach EN, Forum-Antwort EN, Journalisten-Pitch DE). Dokument bewusst nur unter `docs/` (nicht deploybar). Umsetzung ist Owner-seitig — nichts am Site-Code geändert.
+
 ### 2026-08-11 — Session 21: GSC-getriebene On-Page-Runde (Stufe 1: ohne Backlinks abholbar)
 
 - **Grundlage:** erster GSC-Performance-Export (3 Monate, ~10 Klicks / ~3'400 Impressionen). Befund: QST- und Steuerrechner-Seiten kleiner Kantone ranken bereits auf Seite 1 (UR 8.3, SZ 8.8, BL 11.2, FR/JU/GL/AR 7.7–10.2), `/en/hourly-wage-calculator/` ist mit Pos. 7.0 bei 134 Impressionen die beste Volumen×Position-Kombination — aber 0 Klicks. Die grossen Money-Pages (3a: 493 Imp. bei Pos. 78!) brauchen Backlinks, nicht mehr Text. Analyse-Rohdaten im Scratchpad, Massnahmen-Ranking im Chat vom 11.08.
