@@ -459,6 +459,9 @@ table.pkg-table { width: 100%; border-collapse: collapse; min-width: 640px; }
 .article-body li { margin: 5px 0; }
 .article-body a { color: var(--cat-blue); font-weight: 600; text-decoration: underline; }
 .article-body img.article-img { border-radius: var(--radius-md); margin: 16px auto; }
+/* ไดอะแกรมประกอบบทความ (inline SVG วาดเฉพาะหน้า) */
+.article-body .diagram { margin: 18px 0; }
+.article-body .diagram svg { display: block; width: 100%; height: auto; border-radius: var(--radius-md); border: 1px solid var(--border); }
 .article-body .table-wrap { margin: 14px 0; }
 .article-body table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 480px; }
 .article-body th, .article-body td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; }

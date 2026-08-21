@@ -1046,6 +1046,21 @@ const NEW_ARTICLE_META = {
   'prepaid-vs-postpaid': { img: '/img/AIS-5G.webp', related: [{ label: 'เลือกซิมเติมเงิน', href: '/articles/sim-cards.html' }, { label: 'โปรรายเดือน 500 บาทขึ้นไป', href: '/budget/over-500.html' }] },
   'save-mobile-data-tips': { img: '/img/Internet-speed-test.webp', related: [{ label: 'โปรถูกไม่เกิน 30 บาท', href: '/budget/under-30.html' }, { label: 'ความเร็วเน็ต & FUP', href: '/articles/net-speed-explained.html' }] },
   'vat-price-explained': { img: '/img/AIS-5G-Unlimited.webp', related: [{ label: 'วิธีเติมเงินทุกช่องทาง', href: '/articles/topup-prepaid-methods.html' }, { label: 'โปรทรูดีแทค', href: '/true-dtac.html' }] },
+  /* ชุดบทความเทคโนโลยีสื่อสาร (PN-Tech) — รูป OG ใช้คลังภาพเดิมของเว็บตามหัวข้อ, กราฟิกในเนื้อหาเป็น SVG วาดเฉพาะหน้า */
+  'ussd-codes-explained': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'เช็คเบอร์/เช็คเน็ต', href: '/check-number-balance.html' }, { label: 'วิธีสมัครโปรเน็ต', href: '/articles/how-to-register.html' }, { label: 'โปรเน็ต AIS', href: '/ais.html' }] },
+  '5g-vs-4g-explained': { img: '/img/5G-Network.webp', related: [{ label: 'มือถือที่รองรับ 5G', href: '/articles/5g-phones.html' }, { label: 'เช็คเครื่องรองรับ 5G', href: '/articles/check-phone-5g-support.html' }, { label: 'โปรเน็ต 10 Mbps', href: '/speed/10mbps.html' }] },
+  'volte-explained': { img: '/img/Mobile-5G-Setting-Network.webp', related: [{ label: 'ปิด 2G/3G กระทบใคร', href: '/articles/2g-3g-shutdown-impact.html' }, { label: 'WiFi Calling คืออะไร', href: '/articles/wifi-calling-explained.html' }, { label: 'โปรเน็ต AIS', href: '/ais.html' }] },
+  'wifi-calling-explained': { img: '/img/Mobile-5G-Setting-Network.webp', related: [{ label: 'VoLTE คืออะไร', href: '/articles/volte-explained.html' }, { label: 'ทำไมบางจุดไม่มีสัญญาณ', href: '/articles/network-coverage-explained.html' }, { label: 'โปรทรูดีแทค', href: '/true-dtac.html' }] },
+  'mbps-needed-per-activity': { img: '/img/difference-internet-speed.webp', related: [{ label: 'โปรเน็ต 4 Mbps', href: '/speed/4mbps.html' }, { label: 'โปรเน็ต 6 Mbps', href: '/speed/6mbps.html' }, { label: 'โปรเน็ต 10 Mbps', href: '/speed/10mbps.html' }] },
+  'ping-latency-gaming': { img: '/img/Internet-speed-test.webp', related: [{ label: 'เน็ตกี่ Mbps ถึงพอ', href: '/articles/mbps-needed-per-activity.html' }, { label: 'แก้เน็ตมือถือช้า', href: '/articles/fix-slow-mobile-internet.html' }, { label: 'โปรเน็ต 4 Mbps', href: '/speed/4mbps.html' }] },
+  '2g-3g-shutdown-impact': { img: '/img/Mobile-5G-Setting-Network.webp', related: [{ label: 'VoLTE คืออะไร เปิดยังไง', href: '/articles/volte-explained.html' }, { label: 'มือถือที่รองรับ 5G', href: '/articles/5g-phones.html' }, { label: 'เปรียบเทียบทุกค่าย', href: '/compare-networks.html' }] },
+  'network-coverage-explained': { img: '/img/5G-Network.webp', related: [{ label: '5G กับ 4G ต่างกันยังไง', href: '/articles/5g-vs-4g-explained.html' }, { label: 'เราเตอร์ใส่ซิม', href: '/articles/sim-router-guide.html' }, { label: 'เปรียบเทียบทุกค่าย', href: '/compare-networks.html' }] },
+  'sim-router-guide': { img: '/img/true-dtac-unlimited.webp', related: [{ label: 'เน็ตไม่อั้น vs ไม่ลดสปีด', href: '/articles/unlimited-vs-no-throttle.html' }, { label: 'โปรเน็ต 6 Mbps', href: '/speed/6mbps.html' }, { label: 'โปรเน็ต 10 Mbps', href: '/speed/10mbps.html' }] },
+  'check-phone-5g-support': { img: '/img/5G-Network.webp', related: [{ label: '5G กับ 4G ต่างกันยังไง', href: '/articles/5g-vs-4g-explained.html' }, { label: 'มือถือที่รองรับ 5G', href: '/articles/5g-phones.html' }, { label: 'โปรเน็ต AIS', href: '/ais.html' }] },
+  'satellite-internet-thailand': { img: '/img/5G-Network.webp', related: [{ label: 'เราเตอร์ใส่ซิม', href: '/articles/sim-router-guide.html' }, { label: 'คลื่นมือถือแต่ละย่าน', href: '/articles/network-coverage-explained.html' }, { label: 'โปรเน็ต 4 Mbps', href: '/speed/4mbps.html' }] },
+  'tablet-sim-guide': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'คู่มือแชร์ฮอตสปอต', href: '/articles/hotspot-tethering-guide.html' }, { label: 'eSIM กับซิมเติมเงิน', href: '/articles/esim-prepaid-thailand.html' }, { label: 'โปรถูกไม่เกิน 30 บาท', href: '/budget/under-30.html' }] },
+  'nfc-explained': { img: '/img/Mobile-5G-Setting-Network.webp', related: [{ label: 'เช็คเครื่องรองรับ 5G', href: '/articles/check-phone-5g-support.html' }, { label: 'มือถือที่รองรับ 5G', href: '/articles/5g-phones.html' }, { label: 'โปรทรูดีแทค', href: '/true-dtac.html' }] },
+  'imei-check-guide': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'เลือกซิมเติมเงินให้คุ้ม', href: '/articles/sim-cards.html' }, { label: 'ย้ายค่ายเบอร์เดิม', href: '/articles/move-carrier-keep-number.html' }, { label: 'เกี่ยวกับเรา / เบอร์ Call Center', href: '/about.html' }] },
 };
 const NEW_ARTICLE_ART = {
   'check-current-package': { tone: 'brand', big: 'เช็ค', label: 'เช็คโปรเน็ตที่ใช้อยู่ ทุกค่าย', motif: I.search, stat1: 'AIS · ทรู · ดีแทค', stat2: 'รหัสกดเช็คฟรี ไม่เสียเงิน' },
@@ -1060,6 +1075,21 @@ const NEW_ARTICLE_ART = {
   'prepaid-vs-postpaid': { tone: 'brand', big: 'VS', label: 'เติมเงิน vs รายเดือน', motif: SPEC_ICONS.call, stat1: 'ข้อดี-ข้อเสียตรงๆ', stat2: 'เลือกให้ตรงพฤติกรรมใช้จริง' },
   'save-mobile-data-tips': { tone: 'brand', big: 'SAVE', label: 'ประหยัดเน็ตมือถือ', motif: SPEC_ICONS.data, stat1: 'ตั้งค่าครั้งเดียว เห็นผลทันที', stat2: 'ยืดอายุโปรได้จริง' },
   'vat-price-explained': { tone: 'brand', big: 'VAT', label: 'ทำไมราคาโปรมีเศษสตางค์', motif: SPEC_ICONS.tax, stat1: 'VAT 7% คิดยังไง', stat2: 'เตรียมยอดเงินให้พอก่อนกด' },
+  /* ชุดบทความเทคโนโลยีสื่อสาร (PN-Tech) */
+  'ussd-codes-explained': { tone: 'brand', big: '*#', label: 'USSD คืออะไร ทำไมกดแล้วสมัครโปรได้', motif: I.phone, stat1: 'ไม่ใช้เน็ต ไม่เสียเงิน', stat2: 'หัวใจของการสมัครโปรทุกค่าย' },
+  '5g-vs-4g-explained': { tone: 'brand', big: '5G', label: '5G กับ 4G ต่างกันยังไง', motif: SPEC_ICONS.speed, stat1: 'เร็ว·หน่วงต่ำ·จุคนมากขึ้น', stat2: 'แล้ว 4G ยังพอสำหรับใคร' },
+  'volte-explained': { tone: 'brand', big: 'VoLTE', label: 'โทรผ่าน 4G เสียงชัดกว่า', motif: SPEC_ICONS.call, stat1: 'จำเป็นเมื่อ 2G/3G ปิด', stat2: 'เปิดฟรีในเมนูตั้งค่า' },
+  'wifi-calling-explained': { tone: 'brand', big: 'VoWiFi', label: 'โทรเบอร์เดิมผ่าน WiFi', motif: I.wifi, stat1: 'ทางรอดจุดอับสัญญาณ', stat2: 'ตึกหนา·ชั้นใต้ดิน·ห้องใน' },
+  'mbps-needed-per-activity': { tone: 'brand', big: 'Mbps', label: 'เน็ตกี่ Mbps ถึงพอ', motif: SPEC_ICONS.data, stat1: 'ตารางสปีดต่อกิจกรรมจริง', stat2: 'เลือกโปรพอดี ไม่จ่ายทิ้ง' },
+  'ping-latency-gaming': { tone: 'brand', big: 'ms', label: 'Ping เท่าไหร่ถึงเล่นเกมลื่น', motif: I.clock, stat1: 'เน็ตแรงแต่แลค = ปัญหา ping', stat2: 'เข้าใจ latency ฉบับเกมเมอร์' },
+  '2g-3g-shutdown-impact': { tone: 'brand', big: '2G', label: 'ปิด 2G/3G ทั่วไทย ใครกระทบ', motif: I.shield, stat1: 'เช็คเครื่อง·GPS·ปุ่มกดเก่า', stat2: 'พร้อมเช็คลิสต์เตรียมตัว' },
+  'network-coverage-explained': { tone: 'brand', big: 'MHz', label: 'คลื่นมือถือแต่ละย่านต่างกันยังไง', motif: I.wifi, stat1: 'ย่านต่ำไปไกล ย่านสูงเร็ว', stat2: 'ไขปริศนาจุดอับสัญญาณ' },
+  'sim-router-guide': { tone: 'brand', big: 'WiFi', label: 'เราเตอร์ใส่ซิม ใช้แทนเน็ตบ้าน', motif: I.sim, stat1: 'ติดตั้งเสร็จใน 5 นาที', stat2: 'หัวใจคือเลือกซิมให้ถูก' },
+  'check-phone-5g-support': { tone: 'brand', big: 'เช็ค', label: 'มือถือเรารองรับ 5G ไหม', motif: I.search, stat1: 'เช็คเองได้ใน 1 นาที', stat2: 'ระวังกับดักเครื่องหิ้ว' },
+  'satellite-internet-thailand': { tone: 'brand', big: 'SAT', label: 'เน็ตดาวเทียมในไทย ใช้ได้หรือยัง', motif: I.wifi, stat1: 'สถานะจริงตามกฎหมาย 2026', stat2: 'ทางเลือกพื้นที่ไกลสัญญาณ' },
+  'tablet-sim-guide': { tone: 'brand', big: 'TAB', label: 'แท็บเล็ตใส่ซิมได้ไหม', motif: I.sim, stat1: 'WiFi vs Cellular เลือกให้ขาด', stat2: 'พร้อมโปรที่เหมาะกับแท็บเล็ต' },
+  'nfc-explained': { tone: 'brand', big: 'NFC', label: 'แตะจ่าย แตะเชื่อมต่อ คืออะไร', motif: I.copy, stat1: 'ระยะ 4 ซม. คือดีไซน์', stat2: 'ปลอดภัยกว่าที่คิด' },
+  'imei-check-guide': { tone: 'brand', big: 'IMEI', label: 'เลขประจำเครื่องที่ควรจดไว้', motif: I.doc, stat1: 'กด *#06# ขึ้นทันที', stat2: 'หลักฐานสำคัญวันเครื่องหาย' },
 };
 for (const slug of Object.keys(articles)) {
   const a = articles[slug];
