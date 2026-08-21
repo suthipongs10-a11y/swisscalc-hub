@@ -1,6 +1,7 @@
 # Keyword Research — โปรเน็ตเสริม.com (แผนขยายรอบถัดไป)
 
 จัดทำ: 01.08.2026 · สถานะ: **แผนอนาคต — ยังไม่ลงมือทำ** (รอ owner เลือก batch)
+> **อัปเดต 21.08.2026 — batch "PN-Tech" ทำแล้ว 14 หน้า** (owner สั่งเน้นเทคโนโลยีสื่อสาร/มือถือ/แท็บเล็ต/ดาวเทียม): ทั้ง Cluster 3 (8 หน้า) + sim-router-guide, check-phone-5g-support จาก Cluster 4 + เพิ่มนอกแผน 4 หน้า: satellite-internet-thailand, tablet-sim-guide, nfc-explained, imei-check-guide — คงเหลือใน Cluster 1/2/4/5 ตามตารางเดิม
 เก็บไว้บน branch หลักในโฟลเดอร์ `docs/` โดยเจตนา — ไฟล์บน branch `pronetserm` ทุกไฟล์ถูก deploy เป็นไฟล์สาธารณะบนเว็บ ไม่ควรให้แผนคีย์เวิร์ดเปิดดูได้
 
 ## ที่มาของตัวเลข (อ่านก่อนใช้)
