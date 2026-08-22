@@ -73,6 +73,10 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-08-22 — Session 24: Backlink Execution Kit (Texte + Schritt-für-Schritt, owner-seitig auszuführen)
+
+- `docs/backlink-execution-kit.md` (~56k Zeichen): alle Texte aus dem Backlink-Plan fertig ausformuliert, kopierfertig — 6 Schweizer Verzeichnis-Einträge (je eigene DE-Beschreibung, Regel: nie Schweizer Adresse/UID erfinden → sonst überspringen), 2 GitHub-awesome-PRs (Web-UI-Schritte, Zeile + PR-Text mit Self-Submission-Offenlegung), LinkedIn/X-Profile, Reddit-Kit (Warmup, Feedback-Post, Antwort-Vorlagen, Modmail), englishforum-Kit (3 Antwort-Drafts), Poor-Swiss-Forum + moneyland, 5 Outreach-Mails (Poor Swiss/Mustachian/Schwiizerfranke DE/Relocation/Follow-up) + Prospect-Suche (Google-Operatoren, Ahrefs-Gratis-Checker), Data-PR (SOS/Qwoted, #journorequest, DE-Journalisten-Pitch, Saison-Kalender, Startupticker, Product Hunt). Identität überall: Thanakorn Praisee / kontakt@calcswiss.ch (Impressum), Offenlegung in jedem Community-Draft. **Alle CHF-Zahlen im Pitch gegen die Engine verifiziert** (100k ledig: ZG 10'009 / VS 26'194; ZH 71% 12'927 / 128% 16'443; 26 Kantone / 2'110 Gemeinden; 3a 7'258) — Herkunft im Anhang des Kits dokumentiert. ESTV-Brief-Status im Kit vermerkt (gesendet 14.07., Frist verstrichen → Attribution-Posture läuft). Audit: kein ß im Dokument, alle genannten Site-URLs existieren, Tests 102/102, Build 241 Seiten, docs/ nicht deploybar.
+
 ### 2026-08-21 — Session 23: pronetserm — 14 Tech-Artikel + AdSense Auto ads (Branch `pronetserm`)
 
 - **AdSense Auto ads** (`ca-pub-3381605860539529`) in den `<head>` aller Seiten via `head()` in `build.cjs` (Commit `673b7ba`) — pub-ID identisch mit ads.txt, 1× pro Seite verifiziert.
