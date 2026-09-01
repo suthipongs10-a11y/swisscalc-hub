@@ -73,6 +73,13 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-08-22 — Session 26: pronetserm — PN-Gold (10 บทความ keywords ทอง) + Infografiken auf Speed-Hubs
+
+- SERP-Checks: «ซิมหมดอายุ»/«รหัส PUK» = nur Pantip/TikTok als Konkurrenz (Gold), «เช็คเบอร์มิจฉาชีพ» = hohe Nachfrage, Banken-Blogs generisch. 10 Artikel gebaut (Commit `99c7f21`, Site 105 → 115 Seiten): Scam-Check, Spam-Block, PUK, SIM-Ablauf, SIM-Sperre, Handy-verloren-Checkliste, eSIM-Geräteliste, eSIM-Transfer, «โทรไม่ออก»-Troubleshooting, Senioren-Guide (verlinkt auf Money-Pages inkl. neue /ais/1mbps-Seite). Jede Seite: eigenes SVG-Diagramm + FAQ-LD.
+- AIS-Speed-Hubs: pro Seite eine generierte «เอาไปทำอะไรได้แค่ไหน»-Infografik (Aktivität × ok/mid/no je Speed).
+- Audit: keine erfundenen Preise/USSD (nur Call-Center 1175/1242/1678 + Hotlines 1200/1441), 5-Gramm-Overlap max. 8.3 % = ausschliesslich die faktische Call-Center-Zeile, JSON-LD parsebar, Links ok, Chromium fehlerfrei, Sitemap 104 → 114.
+
+
 ### 2026-08-22 — Session 25: pronetserm — AIS Speed-Hub-Seiten (Long-tail สมัครโปร AIS)
 
 - SERP-Recherche: Long-tail «โปรเน็ต ais + สปีด/จำนวนวัน» wird von kleinen Affiliate-Sites mit **dedizierten Speed-Seiten** gewonnen (one2callonline, package12call, package5g); unsere Site hatte nur Dauer-Hubs. Analyse + Keyword-Matrix (Dauer × Speed, Tier-Schätzungen) in `docs/pronetserm-seo-ais-longtail.md`.
