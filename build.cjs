@@ -1077,6 +1077,17 @@ const NEW_ARTICLE_META = {
   'tablet-sim-guide': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'คู่มือแชร์ฮอตสปอต', href: '/articles/hotspot-tethering-guide.html' }, { label: 'eSIM กับซิมเติมเงิน', href: '/articles/esim-prepaid-thailand.html' }, { label: 'โปรถูกไม่เกิน 30 บาท', href: '/budget/under-30.html' }] },
   'nfc-explained': { img: '/img/Mobile-5G-Setting-Network.webp', related: [{ label: 'เช็คเครื่องรองรับ 5G', href: '/articles/check-phone-5g-support.html' }, { label: 'มือถือที่รองรับ 5G', href: '/articles/5g-phones.html' }, { label: 'โปรทรูดีแทค', href: '/true-dtac.html' }] },
   'imei-check-guide': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'เลือกซิมเติมเงินให้คุ้ม', href: '/articles/sim-cards.html' }, { label: 'ย้ายค่ายเบอร์เดิม', href: '/articles/move-carrier-keep-number.html' }, { label: 'เกี่ยวกับเรา / เบอร์ Call Center', href: '/about.html' }] },
+  /* ชุดบทความ "keywords ทอง" (PN-Gold) — กันภัย/กู้ซิม/eSIM/ผู้สูงอายุ */
+  'check-scam-numbers': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'วิธีบล็อกเบอร์กวน', href: '/articles/block-spam-calls.html' }, { label: 'มือถือหาย ทำอะไรก่อน', href: '/articles/lost-phone-sim-actions.html' }, { label: 'เบอร์ Call Center ทุกค่าย', href: '/about.html' }] },
+  'block-spam-calls': { img: '/img/Mobile-5G-Setting-Network.webp', related: [{ label: 'เช็คเบอร์มิจฉาชีพ', href: '/articles/check-scam-numbers.html' }, { label: 'ซิมสำรองไม่ให้หมดอายุ', href: '/articles/sim-expiry-keep-number.html' }, { label: 'FAQ รวมทุกค่าย', href: '/faq.html' }] },
+  'puk-code-unlock': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'มือถือหาย อายัดซิม', href: '/articles/lost-phone-sim-actions.html' }, { label: 'IMEI คืออะไร', href: '/articles/imei-check-guide.html' }, { label: 'เบอร์ Call Center ทุกค่าย', href: '/about.html' }] },
+  'sim-expiry-keep-number': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'ซิมโดนระงับ เปิดใหม่ได้ไหม', href: '/articles/sim-suspended-recover.html' }, { label: 'เช็คเบอร์/เช็คยอด', href: '/check-number-balance.html' }, { label: 'โปรถูกไม่เกิน 30 บาท', href: '/budget/under-30.html' }] },
+  'sim-suspended-recover': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'ซิมหมดอายุ ทำยังไง', href: '/articles/sim-expiry-keep-number.html' }, { label: 'ลงทะเบียนซิมด้วยตัวเอง', href: '/articles/how-to-register.html' }, { label: 'ย้ายค่ายเบอร์เดิม', href: '/articles/move-carrier-keep-number.html' }] },
+  'lost-phone-sim-actions': { img: '/img/Mobile-5G-Setting-Network.webp', related: [{ label: 'IMEI คืออะไร เช็กยังไง', href: '/articles/imei-check-guide.html' }, { label: 'รหัส PUK คืออะไร', href: '/articles/puk-code-unlock.html' }, { label: 'เบอร์ Call Center ทุกค่าย', href: '/about.html' }] },
+  'esim-supported-phones': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'ย้าย eSIM ไปเครื่องใหม่', href: '/articles/esim-transfer-new-phone.html' }, { label: 'eSIM กับซิมเติมเงิน', href: '/articles/esim-prepaid-thailand.html' }, { label: 'แท็บเล็ตใส่ซิมได้ไหม', href: '/articles/tablet-sim-guide.html' }] },
+  'esim-transfer-new-phone': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'มือถือรุ่นไหนรองรับ eSIM', href: '/articles/esim-supported-phones.html' }, { label: 'eSIM กับซิมเติมเงิน', href: '/articles/esim-prepaid-thailand.html' }, { label: 'เบอร์ Call Center ทุกค่าย', href: '/about.html' }] },
+  'cannot-make-calls-fix': { img: '/img/Mobile-5G-Setting-Network.webp', related: [{ label: 'VoLTE คืออะไร เปิดยังไง', href: '/articles/volte-explained.html' }, { label: 'ซิมหมดอายุ ทำยังไง', href: '/articles/sim-expiry-keep-number.html' }, { label: 'แก้เน็ตมือถือช้า', href: '/articles/fix-slow-mobile-internet.html' }] },
+  'phone-plan-for-elderly': { img: '/img/Simcard-AIS-True-Dtac.webp', related: [{ label: 'โปรเน็ต AIS 1 Mbps ประหยัด', href: '/ais/1mbps.html' }, { label: 'เช็คเบอร์มิจฉาชีพ', href: '/articles/check-scam-numbers.html' }, { label: 'ปิด 2G/3G กระทบใคร', href: '/articles/2g-3g-shutdown-impact.html' }] },
 };
 const NEW_ARTICLE_ART = {
   'check-current-package': { tone: 'brand', big: 'เช็ค', label: 'เช็คโปรเน็ตที่ใช้อยู่ ทุกค่าย', motif: I.search, stat1: 'AIS · ทรู · ดีแทค', stat2: 'รหัสกดเช็คฟรี ไม่เสียเงิน' },
@@ -1106,6 +1117,17 @@ const NEW_ARTICLE_ART = {
   'tablet-sim-guide': { tone: 'brand', big: 'TAB', label: 'แท็บเล็ตใส่ซิมได้ไหม', motif: I.sim, stat1: 'WiFi vs Cellular เลือกให้ขาด', stat2: 'พร้อมโปรที่เหมาะกับแท็บเล็ต' },
   'nfc-explained': { tone: 'brand', big: 'NFC', label: 'แตะจ่าย แตะเชื่อมต่อ คืออะไร', motif: I.copy, stat1: 'ระยะ 4 ซม. คือดีไซน์', stat2: 'ปลอดภัยกว่าที่คิด' },
   'imei-check-guide': { tone: 'brand', big: 'IMEI', label: 'เลขประจำเครื่องที่ควรจดไว้', motif: I.doc, stat1: 'กด *#06# ขึ้นทันที', stat2: 'หลักฐานสำคัญวันเครื่องหาย' },
+  /* ชุดบทความ "keywords ทอง" (PN-Gold) */
+  'check-scam-numbers': { tone: 'brand', big: 'เช็ค', label: 'เบอร์แปลกโทรมา ใช่มิจฉาชีพไหม', motif: I.shield, stat1: 'สัญญาณเตือน 5 ข้อ', stat2: 'เช็ค · บล็อก · แจ้ง 1441' },
+  'block-spam-calls': { tone: 'brand', big: 'บล็อก', label: 'ตัดสายกวน สายโฆษณา แก๊งคอล', motif: I.phone, stat1: 'ป้องกัน 3 ชั้น', stat2: 'ตั้งครั้งเดียว เงียบยาว' },
+  'puk-code-unlock': { tone: 'brand', big: 'PUK', label: 'ซิมล็อก แก้ยังไง ห้ามเดามั่ว', motif: I.sim, stat1: 'โควตาแค่ 10 ครั้ง', stat2: 'หารหัสจริงได้ 4 ทาง' },
+  'sim-expiry-keep-number': { tone: 'brand', big: 'วัน', label: 'ซิมหมดอายุ รักษาเบอร์ยังไง', motif: I.cal, stat1: 'เงินเหลือ ≠ ซิมไม่หมดอายุ', stat2: 'เลี้ยงเบอร์ด้วยต้นทุนต่ำสุด' },
+  'sim-suspended-recover': { tone: 'brand', big: 'กู้', label: 'ซิมโดนระงับ เปิดใหม่ได้ไหม', motif: I.sim, stat1: 'ยังมีหน้าต่างเวลากู้', stat2: 'ยิ่งติดต่อเร็ว ยิ่งได้คืน' },
+  'lost-phone-sim-actions': { tone: 'brand', big: 'SOS', label: 'มือถือหาย เช็กลิสต์ 30 นาทีแรก', motif: I.shield, stat1: 'อายัดซิมก่อนทุกอย่าง', stat2: 'ตัด OTP = ตัดทางเข้าเงิน' },
+  'esim-supported-phones': { tone: 'brand', big: 'EID', label: 'มือถือรุ่นไหนรองรับ eSIM', motif: I.sim, stat1: 'เช็กเครื่องเองใน 10 วิ', stat2: 'ระวังเครื่องหิ้วตัดฟีเจอร์' },
+  'esim-transfer-new-phone': { tone: 'brand', big: 'ย้าย', label: 'ย้าย eSIM ไปเครื่องใหม่', motif: I.copy, stat1: 'ลำดับสำคัญกว่าความเร็ว', stat2: 'อย่าเพิ่งล้างเครื่องเก่า' },
+  'cannot-make-calls-fix': { tone: 'brand', big: 'FIX', label: 'โทรไม่ออก ทั้งที่มีเงิน', motif: SPEC_ICONS.call, stat1: 'ไล่เช็ก 8 สาเหตุ', stat2: 'ส่วนใหญ่จบใน 10 นาที' },
+  'phone-plan-for-elderly': { tone: 'brand', big: '60+', label: 'มือถือ + โปรสำหรับผู้สูงอายุ', motif: I.phone, stat1: 'ใช้ง่าย · โทรชัด · จ่ายพอดี', stat2: 'พร้อมเกราะกันแก๊งคอล' },
 };
 for (const slug of Object.keys(articles)) {
   const a = articles[slug];
@@ -1538,6 +1560,29 @@ ${cards.map(c => `<tr><th scope="row"><a href="${proHref(c)}">${esc(proLabel(c))
       relatedExtra: [{ label: 'โปรเน็ต 10 Mbps ทุกค่าย', href: '/speed/10mbps.html' }, { label: 'เราเตอร์ใส่ซิมดีไหม', href: '/articles/sim-router-guide.html' }],
     },
   };
+  /* infographic "สปีดนี้ทำอะไรได้แค่ไหน" — ระดับ ok/mid/no ต่อกิจกรรม กำหนดต่อสปีด */
+  const AIS_SPEED_CAPS = {
+    '1mbps': [['แชต LINE · เปิดเว็บ', 'ok'], ['ฟังเพลงสตรีมมิง', 'ok'], ['แผนที่นำทาง', 'ok'], ['วิดีโอความชัดต่ำ (360p)', 'mid'], ['วิดีโอ HD', 'no'], ['แชร์ฮอตสปอต', 'no']],
+    '2mbps': [['โซเชียล · TikTok', 'ok'], ['YouTube 480p', 'ok'], ['วิดีโอคอล 1 สาย', 'mid'], ['YouTube HD 720p', 'mid'], ['แชร์ฮอตสปอต 1 เครื่อง (งานเบา)', 'mid'], ['หนัง Full HD', 'no']],
+    '4mbps': [['โซเชียลทุกแอป', 'ok'], ['YouTube HD 720p', 'ok'], ['เกมออนไลน์มือถือ', 'ok'], ['วิดีโอคอล · ประชุม', 'ok'], ['แชร์ฮอตสปอต 1 เครื่อง', 'mid'], ['หนัง 1080p · ไลฟ์สด', 'mid']],
+    '6mbps': [['วิดีโอ HD ทุกแอป', 'ok'], ['หนัง Full HD 1080p', 'ok'], ['เกม + โหลดแพตช์', 'ok'], ['แชร์ฮอตสปอต 2 เครื่อง', 'ok'], ['ไลฟ์สดความชัดมาตรฐาน', 'mid'], ['วิดีโอ 4K', 'no']],
+    '10mbps': [['ทุกการใช้งานบนมือถือ', 'ok'], ['หนัง Full HD หลายจอ', 'ok'], ['ไลฟ์สด · อัปโหลดงาน', 'ok'], ['ใส่เราเตอร์แทนเน็ตบ้าน (1-3 คน)', 'ok'], ['แชร์ฮอตสปอตหลายเครื่อง', 'ok'], ['วิดีโอ 4K', 'mid']],
+  };
+  const CAP_STYLE = { ok: ['#4D7518', 'M-4 0 l3 3 6-7'], mid: ['#B45309', 'M-5 0 h10'], no: ['#C0392B', 'M-4 -4 l8 8 M4 -4 l-8 8'] };
+  const CAP_WORD = { ok: 'ลื่น', mid: 'พอได้', no: 'ไม่เหมาะ' };
+  function aisSpeedCapArt(key, label) {
+    const rows = AIS_SPEED_CAPS[key];
+    const h = 74 + rows.length * 44;
+    const body = rows.map(([act, lv], i) => {
+      const y = 92 + i * 44; const [color, mark] = CAP_STYLE[lv];
+      return `<circle cx="52" cy="${y}" r="15" fill="none" stroke="${color}" stroke-width="2.6"/><path d="${mark}" transform="translate(52 ${y})" stroke="${color}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="84" y="${y + 5}" font-size="16" fill="#1A2B12">${esc(act)}</text><text x="636" y="${y + 5}" font-size="14" font-weight="700" fill="${color}" text-anchor="end">${CAP_WORD[lv]}</text>`;
+    }).join('');
+    return `<div class="page-art" style="max-width:680px;margin:0 auto 18px" role="img" aria-label="สรุปว่าความเร็ว ${esc(label)} เหมาะกับกิจกรรมไหนบ้าง">` +
+      `<svg viewBox="0 0 680 ${h}" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans Thai',system-ui,sans-serif">` +
+      `<rect width="680" height="${h}" rx="16" fill="#F6F9F3"/><rect x="0" y="0" width="680" height="54" rx="16" fill="#EDF5E3"/>` +
+      `<text x="30" y="35" font-size="18" font-weight="800" fill="#254B04">เน็ต ${esc(label)} เอาไปทำอะไรได้แค่ไหน</text>` +
+      body + `</svg></div>`;
+  }
   const AIS_SPEED_KEYS = Object.keys(AIS_SPEED_NOTES);
   const durLabelFull = { '1d': 'รายวัน / 24 ชม.', '2d': '2 วัน', '3d': '3 วัน', '7d': '7 วัน (รายสัปดาห์)', '30d': '30 วัน (รายเดือน)' };
   for (const key of AIS_SPEED_KEYS) {
@@ -1562,6 +1607,7 @@ ${cards.map(c => `<tr><th scope="row"><a href="${proHref(c)}">${esc(proLabel(c))
 ${artBlock({ tone: 'ais', big: note.label.replace(' ', ''), label: note.h1, motif: SPEC_ICONS.speed, stat1: `${cards.length} โปร เริ่ม ${minPriceOf(cards)} บาท`, stat2: 'กดรหัสสมัครได้ทันที' })}
 <section class="section mt-0" style="padding-top:8px"><div class="container">
 <div class="article-page" style="margin:0 auto 18px"><div class="article-body"><p>${esc(note.intro)}</p></div></div>
+${aisSpeedCapArt(key, note.label)}
 <div class="pkg-card">
 ${pkgTable(cards, { id: 'tbl-ais-speed' })}
 </div>
