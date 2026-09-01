@@ -238,6 +238,11 @@ const NAV = [
       { label: 'โปรเน็ต AIS 3 วัน', href: '/ais/3daypack.html' },
       { label: 'โปรเน็ต AIS 7 วัน', href: '/ais/7daypack.html' },
       { label: 'โปรเน็ต AIS รายเดือน', href: '/ais/30daypack.html' },
+      { label: 'AIS 1 Mbps ประหยัด', href: '/ais/1mbps.html' },
+      { label: 'AIS 2 Mbps', href: '/ais/2mbps.html' },
+      { label: 'AIS 4 Mbps', href: '/ais/4mbps.html' },
+      { label: 'AIS 6 Mbps', href: '/ais/6mbps.html' },
+      { label: 'AIS 10 Mbps', href: '/ais/10mbps.html' },
     ]
   },
   {
@@ -703,6 +708,17 @@ ${artBlock({ tone: 'ais', big: '5G', label: 'รวมโปรเน็ต AIS 
 <thead><tr><th scope="col">ระยะเวลา</th><th scope="col">จำนวนโปร</th><th scope="col">ความเร็วที่มี</th><th scope="col">ช่วงราคา</th></tr></thead>
 <tbody>${cmpRows}</tbody></table></div>
 <p style="text-align:center;margin-top:14px;color:var(--muted);font-size:14px">อยากเทียบกับค่ายอื่น? ดู <a href="/compare-networks.html" style="color:var(--cat-blue);font-weight:600">ตารางเปรียบเทียบโปรเน็ตทุกค่าย</a></p>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>เลือกโปรเน็ต AIS ตามความเร็ว</h2><p>รู้สปีดที่ต้องการอยู่แล้ว? เข้าหน้ารวมเฉพาะสปีดนั้นได้เลย</p></div>
+<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
+<a class="btn-outline" href="/ais/1mbps.html">AIS 1 Mbps / 512 Kbps ประหยัด</a>
+<a class="btn-outline" href="/ais/2mbps.html">AIS 2 Mbps</a>
+<a class="btn-outline" href="/ais/4mbps.html">AIS 4 Mbps</a>
+<a class="btn-outline" href="/ais/6mbps.html">AIS 6 Mbps</a>
+<a class="btn-outline" href="/ais/10mbps.html">AIS 10 Mbps</a>
+</div>
 </div></section>`;
 
   html += howToSteps();
@@ -1458,6 +1474,116 @@ ${cards.map(c => `<tr><th scope="row"><a href="${proHref(c)}">${esc(proLabel(c))
     ], 'ดูความเร็วอื่น');
     html += footer();
     write(sp.file, html);
+    EXTRA_URLS.push(urlPath);
+  }
+
+  /* ================= 5 หน้า AIS ตามความเร็ว /ais/<speed>.html =================
+   * เป้า long-tail "โปรเน็ต ais <สปีด>" / "เน็ต ais X เมก" — แต่ละหน้ารวมเฉพาะโปร AIS
+   * ของสปีดนั้นจาก data จริง (ราคา/รหัสไม่แตะ) เนื้อหา intro/FAQ เขียนเฉพาะหน้า ไม่ใส่ราคาใน
+   * ข้อความคงที่ (ตัวเลขราคาโผล่เฉพาะส่วนที่ generate จากข้อมูล) */
+  const AIS_SPEED_NOTES = {
+    '1mbps': {
+      file: 'ais/1mbps.html', include: [512, 1000], label: '1 Mbps',
+      h1: 'โปรเน็ต AIS 1 Mbps และ 512 Kbps — โปรช้าประหยัด คุมงบ',
+      intro: 'สายประหยัดตัวจริงมาถูกหน้าแล้ว: เน็ต AIS ความเร็ว 1 เมก (1 Mbps) และ 512 Kbps คือกลุ่มที่ราคาถูกที่สุดของซิมเติมเงิน เหมาะกับแชต LINE เปิดโซเชียลแบบเบาๆ ฟังเพลง เปิดแผนที่นำทาง หรือใส่เครื่องสำรอง/โทรศัพท์ผู้สูงอายุที่ไม่ได้ดูวิดีโอ ความเร็วระดับนี้ดูคลิปความชัดต่ำได้พอถูไถ แต่ถ้าตั้งใจดู YouTube เป็นหลัก ข้ามไปดูตั้งแต่ 2 Mbps ขึ้นไปจะไม่หงุดหงิดกว่ากันมาก',
+      faq: [
+        { q: 'เน็ต AIS 1 เมก ทำอะไรได้บ้าง', a: 'แชต LINE ส่งรูป เปิดเว็บทั่วไป ฟังเพลงสตรีมมิง ใช้แผนที่นำทาง และเปิดโซเชียลแบบไม่เน้นวิดีโอได้สบาย ส่วนวิดีโอจะดูได้ที่ความชัดต่ำ (ประมาณ 360p) เหมาะเป็นเน็ตติดเครื่องมากกว่าเน็ตดูหนัง' },
+        { q: '512 Kbps กับ 1 Mbps เลือกอันไหนดี', a: 'ต่างกันเท่าตัวในการโหลดหน้าเว็บและรูปภาพ ถ้าใช้แค่แชตกับโทรเป็นหลัก 512 Kbps ก็พอและถูกกว่า แต่ถ้าเปิดโซเชียลทุกวัน 1 Mbps จะลื่นกว่าชัดเจน — เทียบราคาต่อวันจากตารางในหน้านี้แล้วเลือกตามการใช้จริงได้เลย' },
+        { q: 'ความเร็วระดับนี้เหมาะกับกล้องวงจรปิดหรือ GPS tracker ไหม', a: 'เหมาะมาก เพราะอุปกรณ์กลุ่มนี้ส่งข้อมูลทีละน้อยแต่ต่อเนื่อง โปรความเร็วคงที่ราคาประหยัดจึงคุ้มกว่าโปรแรงๆ ที่จ่ายเผื่อโดยไม่ได้ใช้ ตรวจสอบเพียงว่าอุปกรณ์รองรับเครือข่าย 4G เพราะเครือข่ายรุ่นเก่ากำลังทยอยปิด' },
+      ],
+      relatedExtra: [{ label: 'โปรถูกไม่เกิน 30 บาท (ทุกค่าย)', href: '/budget/under-30.html' }],
+    },
+    '2mbps': {
+      file: 'ais/2mbps.html', include: [2000], label: '2 Mbps',
+      h1: 'โปรเน็ต AIS 2 Mbps ไม่ลดสปีด — รายวัน ถึง 30 วัน',
+      intro: 'เน็ต AIS 2 เมก คือจุดเริ่มของ "ดูวิดีโอได้จริง": YouTube ความชัดมาตรฐาน (480p) ลื่น ไถ TikTok และโซเชียลได้ทั้งวันโดยราคายังอยู่ฝั่งประหยัด หน้านี้รวมโปร 2 Mbps ไม่ลดสปีดของ AIS ทุกช่วงเวลา ทั้งแบบ 24 ชั่วโมงสำหรับวันที่ใช้หนัก แบบ 7 วันสำหรับคนไม่อยากเติมบ่อย และแบบ 30 วันสำหรับใช้ยาวทั้งเดือน เรียงตามราคาเฉลี่ยต่อวันให้เห็นความคุ้มชัดๆ',
+      faq: [
+        { q: 'เน็ต 2 เมก ดู YouTube ชัดแค่ไหน', a: 'ดูได้ลื่นที่ความชัดมาตรฐาน 480p บนจอมือถือถือว่าคมพอสำหรับการดูทั่วไป ถ้าปรับเป็น HD 720p อาจต้องรอโหลดเป็นช่วงๆ ใครดูวิดีโอเป็นกิจวัตรและอยากได้ HD นิ่งๆ แนะนำขยับไปโปร 4 Mbps' },
+        { q: 'โปรแบบ 24 ชั่วโมง กับรายวัน ต่างกันยังไง', a: 'โปรแบบ 24 ชั่วโมงนับจากวินาทีที่สมัครไปครบหนึ่งวันเต็ม เช่น สมัครหกโมงเย็นก็ใช้ได้ถึงหกโมงเย็นวันถัดไป ส่วนคำว่ารายวันในบางโปรอาจตัดรอบตามวันปฏิทิน อ่านเงื่อนไขในรายละเอียดของแต่ละโปรบนหน้านี้ได้เลย' },
+        { q: '2 Mbps แชร์ฮอตสปอตให้เครื่องอื่นไหวไหม', a: 'ไหวแบบมีเงื่อนไข: เหมาะกับแชร์ให้อีกหนึ่งเครื่องเพื่อแชตหรือเปิดเว็บเบาๆ แต่ถ้าปลายทางจะดูวิดีโอด้วย สปีดจะถูกแบ่งจนสะดุด งานแชร์จริงจังควรเริ่มที่ 4-6 Mbps ขึ้นไป' },
+      ],
+      relatedExtra: [{ label: 'โปรเน็ต 2 Mbps ทุกค่าย', href: '/speed/2mbps.html' }],
+    },
+    '4mbps': {
+      file: 'ais/4mbps.html', include: [4000], label: '4 Mbps',
+      h1: 'โปรเน็ต AIS 4 Mbps ไม่ลดสปีด — ครบทุกช่วงเวลา 1–30 วัน',
+      intro: 'ถ้าให้เลือกสปีดเดียวที่ตอบโจทย์คนส่วนใหญ่ คำตอบคือ 4 เมก: ดู YouTube ชัดระดับ HD ได้ วิดีโอคอลลื่น ไถโซเชียลไม่มีสะดุด และเป็นสปีดที่ AIS มีโปรให้เลือกครบทุกช่วงเวลามากที่สุดในเว็บนี้ ตั้งแต่รายวัน 2 วัน 3 วัน รายสัปดาห์ ไปจนถึง 30 วัน ทั้งรุ่นเครือข่าย 4G และ 5G หน้านี้เรียงทุกตัวตามราคาเฉลี่ยต่อวัน พร้อมตารางสรุปว่ารอบเวลาไหนถูกสุด',
+      faq: [
+        { q: 'เน็ต 4 เมก ดูหนัง เล่นเกม ไหวไหม', a: 'ดูวิดีโอ HD 720p ได้นิ่ง และเกมออนไลน์บนมือถือใช้แบนด์วิดท์น้อยกว่านั้นมากจึงเล่นได้สบาย สิ่งที่ควรรู้คือความลื่นของเกมขึ้นกับค่า ping มากกว่าความเร็ว อ่านเพิ่มได้ในบทความเรื่อง ping ของเรา' },
+        { q: 'โปร 4 Mbps รุ่น 4G กับรุ่น 5G ต่างกันยังไง', a: 'เพดานความเร็วเท่ากันที่ 4 Mbps เหมือนกัน ต่างที่เครือข่ายที่เปิดให้ใช้และของแถมตามเงื่อนไขแต่ละโปร เช่น บางตัวแถมเน็ต 5G เพิ่ม ดูรายละเอียดใต้การ์ดโปรแต่ละตัวแล้วเลือกให้ตรงกับมือถือของเรา' },
+        { q: 'ใช้ 4 เมก แชร์ฮอตสปอตทำงานได้ไหม', a: 'ได้สำหรับงานเอกสาร อีเมล และประชุมออนไลน์หนึ่งเครื่อง ถือเป็นสปีดขั้นต่ำที่เริ่มแชร์ได้จริง ถ้าต้องแชร์ให้กันหลายเครื่องหรือมีดูวิดีโอร่วมด้วย ขยับไป 6 หรือ 10 Mbps จะเสถียรกว่า' },
+      ],
+      relatedExtra: [{ label: 'โปรเน็ต 4 Mbps ทุกค่าย', href: '/speed/4mbps.html' }],
+    },
+    '6mbps': {
+      file: 'ais/6mbps.html', include: [6000], label: '6 Mbps',
+      h1: 'โปรเน็ต AIS 6 Mbps ไม่ลดสปีด — จุดกึ่งกลางที่หลายคนมองข้าม',
+      intro: 'ระหว่าง 4 เมกที่ "พอ" กับ 10 เมกที่ "แรงแต่แพงขึ้น" มี 6 เมก ยืนอยู่ตรงกลางแบบเงียบๆ: ดูวิดีโอ Full HD 1080p ได้จริง แชร์ฮอตสปอตให้เครื่องที่สองแบบไม่ต้องลุ้น และหลายช่วงเวลาราคาห่างจาก 4 Mbps ไม่กี่บาท หน้านี้รวมโปร 6 Mbps ไม่ลดสปีดของ AIS ทุกช่วงเวลา ตั้งแต่รายวันยันรายเดือน เรียงตามราคาเฉลี่ยต่อวันพร้อมตารางเทียบให้ตัดสินใจง่าย',
+      faq: [
+        { q: 'เน็ต 6 เมก ต่างจาก 4 เมก รู้สึกได้จริงไหม', a: 'รู้สึกได้ชัดในสองจังหวะ: การดูวิดีโอความชัดสูงที่ 1080p จะนิ่งกว่า และตอนแชร์ฮอตสปอตที่มีคนใช้ร่วมสองเครื่อง สปีดเหลือพอทั้งคู่ ถ้าใช้คนเดียวเน้นโซเชียล ความต่างจะไม่เด่นเท่า' },
+        { q: 'ดูหนังบนทีวีผ่านฮอตสปอตด้วยโปร 6 Mbps ได้ไหม', a: 'ได้ในระดับ Full HD ถ้าสัญญาณในจุดนั้นแรงพอ เพราะแอปสตรีมมิงทั่วไปแนะนำราว 5 Mbps สำหรับ 1080p เหลือเผื่อไว้เล็กน้อย แต่ถ้าทีวีเป็น 4K สปีดนี้ไม่พอ ต้องมองโปร 10 Mbps ขึ้นไป' },
+        { q: 'ทำไมบางโปร 6 Mbps ระบุ 4G บางโปรระบุ 5G', a: 'เป็นเงื่อนไขเครือข่ายและของแถมของแต่ละแพ็กเกจ ไม่กระทบเพดานความเร็วซึ่งคงที่ 6 Mbps เท่ากัน เครื่องที่ไม่รองรับ 5G ก็ใช้โปรกลุ่มนี้ได้ตามปกติบนเครือข่าย 4G' },
+      ],
+      relatedExtra: [{ label: 'โปรเน็ต 6 Mbps ทุกค่าย', href: '/speed/6mbps.html' }],
+    },
+    '10mbps': {
+      file: 'ais/10mbps.html', include: [10000], label: '10 Mbps',
+      h1: 'โปรเน็ต AIS 10 Mbps ไม่ลดสปีด — ตัวแรงสุดของสายเติมเงิน',
+      intro: 'นี่คือเพดานบนของโปรความเร็วคงที่ฝั่ง AIS: 10 เมก ดูวิดีโอความชัดสูงได้สบาย ไลฟ์สดได้ อัปโหลดงานได้เร็ว และเป็นสปีดที่นิยมเอาไปใส่เราเตอร์ใส่ซิมแทนเน็ตบ้านในห้องเช่าหรือบ้านที่ไฟเบอร์เข้าไม่ถึง หน้านี้รวมโปร 10 Mbps ไม่ลดสปีดของ AIS ทุกช่วงเวลา เรียงตามราคาเฉลี่ยต่อวัน — ยิ่งรอบยาว ราคาต่อวันยิ่งถูกลงชัดเจน',
+      faq: [
+        { q: 'เน็ต 10 เมก ใช้แทนเน็ตบ้านได้จริงไหม', a: 'สำหรับผู้ใช้ 1-3 คนที่ดูวิดีโอ ทำงาน และเล่นโซเชียลทั่วไป ใช้แทนได้จริงโดยเฉพาะเมื่อเสียบผ่านเราเตอร์ใส่ซิมวางในจุดสัญญาณแรง อ่านวิธีเลือกอุปกรณ์และจุดวางในบทความเราเตอร์ใส่ซิมของเรา ข้อจำกัดหลักคือความหน่วงสูงกว่าไฟเบอร์เล็กน้อย' },
+        { q: 'ไลฟ์สดขายของด้วยโปร 10 Mbps ไหวไหม', a: 'ไหว เพราะการไลฟ์ความชัดมาตรฐานถึง HD ใช้แบนด์วิดท์อัปโหลดราว 3-6 Mbps จุดที่ต้องใส่ใจกว่าตัวเลขโปรคือความแรงสัญญาณตรงจุดที่ไลฟ์ ทดสอบอัปโหลดก่อนเริ่มงานจริงทุกครั้งจะปลอดภัยสุด' },
+        { q: 'จาก 6 เมก ขยับมา 10 เมก คุ้มตอนไหน', a: 'คุ้มเมื่อมีอย่างน้อยหนึ่งข้อนี้: แชร์เน็ตให้หลายเครื่องเป็นประจำ ดูวิดีโอบนจอใหญ่ อัปโหลดไฟล์หรือไลฟ์บ่อย หรือใช้กับเราเตอร์เป็นเน็ตหลักของบ้าน ถ้าใช้มือถือเครื่องเดียวดูวิดีโอทั่วไป 6 Mbps ยังพอ' },
+      ],
+      relatedExtra: [{ label: 'โปรเน็ต 10 Mbps ทุกค่าย', href: '/speed/10mbps.html' }, { label: 'เราเตอร์ใส่ซิมดีไหม', href: '/articles/sim-router-guide.html' }],
+    },
+  };
+  const AIS_SPEED_KEYS = Object.keys(AIS_SPEED_NOTES);
+  const durLabelFull = { '1d': 'รายวัน / 24 ชม.', '2d': '2 วัน', '3d': '3 วัน', '7d': '7 วัน (รายสัปดาห์)', '30d': '30 วัน (รายเดือน)' };
+  for (const key of AIS_SPEED_KEYS) {
+    const note = AIS_SPEED_NOTES[key];
+    const cards = ALL.filter(c => c.carrier === 'ais' && note.include.includes(speedKb(c))).sort((x, y) => perDay(x) - perDay(y));
+    if (!cards.length) continue;
+    const urlPath = '/' + note.file;
+    const bc = [{ label: 'หน้าแรก', href: '/' }, { label: 'โปรเน็ต AIS', href: '/ais.html' }, { label: `AIS ${note.label}`, href: urlPath }];
+    const ld = [breadcrumbLd(bc), ...productLd(cards, urlPath), faqLd(note.faq)];
+    const durGroups = ['1d', '2d', '3d', '7d', '30d']
+      .map(k => ({ k, list: cards.filter(c => durKey(c.durationRaw) === k) }))
+      .filter(g => g.list.length);
+    let html = head({
+      title: trimTitle(`${note.h1} (${cards.length} โปร) | ${SITE_NAME}`),
+      description: trimDesc(`รวมโปรเน็ต AIS ความเร็ว ${note.label} ไม่ลดสปีด ${cards.length} แพ็กเกจ เริ่มต้น ${minPriceOf(cards)} บาท ครอบคลุม${durGroups.map(g => durLabelFull[g.k].split(' ')[0]).join(' · ')} พร้อมรหัสกดสมัครได้ทันที ราคารวม VAT`),
+      canonicalPath: urlPath, ogImage: '/img/AIS-5G.webp', ldBlocks: ld,
+    });
+    html += header();
+    html += breadcrumb(bc);
+    html += `
+<div class="container page-head"><h1>${esc(note.h1)}</h1><p class="pkg-updated">อัปเดตล่าสุด ${UPDATED_TH} · ${cards.length} โปร AIS เรียงตามราคาเฉลี่ยต่อวัน · ราคารวมภาษีแล้ว</p></div>
+${artBlock({ tone: 'ais', big: note.label.replace(' ', ''), label: note.h1, motif: SPEC_ICONS.speed, stat1: `${cards.length} โปร เริ่ม ${minPriceOf(cards)} บาท`, stat2: 'กดรหัสสมัครได้ทันที' })}
+<section class="section mt-0" style="padding-top:8px"><div class="container">
+<div class="article-page" style="margin:0 auto 18px"><div class="article-body"><p>${esc(note.intro)}</p></div></div>
+<div class="pkg-card">
+${pkgTable(cards, { id: 'tbl-ais-speed' })}
+</div>
+</div></section>
+<section class="section"><div class="container">
+<div class="section-head-center"><h2>โปร AIS ${esc(note.label)} รอบเวลาไหนถูกสุด</h2><p>เทียบราคาถูกสุดของแต่ละช่วงเวลา — รอบยาวเฉลี่ยต่อวันถูกกว่าเสมอ</p></div>
+<div class="table-wrap"><table class="cmp-table">
+<thead><tr><th scope="col">ระยะเวลา</th><th scope="col">จำนวนโปร</th><th scope="col">เริ่มต้น</th><th scope="col">เฉลี่ย/วัน (ตัวถูกสุด)</th></tr></thead>
+<tbody>
+${durGroups.map(g => { const cheap = [...g.list].sort((a, b) => priceNum(a.price) - priceNum(b.price))[0]; return `<tr><th scope="row">${durLabelFull[g.k]}</th><td>${g.list.length} โปร</td><td>${esc(cheap.price)} บาท</td><td class="win">${fmtBaht(perDay(cheap))} บาท</td></tr>`; }).join('\n')}
+</tbody></table></div>
+</div></section>`;
+    html += faqSection(note.faq, { title: `คำถามที่พบบ่อย — โปรเน็ต AIS ${note.label}` });
+    const idx = AIS_SPEED_KEYS.indexOf(key);
+    html += relatedLinks([
+      ...(idx > 0 ? [{ label: `AIS ${AIS_SPEED_NOTES[AIS_SPEED_KEYS[idx - 1]].label}`, href: '/' + AIS_SPEED_NOTES[AIS_SPEED_KEYS[idx - 1]].file }] : []),
+      ...(idx < AIS_SPEED_KEYS.length - 1 ? [{ label: `AIS ${AIS_SPEED_NOTES[AIS_SPEED_KEYS[idx + 1]].label}`, href: '/' + AIS_SPEED_NOTES[AIS_SPEED_KEYS[idx + 1]].file }] : []),
+      { label: 'รวมโปรเน็ต AIS ทั้งหมด', href: '/ais.html' },
+      ...note.relatedExtra,
+    ], 'ดูสปีดอื่นของ AIS');
+    html += footer();
+    write(note.file, html);
     EXTRA_URLS.push(urlPath);
   }
 
