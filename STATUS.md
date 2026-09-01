@@ -73,6 +73,13 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-08-22 — Session 25: pronetserm — AIS Speed-Hub-Seiten (Long-tail สมัครโปร AIS)
+
+- SERP-Recherche: Long-tail «โปรเน็ต ais + สปีด/จำนวนวัน» wird von kleinen Affiliate-Sites mit **dedizierten Speed-Seiten** gewonnen (one2callonline, package12call, package5g); unsere Site hatte nur Dauer-Hubs. Analyse + Keyword-Matrix (Dauer × Speed, Tier-Schätzungen) in `docs/pronetserm-seo-ais-longtail.md`.
+- Gebaut (Branch `pronetserm`, Commit `7fcd52e`): **5 neue AIS-Speed-Hubs** `/ais/{1,2,4,6,10}mbps.html` (1mbps bündelt 512Kbps gegen Thin-Content) — AIS-only-Pakettabellen nach Preis/Tag, «Welche Laufzeit ist am billigsten»-Tabelle, individuelle Intros/FAQ mit umgangssprachlichem «X เมก», Product+FAQ-LD, Nav-Dropdown + Hub-Chips. Sitemap 99 → 104.
+- Audit: alle Preise/USSD-Codes verbatim aus packages.json (automatisch geprüft), JSON-LD parsebar, Links ok, AdSense 1×/Seite, Chromium fehlerfrei, Diff auf Bestandsseiten = nur Nav.
+
+
 ### 2026-08-22 — Session 24: Backlink Execution Kit (Texte + Schritt-für-Schritt, owner-seitig auszuführen)
 
 - `docs/backlink-execution-kit.md` (~56k Zeichen): alle Texte aus dem Backlink-Plan fertig ausformuliert, kopierfertig — 6 Schweizer Verzeichnis-Einträge (je eigene DE-Beschreibung, Regel: nie Schweizer Adresse/UID erfinden → sonst überspringen), 2 GitHub-awesome-PRs (Web-UI-Schritte, Zeile + PR-Text mit Self-Submission-Offenlegung), LinkedIn/X-Profile, Reddit-Kit (Warmup, Feedback-Post, Antwort-Vorlagen, Modmail), englishforum-Kit (3 Antwort-Drafts), Poor-Swiss-Forum + moneyland, 5 Outreach-Mails (Poor Swiss/Mustachian/Schwiizerfranke DE/Relocation/Follow-up) + Prospect-Suche (Google-Operatoren, Ahrefs-Gratis-Checker), Data-PR (SOS/Qwoted, #journorequest, DE-Journalisten-Pitch, Saison-Kalender, Startupticker, Product Hunt). Identität überall: Thanakorn Praisee / kontakt@calcswiss.ch (Impressum), Offenlegung in jedem Community-Draft. **Alle CHF-Zahlen im Pitch gegen die Engine verifiziert** (100k ledig: ZG 10'009 / VS 26'194; ZH 71% 12'927 / 128% 16'443; 26 Kantone / 2'110 Gemeinden; 3a 7'258) — Herkunft im Anhang des Kits dokumentiert. ESTV-Brief-Status im Kit vermerkt (gesendet 14.07., Frist verstrichen → Attribution-Posture läuft). Audit: kein ß im Dokument, alle genannten Site-URLs existieren, Tests 102/102, Build 241 Seiten, docs/ nicht deploybar.
