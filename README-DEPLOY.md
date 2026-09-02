@@ -40,3 +40,39 @@
 
 - `verify.cjs` เป็นสคริปต์ตรวจเทียบกับเว็บเก่าตอน migrate (พาธ Windows) — เก็บไว้เป็นประวัติ ใช้รันที่นี่ไม่ได้
 - AdSense: เว็บนี้ผ่านการอนุมัติแล้ว หากใส่โค้ดโฆษณา ให้เพิ่ม `ads.txt` ในโฟลเดอร์นี้ด้วย
+
+---
+
+## แผนสำรอง: deploy ด้วย Wrangler เมื่อ GitHub integration ใช้ไม่ได้
+
+ใช้เมื่อ Cloudflare ขึ้นแถบ "The repository cannot be accessed" และ deployment ใหม่ขึ้น "No deployment available" (เช่น ช่วงบัญชี GitHub ถูก flag) — เว็บจริงจะค้างที่ deployment สำเร็จล่าสุดจนกว่าจะแก้
+
+### 1) เอาไฟล์เว็บมาไว้บนเครื่อง (ไม่ต้องใช้ git)
+1. เปิด GitHub → repo `swisscalc-hub` → สลับ branch เป็น **`pronetserm`** → ปุ่ม **Code → Download ZIP**
+2. แตก ZIP ได้โฟลเดอร์ `swisscalc-hub-pronetserm` (ข้างในคือไฟล์เว็บทั้งหมด: index.html, ais/, articles/, ads.txt …)
+
+### 2) ติดตั้ง Node.js แล้วล็อกอิน Cloudflare (ไม่เกี่ยวกับ GitHub)
+```powershell
+cd <โฟลเดอร์ที่แตก ZIP>
+npx wrangler login          # เปิดเบราว์เซอร์ให้กด Allow ด้วยบัญชี Cloudflare
+```
+(ทางเลือกแทน login: สร้าง API Token ที่ dash.cloudflare.com → My Profile → API Tokens → template "Cloudflare Pages: Edit"
+แล้วตั้ง `$env:CLOUDFLARE_API_TOKEN="..."` และ `$env:CLOUDFLARE_ACCOUNT_ID="..."` ก่อนรันคำสั่งถัดไป)
+
+### 3) Deploy
+```powershell
+npx wrangler pages deploy . --project-name=pronetserm --branch=pronetserm --commit-dirty=true
+```
+- ถ้าสำเร็จ จะได้ URL `https://<hash>.pronetserm.pages.dev` และโดเมนจริงอัปเดตทันที
+- **ถ้า error ทำนอง "project is connected to a Git repository / cannot use direct upload"** → โปรเจกต์แบบเชื่อม Git รับ direct upload ไม่ได้ ให้สร้างโปรเจกต์ใหม่แบบ direct upload แล้วย้ายโดเมน:
+```powershell
+npx wrangler pages project create pronetserm-direct --production-branch=pronetserm
+npx wrangler pages deploy . --project-name=pronetserm-direct --branch=pronetserm --commit-dirty=true
+```
+  จากนั้นใน dashboard: โปรเจกต์เก่า `pronetserm` → Custom domains → **Remove** ทั้ง `xn--m3chf0ahc2cze1ecq8d.com` และ `www.…` → โปรเจกต์ใหม่ `pronetserm-direct` → Custom domains → **Add** ทั้งสองโดเมน (DNS อยู่ใน Cloudflare อยู่แล้ว มีผลในไม่กี่นาที)
+
+### 4) ตรวจว่าขึ้นจริง
+เปิด `โปรเน็ตเสริม.com/articles/index.html` ต้องเห็นจำนวนบทความตรงกับ branch (ดูใน `articles/index.html` ของ ZIP) และ `โปรเน็ตเสริม.com/ais/4mbps.html` ต้องเปิดได้
+
+### เมื่อ GitHub กลับมาปกติ
+กด **Configure installation** บนแถบเหลืองใน Cloudflare เพื่อให้สิทธิ์ GitHub App ใหม่ → deployment อัตโนมัติจะกลับมาทำงานเอง และควรตั้ง **Preview deployments = None** (Settings → Builds & deployments) เพื่อไม่ให้ branch `claude/*` ของอีกเว็บถูก build ทิ้ง
