@@ -73,6 +73,13 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-09-02 — Session 27: pronetserm live via Wrangler · GSC 02.09 · SEO-Strategie-Dokument
+
+- **Deploy-Blocker gelöst (owner-seitig):** GitHub-Flag hatte die Cloudflare-Git-Integration gekappt (Deployments seit `b52acdc` fehlgeschlagen) → Fallback-Anleitung in `README-DEPLOY.md` (Branch `pronetserm`, `51ca87e`), Owner hat per `wrangler pages deploy` ausgerollt — 115 Seiten live.
+- **GSC calcswiss.ch (bis 30.08):** Klicks 20 → 35, Impressionen 6.7k → 10.1k, W35 = 2'419 (Rekord); EN hourly 942 Imp./Pos. 7.3/4 Klicks; FR hourly Pos. 14.7; AG 25.4; 3a (Pos. 79) und Steuervergleich (41.8) weiter Backlink-blockiert. AdSense calcswiss: erneut «Low value content» — Empfehlung: nicht sofort re-requesten; Backlink Tier A + Gemeinde-Steuerfuss-Tabellen auf Kantonsseiten als nächstes Content-Milestone (wartet auf Freigabe).
+- `docs/pronetserm-seo-strategy.md`: 90-Tage-Plan. Kernbefund: Konkurrenz rankt mit Einzel-Paket-Seiten (haben wir: 38 `/pro/`, aber dünn) **und zeigt AIS 10 Mbps/30 Tage für 200 Baht, unsere Daten 1'177 Baht** → Preisaktualität durch Owner ist Voraussetzung Nr. 1; danach `/pro/`-Upgrade, Preis-Seiten, True/dtac-Speed-Hubs, GSC-Property.
+
+
 ### 2026-08-22 — Session 26: pronetserm — PN-Gold (10 บทความ keywords ทอง) + Infografiken auf Speed-Hubs
 
 - SERP-Checks: «ซิมหมดอายุ»/«รหัส PUK» = nur Pantip/TikTok als Konkurrenz (Gold), «เช็คเบอร์มิจฉาชีพ» = hohe Nachfrage, Banken-Blogs generisch. 10 Artikel gebaut (Commit `99c7f21`, Site 105 → 115 Seiten): Scam-Check, Spam-Block, PUK, SIM-Ablauf, SIM-Sperre, Handy-verloren-Checkliste, eSIM-Geräteliste, eSIM-Transfer, «โทรไม่ออก»-Troubleshooting, Senioren-Guide (verlinkt auf Money-Pages inkl. neue /ais/1mbps-Seite). Jede Seite: eigenes SVG-Diagramm + FAQ-LD.
