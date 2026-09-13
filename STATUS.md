@@ -73,6 +73,15 @@ Read order for a fresh session: `CLAUDE.md` → `BUILD_PLAN.md` (current milesto
 
 ## Session log
 
+### 2026-09-13 — Session 28: GSC 13.09 (Wachstum bestätigt) · Backlink Tier A gestartet
+
+- **GSC calcswiss.ch (3-Monats-Export, bis 11.09):** Wochenkurve sauber compound, ohne einen einzigen Backlink — Klicks je Woche 2 → 4 → 8 → 9 → **24 (W36) → 55 (W37)**, Impressionen 420 → 3'891 → **6'907**, CTR 0.18% → **0.80%**. Letzte 28 Tage: 97 Klicks / 15'671 Impressionen. 186 Seiten mit Impressionen.
+- Klickträger: `/steuervergleich/` (13), `/en/hourly-wage-calculator/` (11), QST-Kantonsseiten ZH/SZ/AG/GR/FR (~23 zusammen) — genau die im Toolranking priorisierte Achse. EN zieht überraschend stark mit.
+- **Befund Backlink-Bedarf quantifiziert:** Säule-3a-Cluster hat Nachfrage, aber keine Sichtbarkeit — «3 säule steuern sparen rechner» 136 Imp./**Pos. 81.8**, «3. säule rechner» 131/85.8, «säule 3a steuerersparnis» 128/74.8, «steuerklassen schweiz» 112/62.3, «steuervergleich» 94/32.4 — alle 0 Klicks. On-Page ist in Ordnung (Titel/Meta/Schema korrekt); es fehlt Domain-Autorität.
+- **Tier A gestartet (Owner-Freigabe):** `scripts/generate-brand-assets.mjs` erzeugt die für externe Profile nötigen Bilddateien nach `public/brand/` — Avatar 1024² (kreis-crop-sicher, für LinkedIn-Logo ≥300² und X), Wortmarke 1200×400 auf Weiss, X-Header 1500×500, LinkedIn-Cover 1128×191. Damit haben die Assets auch stabile öffentliche URLs für Formulare, die eine Logo-URL statt Upload wollen.
+- `docs/backlink-tracker.md`: operative Statusdatei (Vorab-Checks, 6 Verzeichnisse, awesome-lists, LinkedIn/X, Baseline-KPIs vom 13.09). Awesome-list-PRs bewusst zurückgestellt, bis der GitHub-Account entsperrt ist. Offen für mich, sobald Profil-URLs existieren: Impressum-Crosslink + `sameAs` im Organization-JSON-LD.
+- Verifiziert: `astro check` + build 241 Seiten clean, 102/102 Tests, Link-Check 240 Seiten ok, Assets landen in `dist/brand/`, alle vier PNGs visuell geprüft.
+
 ### 2026-09-02 — Session 27: pronetserm live via Wrangler · GSC 02.09 · SEO-Strategie-Dokument
 
 - **Deploy-Blocker gelöst (owner-seitig):** GitHub-Flag hatte die Cloudflare-Git-Integration gekappt (Deployments seit `b52acdc` fehlgeschlagen) → Fallback-Anleitung in `README-DEPLOY.md` (Branch `pronetserm`, `51ca87e`), Owner hat per `wrangler pages deploy` ausgerollt — 115 Seiten live.
